@@ -1,9 +1,9 @@
-import SignUpForm from "@/components/_cms/components/auth/SignUpForm";
+import SignUpForm from "@/components/auth/SignUpForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Đăng ký | AlphaHome",
-  description: "Đăng ký tài khoản AlphaHome",
+  title: "Đăng ký | Sáng Cà Tối Cồn",
+  description: "Đăng ký tài khoản Sáng Cà Tối Cồn",
   // other metadata
 };
 

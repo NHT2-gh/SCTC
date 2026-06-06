@@ -8,8 +8,8 @@ import { SystemRole } from "@/types/common";
 import { signOut } from "@/lib/server-action/auth.action";
 import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
-import { DropdownItem, Dropdown } from "../_cms/ui/dropdown";
-import AvatarText from "../_cms/ui/avatar/AvatarText";
+import { DropdownItem, Dropdown } from "../ui/dropdown";
+import AvatarText from "../ui/avatar/AvatarText";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);

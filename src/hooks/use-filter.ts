@@ -3,7 +3,7 @@
 import {
   FilterItemConfig,
   FilterValue,
-} from "@/components/_cms/components/filter/filter-box-render/type";
+} from "@/components/filter/filter-box-render/type";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useUrlParams } from "./use-url-state";
 

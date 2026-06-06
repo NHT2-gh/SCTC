@@ -1,5 +1,5 @@
 "use client";
-import { ThemeToggleButton } from "@/components/_cms/common/theme-toggle-button";
+import { ThemeToggleButton } from "@/components/common/theme-toggle-button";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/header/UserDropdown";
 import { useSidebar } from "@/context/SidebarContext";
@@ -91,7 +91,7 @@ const AppHeader: React.FC = () => {
                 A
               </div>
               <span className="text-xl font-bold text-gray-900 dark:text-white">
-                AlphaHome
+                Sáng Cà Tối Cồn
               </span>
             </div>
           </Link>

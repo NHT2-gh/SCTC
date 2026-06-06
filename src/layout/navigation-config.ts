@@ -13,33 +13,37 @@ const NavItems: NavItem[] = [
     role: ["super_admin"],
   },
   {
-    icon: "boxCube",
-    name: "Quản lý toà nhà",
-    path: APP_ROUTES.ADMIN.BUILDINGS.BASE(),
+    icon: "package",
+    name: "Ingredients",
+    path: APP_ROUTES.ADMIN.INGREDIENTS.LIST(),
     subItems: [
-      { name: "Danh sách", path: APP_ROUTES.ADMIN.BUILDINGS.BASE() },
-      { name: "Thêm toà nhà", path: APP_ROUTES.ADMIN.BUILDINGS.CREATE() },
+      { name: "Ingredients List", path: APP_ROUTES.ADMIN.INGREDIENTS.LIST() },
+      { name: "Add Ingredients", path: APP_ROUTES.ADMIN.INGREDIENTS.ADD() },
     ],
-    role: ["super_admin", "admin"],
+    role: ["admin"],
   },
   {
-    icon: "userCircle",
-    name: "Quản lý sale phòng",
-    path: APP_ROUTES.SALE.BASE,
+    icon: "boxCube",
+    name: "Recipes",
+    path: APP_ROUTES.ADMIN.RECIPES.DRINK_RECIPES(),
     subItems: [
       {
-        name: "Danh sách phòng trống",
-        path: APP_ROUTES.SALE.AVAILABLE_ROOMS(),
+        name: "Recipe",
+        path: APP_ROUTES.ADMIN.RECIPES.DRINK_RECIPES(),
+      },
+      {
+        name: "Component Recipes",
+        path: APP_ROUTES.ADMIN.RECIPES.COMPONENTS_RECIPES(),
       },
     ],
-    role: ["super_admin", "admin", "user"],
+    role: ["admin"],
   },
 ];
 
 // CMS Sidebar Configuration
 export const NavigationConfig: Menu = {
   main: {
-    title: "Main Menu",
+    title: "BASE",
     items: NavItems,
   },
 };

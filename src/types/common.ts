@@ -1,4 +1,4 @@
-import { FilterValue } from "@/components/_cms/components/filter/filter-box-render/type";
+import { FilterValue } from "@/components/filter/filter-box-render/type";
 
 // Other types used across the application
 export interface Pagination {

@@ -9,23 +9,22 @@ export const ROUTES = {
   auth: ["/auth/login", "/auth/sign-up"],
   /**
    * Private route prefixes
-   * Chỉ cần match prefix → không cần khai báo từng route
    */
-  privatePrefixes: ["/", "/buildings"],
+  privatePrefixes: ["/admin"],
+
+  /**
+   * Public route prefixes
+   */
+  publicPrefixes: ["/"],
+
   /**
    * API routes (skip middleware)
    */
   apiPrefixes: ["/api"],
 
   systemRoleSRoutes: {
-    [SystemRole.super_admin]: [
-      APP_ROUTES.ADMIN.BASE,
-      APP_ROUTES.ADMIN.USERS.BASE,
-    ],
-    [SystemRole.admin]: [
-      APP_ROUTES.ADMIN.BASE,
-      APP_ROUTES.ADMIN.BUILDINGS.BASE(),
-    ],
+    [SystemRole.super_admin]: [APP_ROUTES.ADMIN.BASE],
+    [SystemRole.admin]: [APP_ROUTES.ADMIN.BASE],
     [SystemRole.user]: [],
   },
 } as const;
@@ -33,8 +32,8 @@ export const ROUTES = {
 /**
  * Default redirects
  */
-export const DEFAULT_LOGIN_REDIRECT = "/";
-export const DEFAULT_AUTH_REDIRECT = "/auth/login";
+export const DEFAULT_LOGIN_REDIRECT = APP_ROUTES.ADMIN.BASE;
+export const DEFAULT_AUTH_REDIRECT = APP_ROUTES.AUTH.SIGN_IN;
 
 /**
  * Check exact match

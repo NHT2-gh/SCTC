@@ -9,6 +9,7 @@ import { getIcon } from "@/utils/iconMap";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { SystemRole } from "@/types/common";
+import Image from "next/image";
 
 interface AppSidebarProps<
   T extends Record<string, { title: string; items: NavItem[] }>,
@@ -279,17 +280,25 @@ export default function AppSidebar<
         <Link href={topSidebar.basePath}>
           {isExpanded || isHovered || isMobileOpen ? (
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 bg-brand-500 rounded-lg text-white font-bold text-lg">
-                A
-              </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">
-                AlphaHome CMS
+              <Image
+                src={"/images/logo/logo-sctc-v1.webp"}
+                alt={"Logo"}
+                width={40}
+                height={40}
+                unoptimized
+              />
+              <span className="text-xl font-bold text-gray-900 dark:text-white text-nowrap">
+                Sáng Cà Tối Cồn
               </span>
             </div>
           ) : (
-            <div className="flex items-center justify-center w-10 h-10 bg-brand-500 rounded-lg text-white font-bold text-xl">
-              A
-            </div>
+            <Image
+              src={"/images/logo/logo-sctc-v1.webp"}
+              alt={"Logo"}
+              width={40}
+              height={40}
+              unoptimized
+            />
           )}
         </Link>
       </div>

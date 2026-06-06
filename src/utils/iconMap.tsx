@@ -22,6 +22,7 @@ import {
   UserCircleIcon,
   UserIcon,
 } from "@/icons";
+import { PackageIcon } from "lucide-react";
 
 export const iconMap = {
   grid: GridIcon,
@@ -40,6 +41,7 @@ export const iconMap = {
   call: CallIcon,
   mail: MailIcon,
   user: UserIcon,
+  package: PackageIcon,
 
   "modal-alert-success": IcModalAlertSuccessIcon,
   "modal-alert-info": IcModalAlertInfoIcon,

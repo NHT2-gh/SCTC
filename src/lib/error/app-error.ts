@@ -1,6 +1,6 @@
 import { ErrorCode } from "./error-codes";
 
-const errorMessageMap: Record<ErrorCode, string> = {
+export const errorMessageMap: Record<ErrorCode, string> = {
   [ErrorCode.DUPLICATE_DATA]: "Dữ liệu đã tồn tại",
   [ErrorCode.FOREIGN_KEY_INVALID]: "Dữ liệu liên kết không hợp lệ",
   [ErrorCode.MISSING_REQUIRED_FIELD]: "Vui lòng nhập đầy đủ thông tin",

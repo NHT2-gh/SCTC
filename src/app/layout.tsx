@@ -15,10 +15,10 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | AlphaHome",
-    default: "AlphaHome",
+    template: "%s | SCTC",
+    default: "Sáng Cà Tối Cồn",
   },
-  description: "AlphaHome Admin Dashboard",
+  description: "SCTC Admin Dashboard",
 };
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${outfit.className} dark:bg-gray-900`}>
+      <body className={`${outfit.className}  dark:bg-gray-900`}>
         <AppProviders>
           <ThemeProvider>
             <SidebarProvider>

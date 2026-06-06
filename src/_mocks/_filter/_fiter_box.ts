@@ -1,7 +1,7 @@
 import {
   FilterItemConfig,
   FilterValue,
-} from "@/components/_cms/components/filter/filter-box-render/type";
+} from "@/components/filter/filter-box-render/type";
 
 export const _filterConfigs: FilterItemConfig[] = [
   {
