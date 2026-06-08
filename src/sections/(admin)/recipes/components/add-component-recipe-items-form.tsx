@@ -1,52 +1,77 @@
 import Form from "@/components/form/Form";
-import React from "react";
+import React, { useState } from "react";
 import { FormField } from "@/components/form";
 import {
   ComponentRecipeItemsValidationSchema,
-  componentRecipeItemsValidationSchema,
+  recipeItemValidationSchema,
+  RecipeItemValidationSchema,
 } from "@/schemas/validation/component.validation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useIngredients } from "@/hooks/queries/use-ingredient";
+import { useFormContext } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export default function AddComponentRecipeItemsForm() {
+interface AddComponentRecipeItemsFormProps {
+  componentId: string;
+}
+export default function AddComponentRecipeItemsForm({
+  componentId,
+}: AddComponentRecipeItemsFormProps) {
   const { data: ingredients } = useIngredients();
-  const form = useForm<ComponentRecipeItemsValidationSchema>({
-    resolver: zodResolver(componentRecipeItemsValidationSchema),
+  const componentRecipeForm =
+    useFormContext<ComponentRecipeItemsValidationSchema>();
+
+  const { append } = useFieldArray({
+    control: componentRecipeForm.control,
+    name: "component_items",
+  });
+
+  const addComponentItemForm = useForm<RecipeItemValidationSchema>({
+    resolver: zodResolver(recipeItemValidationSchema),
     defaultValues: {
+      component_id: componentId,
       ingredient_id: "",
       quantity: 0,
-      unit: "gram",
     },
   });
+
+  const { handleSubmit, reset } = addComponentItemForm;
+
+  const onSubmit = (data: RecipeItemValidationSchema) => {
+    append(data);
+    reset();
+  };
+
   return (
-    <Form onSubmit={() => {}} className="">
-      <FormField
-        form={form}
-        field={{
-          name: "ingredient_id",
-          type: "select",
-          options:
-            ingredients?.data.map((item) => ({
-              label: item.name,
-              value: item.id,
-            })) || [],
-        }}
-      />
-      <FormField form={form} field={{ name: "quantity", type: "number" }}>
+    <>
+      <Form onSubmit={handleSubmit(onSubmit)} className="!grid-cols-3">
         <FormField
-          form={form}
-          className="absolute top-0 right-0 max-w-[100px]"
+          form={addComponentItemForm}
           field={{
-            name: "unit",
+            name: "ingredient_id",
             type: "select",
-            options: [
-              { label: "Gram", value: "gram" },
-              { label: "Ml", value: "ml" },
-            ],
+            label: "Nguyên liệu",
+            placeholder: "Chọn nguyên liệu",
+            options:
+              ingredients?.data.map((item) => ({
+                label: `${item.name} ${item.notes ? `(${item.notes})` : ""}`,
+                value: item.id,
+              })) || [],
           }}
         />
-      </FormField>
-    </Form>
+        <FormField
+          form={addComponentItemForm}
+          field={{ name: "quantity", type: "number", label: "Khối lượng" }}
+        />
+      </Form>
+      <Button
+        type="submit"
+        className="ml-auto block"
+        onClick={handleSubmit(onSubmit)}
+      >
+        Thêm
+      </Button>
+    </>
   );
 }

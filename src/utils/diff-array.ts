@@ -8,7 +8,7 @@ export function diffArray<T extends { id?: string }>({
   dirtyFields: any[];
 }) {
   const upsert: T[] = [];
-  const deleted: T[] = [];
+  const deleted: string[] = [];
 
   const currentMap = new Map(current.filter((i) => i.id).map((i) => [i.id, i]));
 
@@ -23,8 +23,8 @@ export function diffArray<T extends { id?: string }>({
 
   // DELETE
   initial.forEach((item) => {
-    if (!currentMap.has(item.id)) {
-      deleted.push(item);
+    if (item.id && !currentMap.has(item.id)) {
+      deleted.push(item.id);
     }
   });
 

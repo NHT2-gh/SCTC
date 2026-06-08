@@ -2,7 +2,7 @@
 import React, { memo, useMemo, useState } from "react";
 
 import { cn, debounce } from "@/lib/utils";
-import { TextFieldConfig } from "../../form/type";
+import { TextFieldConfig } from "@/components/form/type";
 
 const baseClasses = ` h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30`;
 const variantClasses = {
@@ -30,7 +30,9 @@ export default memo(function TextInput({
   children,
   ...props
 }: TextFieldConfig) {
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>(
+    defaultValue || value || "",
+  );
 
   const debouncedSendRequest = useMemo(() => {
     return debounce((value: string) => handleOnChange?.(value), debounceTime!);

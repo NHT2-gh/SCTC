@@ -91,20 +91,7 @@ export default function FormField({
               <FieldComponent
                 {...field}
                 disabled={disabled}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  if (field.type === "number") {
-                    const num = e.target.valueAsNumber;
-                    onChange?.({
-                      ...e,
-                      target: {
-                        ...e.target,
-                        value: isNaN(num) ? "" : num,
-                      },
-                    });
-                  } else {
-                    onChange?.(e);
-                  }
-                }}
+                onChange={onChange}
                 onBlur={onBlur}
                 value={value}
                 name={name}
@@ -124,12 +111,13 @@ export default function FormField({
                 id={field.name}
                 disabled={disabled}
                 handleOnChange={(
-                  value: string | Date,
+                  value: string | Date | number,
                   currentDateString?: string,
                 ) => {
-                  onChange(value);
                   if (currentDateString) {
                     onChange(currentDateString);
+                  } else {
+                    onChange(value);
                   }
                 }}
                 defaultDate={field.type === "date" ? value : undefined}

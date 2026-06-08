@@ -1,8 +1,8 @@
-import { ComponentRecipeItems } from "@/types/component";
+import { ComponentRecipeItem } from "@/types/component";
 import React from "react";
 
 interface ComponentRecipeProps {
-  items: ComponentRecipeItems[];
+  items: ComponentRecipeItem[];
 }
 
 export default function ComponentRecipe({ items }: ComponentRecipeProps) {

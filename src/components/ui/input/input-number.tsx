@@ -33,9 +33,8 @@ export default function NumberInput({
   ...props
 }: NumberFieldConfig) {
   const [inputValue, setInputValue] = useState<number>(
-    defaultValue ? Number(defaultValue) : 0,
+    defaultValue || value || 0,
   );
-
   const debouncedSendRequest = useMemo(() => {
     return debounce(
       (value: string) => handleOnChange?.(Number(value)),

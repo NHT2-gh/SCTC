@@ -8,7 +8,6 @@ import {
 } from "@/hooks/queries/use-component";
 import { useState } from "react";
 import { ItemSearch, ModalComponentRecipeItems } from "../components";
-import { Loader2 } from "lucide-react";
 import { useModal } from "@/hooks/useModal";
 
 export default function ComponentsRecipesPageView() {
@@ -60,6 +59,7 @@ export default function ComponentsRecipesPageView() {
       </ComponentCard>
       {componentSelected && componentRecipeItems?.data && (
         <ModalComponentRecipeItems
+          componentId={componentSelected}
           items={componentRecipeItems?.data}
           isOpen={modalViewComponentItems.isOpen}
           onClose={modalViewComponentItems.closeModal}

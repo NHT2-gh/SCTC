@@ -18,8 +18,8 @@ export interface Component {
   component_type: keyof typeof ComponentType;
 }
 
-export interface ComponentRecipeItems {
-  id: string;
+export interface ComponentRecipeItem {
+  id?: string;
   component_id: string;
   ingredient_id: string;
   quantity: number;

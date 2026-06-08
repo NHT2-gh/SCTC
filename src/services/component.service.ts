@@ -1,8 +1,8 @@
 import { ErrorCode } from "@/lib/error/error-codes";
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import { supabase } from "@/supabase/supabaseClients";
-import { ResponseStandard } from "@/types/common";
-import { Component, ComponentRecipeItems } from "@/types/component";
+import { MutationResult, ResponseStandard } from "@/types/common";
+import { Component, ComponentRecipeItem } from "@/types/component";
 
 class ComponentService {
   private tableName: string;
@@ -40,7 +40,7 @@ class ComponentService {
 
   async getComponentRecipeItems(
     id: string,
-  ): Promise<ResponseStandard<ComponentRecipeItems[] | null>> {
+  ): Promise<ResponseStandard<ComponentRecipeItem[] | null>> {
     if (!id)
       return {
         success: false,
@@ -59,6 +59,47 @@ class ComponentService {
     return {
       success: true,
       data: recipeItems,
+    };
+  }
+
+  async upsertComponentRecipeItems(
+    data: ComponentRecipeItem[],
+  ): Promise<MutationResult> {
+    if (!data.length) {
+      return {
+        success: false,
+        message: ErrorCode["INVALID_INPUT"],
+      };
+    }
+
+    const { error } = await supabase.from(this.tableDetail).upsert(data, {
+      onConflict: "id",
+    });
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
+    };
+  }
+
+  async deleteComponentRecipeItems(ids: string[]): Promise<MutationResult> {
+    if (!ids.length) {
+      return {
+        success: false,
+        message: ErrorCode["INVALID_INPUT"],
+      };
+    }
+
+    const { error } = await supabase
+      .from(this.tableDetail)
+      .delete()
+      .in("id", ids);
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
     };
   }
 }

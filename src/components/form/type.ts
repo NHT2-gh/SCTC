@@ -62,6 +62,8 @@ export interface TextFieldConfig extends BaseFieldConfig {
   debounceTime?: number;
   maxLength?: number;
   minLength?: number;
+  defaultValue?: string;
+  value?: string;
 }
 
 export interface NumberFieldConfig extends BaseFieldConfig {
@@ -72,6 +74,8 @@ export interface NumberFieldConfig extends BaseFieldConfig {
   step?: number;
   debounceTime?: number;
   formatCurrency?: boolean;
+  defaultValue?: number;
+  value?: number;
 }
 
 export interface TextareaFieldConfig extends BaseFieldConfig {
