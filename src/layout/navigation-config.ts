@@ -38,6 +38,18 @@ const NavItems: NavItem[] = [
     ],
     role: ["admin"],
   },
+  {
+    icon: "task",
+    name: "Menu",
+    path: APP_ROUTES.ADMIN.MENUS.BASE,
+    subItems: [
+      {
+        name: "Drinks Menu",
+        path: APP_ROUTES.ADMIN.MENUS.TYPE("drink"),
+      },
+    ],
+    role: ["admin"],
+  },
 ];
 
 // CMS Sidebar Configuration

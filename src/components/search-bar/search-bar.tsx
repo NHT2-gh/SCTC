@@ -1,64 +1,30 @@
 import React, { useMemo, useState } from "react";
-import { Input } from "../ui/input";
-import { debounce } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { SearchIcon } from "lucide-react";
-
-interface SearchBarProps {
-  inputRef?: React.RefObject<HTMLInputElement | null>;
-  handleOnChange?: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-  debounceTime?: number;
-  handleKeyDown?: (value: string) => void;
-}
+import InputText from "../ui/input/input-text";
+import { TextFieldConfig } from "../form/type";
 
 export default function SearchBar({
-  inputRef,
+  ref,
   placeholder,
   handleOnChange,
   className,
   debounceTime = 0,
   handleKeyDown,
-}: SearchBarProps) {
-  const [inputValue, setInputValue] = useState<string>("");
-
-  const debouncedSendRequest = useMemo(
-    () => debounce((value: string) => handleOnChange?.(value), debounceTime),
-    [handleOnChange, debounceTime],
-  );
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-
-    if (debounceTime > 0) {
-      debouncedSendRequest(value);
-    } else {
-      handleOnChange?.(value);
-    }
-  };
-
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleKeyDown?.(inputValue);
-    }
-  };
-
+}: Omit<TextFieldConfig, "type">) {
   return (
-    <div className={`relative`}>
-      <Input
-        ref={inputRef}
-        type="text"
-        placeholder={placeholder || "Tìm kiếm"}
-        className={`relative max-w-[400px] ${className}`}
-        value={inputValue}
-        onChange={onChange}
-        name="search"
-        id="search"
-        onKeyDown={onKeyDown}
-      >
-        <SearchIcon className="size-5 text-gray-400 dark:text-gray-500 pointer-events-none absolute left-2 top-1/2 -translate-y-1/2" />
-      </Input>
-    </div>
+    <InputText
+      type="text"
+      ref={ref}
+      placeholder={placeholder || "Tìm kiếm"}
+      className={cn("relative max-w-[400px] !pl-8", className)}
+      handleOnChange={handleOnChange}
+      name="search"
+      id="search"
+      debounceTime={debounceTime}
+      handleKeyDown={handleKeyDown}
+    >
+      <SearchIcon className="size-5 text-gray-400 dark:text-gray-500 pointer-events-none absolute left-2 top-1/2 -translate-y-1/2" />
+    </InputText>
   );
 }

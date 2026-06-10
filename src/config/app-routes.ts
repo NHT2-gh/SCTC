@@ -1,5 +1,7 @@
 // Application routes for the CMS
 
+import { MenuType } from "@/types/menu";
+
 export const APP_ROUTES = {
   AUTH: {
     SIGN_IN: "/auth/login",
@@ -20,8 +22,16 @@ export const APP_ROUTES = {
       // },
     },
     RECIPES: {
-      COMPONENTS_RECIPES: () => `${APP_ROUTES.ADMIN.BASE}/recipes/components`,
-      DRINK_RECIPES: () => `${APP_ROUTES.ADMIN.BASE}/recipes/drinks`,
+      BASE: "/admin/recipes",
+      COMPONENTS_RECIPES: () => `${APP_ROUTES.ADMIN.RECIPES.BASE}/components`,
+      DRINK_RECIPES: () => `${APP_ROUTES.ADMIN.RECIPES.BASE}/drinks`,
+    },
+
+    MENUS: {
+      BASE: "/admin/menus",
+      TYPE: (type: MenuType) => `${APP_ROUTES.ADMIN.MENUS.BASE}/${type}`,
+      DETAIL: (type: MenuType, id: string) =>
+        `${APP_ROUTES.ADMIN.MENUS.TYPE(type)}/${id}`,
     },
   },
 };

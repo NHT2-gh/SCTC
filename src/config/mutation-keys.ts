@@ -4,7 +4,12 @@ export const mutationKeys = {
   },
 
   componentRecipe: {
+    add: ["component-recipe", "add"],
     upsert: ["component-recipe", "upsert"],
     delete: ["component-recipe", "delete"],
+  },
+
+  menuItems: {
+    add: ["menu-items", "add"],
   },
 };

@@ -4,7 +4,7 @@ import React, { memo, useMemo, useState } from "react";
 import { cn, debounce } from "@/lib/utils";
 import { TextFieldConfig } from "@/components/form/type";
 
-const baseClasses = ` h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30`;
+const baseClasses = `relative h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs dark:bg-gray-900 dark:text-white/90 `;
 const variantClasses = {
   disabled: ` text-gray-500 border-gray-300 opacity-40 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700 opacity-40`,
   error: ` border-error-500 focus:border-error-300 focus:ring-error-500/20 dark:text-error-400 dark:border-error-500 dark:focus:border-error-800`,
@@ -28,6 +28,8 @@ export default memo(function TextInput({
   disabled = false,
   hint,
   children,
+  ref,
+  handleKeyDown,
   ...props
 }: TextFieldConfig) {
   const [inputValue, setInputValue] = useState<string>(
@@ -35,32 +37,50 @@ export default memo(function TextInput({
   );
 
   const debouncedSendRequest = useMemo(() => {
-    return debounce((value: string) => handleOnChange?.(value), debounceTime!);
+    return debounce((value: string) => {
+      handleOnChange?.(value);
+    }, debounceTime!);
   }, [handleOnChange, debounceTime]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
+
     debounceTime ? debouncedSendRequest(value) : handleOnChange?.(value);
   };
 
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleKeyDown?.(inputValue);
+    }
+  };
+
   return (
-    <div className={cn("relative", className)}>
+    <div
+      className={cn(
+        baseClasses,
+        variantClasses[variant],
+        {
+          [variantClasses.disabled]: disabled,
+        },
+        className,
+      )}
+    >
       <input
         id={id}
         name={name}
+        ref={ref}
         type={type}
         placeholder={placeholder}
         value={inputValue}
         onChange={onChange}
         disabled={disabled}
-        className={cn(baseClasses, variantClasses[variant], {
-          [variantClasses.disabled]: disabled,
-        })}
+        onKeyDown={onKeyDown}
+        className="w-full h-full placeholder:text-gray-400 focus:outline-hidden dark:placeholder:text-white/30"
         {...props}
       />
 
-      <div className="absolute right-2 bottom-[-2]">{children}</div>
+      {children}
 
       {hint && (
         <p

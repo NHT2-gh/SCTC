@@ -7,12 +7,17 @@ import {
   useGetComponentRecipeItems,
 } from "@/hooks/queries/use-component";
 import { useState } from "react";
-import { ItemSearch, ModalComponentRecipeItems } from "../components";
+import {
+  AddComponentForm,
+  ItemSearch,
+  ModalComponentRecipeItems,
+} from "../components";
 import { useModal } from "@/hooks/useModal";
+import { Component } from "@/types/component";
 
 export default function ComponentsRecipesPageView() {
   const [searchText, setSearchText] = useState<string | undefined>(undefined);
-  const [componentSelected, setComponentSelected] = useState<string | null>(
+  const [componentSelected, setComponentSelected] = useState<Component | null>(
     null,
   );
   const modalViewComponentItems = useModal();
@@ -21,7 +26,7 @@ export default function ComponentsRecipesPageView() {
     data: componentRecipeItems,
     error: ComponentRecipeError,
     isLoading: isLoadingComponentRecipe,
-  } = useGetComponentRecipeItems(componentSelected);
+  } = useGetComponentRecipeItems(componentSelected?.id!);
   return (
     <MainContainer title="Công thức thành phần">
       <ComponentCard title={"Tìm kiếm công thức thành phần"}>
@@ -36,7 +41,7 @@ export default function ComponentsRecipesPageView() {
           className="max-w-full"
         />
         {componentsData?.data && searchText && (
-          <div className="border rounded-lg mt-3 min-h-fit">
+          <div className="border absolute bg-white z-[10] top-32 left-6 right-6 rounded-lg mt-3 min-h-fit">
             {isLoading && <span>...Đang tải</span>}
             {componentsData?.data.length > 0 ? (
               componentsData?.data?.map((item) => (
@@ -45,7 +50,7 @@ export default function ComponentsRecipesPageView() {
                   data={item}
                   onSelect={(id) => {
                     modalViewComponentItems.openModal();
-                    setComponentSelected(id);
+                    setComponentSelected(item);
                   }}
                 />
               ))
@@ -57,9 +62,13 @@ export default function ComponentsRecipesPageView() {
           </div>
         )}
       </ComponentCard>
+
+      <ComponentCard title={"Tạo công thức thành phần"}>
+        <AddComponentForm />
+      </ComponentCard>
       {componentSelected && componentRecipeItems?.data && (
         <ModalComponentRecipeItems
-          componentId={componentSelected}
+          component={componentSelected}
           items={componentRecipeItems?.data}
           isOpen={modalViewComponentItems.isOpen}
           onClose={modalViewComponentItems.closeModal}

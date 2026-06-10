@@ -1,5 +1,5 @@
 import Modal, { type ModalProps } from "@/components/ui/modal/modal";
-import { ComponentRecipeItem } from "@/types/component";
+import { Component, ComponentRecipeItem } from "@/types/component";
 import React, { useState } from "react";
 import { AddComponentRecipeItemsForm } from ".";
 import { FormProvider, useForm } from "react-hook-form";
@@ -20,14 +20,14 @@ import Form from "@/components/form/Form";
 import { Alert } from "@/components/alert";
 
 interface ModalComponentRecipeItemsProps {
-  componentId: string;
+  component: Component;
   items: ComponentRecipeItem[];
   isOpen: boolean;
   onClose: () => void;
 }
 
 export default function ModalComponentRecipeItems({
-  componentId,
+  component,
   items,
   isOpen,
   onClose,
@@ -91,9 +91,13 @@ export default function ModalComponentRecipeItems({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="md:max-w-[60rem]">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      className="md:max-w-[60rem] md:min-h-fit"
+    >
       <h3 className="text-xl font-bold text-brand-700 mb-4">
-        Công thức thành phần
+        {component.name}
       </h3>
       <FormProvider {...componentRecipeItems}>
         <Form
@@ -130,9 +134,9 @@ export default function ModalComponentRecipeItems({
           </Button>
         </Form>
 
-        <div className="rounded-xl space-y-4 mt-5 border border-gray-100 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900">
+        <div className="rounded-xl space-y-4 mt-6 border border-gray-100 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900">
           <h4 className="font-bold text-brand-700">Thêm nguyên liệu</h4>
-          <AddComponentRecipeItemsForm componentId={componentId} />
+          <AddComponentRecipeItemsForm componentId={component.id} />
         </div>
       </FormProvider>
     </Modal>

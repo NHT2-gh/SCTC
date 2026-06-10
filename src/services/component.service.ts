@@ -1,8 +1,9 @@
 import { ErrorCode } from "@/lib/error/error-codes";
-import { handlePostgresError } from "@/lib/error/postgres-error";
 import { supabase } from "@/supabase/supabaseClients";
+import { handlePostgresError } from "@/lib/error/postgres-error";
 import { MutationResult, ResponseStandard } from "@/types/common";
 import { Component, ComponentRecipeItem } from "@/types/component";
+import { ComponentValidationSchema } from "@/schemas/validation/component.validation";
 
 class ComponentService {
   private tableName: string;
@@ -95,6 +96,25 @@ class ComponentService {
       .from(this.tableDetail)
       .delete()
       .in("id", ids);
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
+    };
+  }
+
+  async addComponent(data: ComponentValidationSchema): Promise<MutationResult> {
+    if (!data) {
+      return {
+        success: false,
+        message: ErrorCode["INVALID_INPUT"],
+      };
+    }
+
+    const { error } = await supabase
+      .from(this.tableName)
+      .insert(data as unknown as Component);
 
     if (error) handlePostgresError(error);
 

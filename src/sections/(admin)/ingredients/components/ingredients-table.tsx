@@ -32,7 +32,7 @@ export default function IngredientsTable() {
     <div className="border border-gray-200 rounded-xl">
       <TableTitle title="Bảng nguyên liệu">
         <SearchBar
-          inputRef={searchInputRef}
+          ref={searchInputRef}
           handleKeyDown={(value) => {
             setSearchText(value);
           }}

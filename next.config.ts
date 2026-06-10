@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    domains: ["jioeyqgkaazhqeanehtt.supabase.co"],
+    domains: ["jioeyqgkaazhqeanehtt.supabase.co", "i.pinimg.com"],
   },
 
   allowedDevOrigins: ["http://192.168.1.33", "http://localhost:3000"],

@@ -64,14 +64,15 @@ export default function AddComponentRecipeItemsForm({
           form={addComponentItemForm}
           field={{ name: "quantity", type: "number", label: "Khối lượng" }}
         />
+
+        <Button
+          type="submit"
+          className="ml-auto block"
+          onClick={handleSubmit(onSubmit)}
+        >
+          Thêm
+        </Button>
       </Form>
-      <Button
-        type="submit"
-        className="ml-auto block"
-        onClick={handleSubmit(onSubmit)}
-      >
-        Thêm
-      </Button>
     </>
   );
 }

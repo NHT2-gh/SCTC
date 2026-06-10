@@ -44,7 +44,7 @@ export interface BaseFieldConfig extends Omit<
   "type"
 > {
   type: FieldType;
-  ref?: RefCallBack;
+  ref?: React.RefObject<HTMLInputElement | null>;
   variant?: "default" | "error" | "success";
   description?: string;
   required?: boolean;
@@ -59,6 +59,7 @@ export interface BaseFieldConfig extends Omit<
 export interface TextFieldConfig extends BaseFieldConfig {
   type: "text" | "email" | "password" | "url" | "tel";
   handleOnChange?: (value: string) => void;
+  handleKeyDown?: (value: string) => void;
   debounceTime?: number;
   maxLength?: number;
   minLength?: number;

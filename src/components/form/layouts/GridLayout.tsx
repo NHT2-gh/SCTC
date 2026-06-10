@@ -27,6 +27,7 @@ export default function GridLayout({
       {fields.map((field) => (
         <FormField
           key={field.name}
+          className={field.className}
           field={field}
           form={form}
           disabled={disabled}

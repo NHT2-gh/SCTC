@@ -12,10 +12,10 @@ export default function ItemSearch({ data, onSelect }: ItemSearchProps) {
       onClick={() => onSelect(data.id)}
       className="w-full border-b flex justify-between p-3 last:border-none"
     >
-      <div>
-        <h4 className="font-semibold text-sm">{data.name}</h4>
-        <span className="text-sm text-gray-500">{data.description}</span>
-      </div>
+      <h4 className="font-semibold text-sm">
+        {data.name} {data.description && "(" + data.description + ")"}
+      </h4>
+
       <p className="text-xs text-gray-700">
         Phân loại: {ComponentType[data.component_type]}
       </p>

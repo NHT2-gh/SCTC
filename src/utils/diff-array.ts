@@ -30,3 +30,13 @@ export function diffArray<T extends { id?: string }>({
 
   return { upsert, deleted };
 }
+
+export function diffBasicArray<T>(original: T[], current: T[]) {
+  const added = current.filter((item) => !original.includes(item));
+  const removed = original.filter((item) => !current.includes(item));
+
+  return {
+    added,
+    removed,
+  };
+}

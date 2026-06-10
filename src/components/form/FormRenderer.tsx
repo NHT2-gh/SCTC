@@ -1,4 +1,5 @@
 "use client";
+import z from "zod";
 import React, { useEffect } from "react";
 import { XIcon } from "lucide-react";
 import FormField from "./FormField";
@@ -11,7 +12,7 @@ import { FormRendererProps, FormSchema } from "./type";
 import AccordionLayout from "./layouts/AccordionLayout";
 import { useForm, UseFormReturn } from "react-hook-form";
 import Form from "./Form";
-import z from "zod";
+import { cn } from "@/lib/utils";
 
 export default function FormRenderer({
   schema,
@@ -119,7 +120,7 @@ export default function FormRenderer({
   };
 
   return (
-    <Form onSubmit={handleSubmit} className={className}>
+    <Form onSubmit={handleSubmit} className={cn("block w-full", className)}>
       {schema.title && (
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">

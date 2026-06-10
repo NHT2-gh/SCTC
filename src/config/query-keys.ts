@@ -13,4 +13,12 @@ export const queryKeys = {
     getAll: (searchName?: string) => ["components", searchName],
     getById: (id: string | null) => ["components", id],
   },
+
+  menu: {
+    getAll: (params?: GetWithFilterParams) => ["menus", params],
+    detail: (id: string) => ["menus", id],
+  },
+  drink: {
+    getAll: (params?: GetWithFilterParams) => ["drinks", params],
+  },
 };
