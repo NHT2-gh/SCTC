@@ -33,3 +33,23 @@ export function useAddMenuItems() {
     },
   });
 }
+
+export function useGetMenuLayouts(menuId: string) {
+  return useQuery({
+    queryKey: queryKeys.menu.layout(menuId),
+    queryFn: () => menuService.getMenuLayoutItems(menuId),
+  });
+}
+
+export function useInitLayoutMenu() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: mutationKeys.menuItems.initLayout,
+    mutationFn: (menuId: string) => menuService.initMenuLayout(menuId),
+    onSuccess: (_, menuId) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.menu.layout(menuId),
+      });
+    },
+  });
+}

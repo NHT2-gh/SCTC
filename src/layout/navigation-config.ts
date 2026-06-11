@@ -45,7 +45,7 @@ const NavItems: NavItem[] = [
     subItems: [
       {
         name: "Drinks Menu",
-        path: APP_ROUTES.ADMIN.MENUS.TYPE("drink"),
+        path: APP_ROUTES.ADMIN.MENUS.BASE,
       },
     ],
     role: ["admin"],

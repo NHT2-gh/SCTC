@@ -1,17 +1,16 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { MenuType } from "@/types/menu";
 import { useAddMenuItems, useGetMenuDetail } from "@/hooks/queries/use-menu";
 import { MainContainer } from "@/components/common/page-layout";
 import { DrinkCard, DrinksSearchBox } from "../components";
-import { SearchBar } from "@/components/search-bar";
 import { diffBasicArray } from "@/utils/diff-array";
 import { showToast } from "@/lib/toast";
 import { mapErrorToMessage } from "@/lib/error/app-error";
-import { TableDropdown } from "@/components/common/table-dropdown";
-import { Dropdown, DropdownItem } from "@/components/ui/dropdown";
-import { EllipsisVertical, Eye, LayoutIcon, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LayoutIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { APP_ROUTES } from "@/config/app-routes";
+import Link from "next/link";
 
 interface MenuDetailProps {
   id: string;
@@ -20,12 +19,7 @@ interface MenuDetailProps {
 export default function MenuDetailPageView({ id }: MenuDetailProps) {
   const { data: menuItems, isLoading } = useGetMenuDetail(id);
   const addMenuItems = useAddMenuItems();
-
-  console.log(
-    menuItems?.data.map((item) => {
-      return item.drinks.id;
-    }),
-  );
+  const router = useRouter();
   const handleAddItems = useCallback(async (ids: string[]) => {
     const originalArray =
       menuItems?.data && menuItems?.data?.length > 0
@@ -65,10 +59,12 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
             onAdd={(ids) => handleAddItems(ids)}
           />
         )}
-        <Button>
-          <LayoutIcon />
-          Thiết lập Layout Menu
-        </Button>
+        <Link href={APP_ROUTES.ADMIN.MENUS.LAYOUTS(id)}>
+          <Button>
+            <LayoutIcon />
+            Thiết lập Layout Menu
+          </Button>
+        </Link>
       </div>
       <section className="grid grid-cols-[repeat(auto-fill,150px)] gap-3">
         {menuItems?.data.length === 0 && (

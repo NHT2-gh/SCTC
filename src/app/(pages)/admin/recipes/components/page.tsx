@@ -1,4 +1,4 @@
-import { ComponentsRecipesPageView } from "@/sections/(admin)/recipes/view";
+import { ComponentsRecipesPageView } from "@/sections/(admin)/recipes/views";
 import React from "react";
 
 export default function ComponentPage() {

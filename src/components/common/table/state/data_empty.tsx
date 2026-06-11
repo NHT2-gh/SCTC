@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 
 export default function DataEmpty({
   message,
   colSpan,
 }: {
-  message: string;
+  message: string | ReactNode;
   colSpan: number;
 }) {
   return (

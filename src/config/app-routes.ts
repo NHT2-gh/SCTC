@@ -29,9 +29,11 @@ export const APP_ROUTES = {
 
     MENUS: {
       BASE: "/admin/menus",
-      TYPE: (type: MenuType) => `${APP_ROUTES.ADMIN.MENUS.BASE}/${type}`,
-      DETAIL: (type: MenuType, id: string) =>
-        `${APP_ROUTES.ADMIN.MENUS.TYPE(type)}/${id}`,
+      DETAIL: (id: string) => `${APP_ROUTES.ADMIN.MENUS.BASE}/${id}`,
+      LAYOUTS: (menuId: string, type?: MenuType) =>
+        !type
+          ? `${menuId}/layouts`
+          : `${APP_ROUTES.ADMIN.MENUS.DETAIL(menuId)}/layouts`,
     },
   },
 };

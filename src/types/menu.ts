@@ -29,3 +29,12 @@ export interface MenuItem {
   menu_id: string;
   drinks: Drink;
 }
+
+export interface MenuLayoutItem {
+  id: string;
+  drinks: Drink;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
