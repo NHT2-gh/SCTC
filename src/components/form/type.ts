@@ -3,8 +3,10 @@ import { InputHTMLAttributes, ReactNode } from "react";
 import {
   Control,
   FieldError,
+  FieldValues,
   RefCallBack,
   UseFormReturn,
+  UseFormSetValue,
 } from "react-hook-form";
 import { DateOption, Hook } from "flatpickr/dist/types/options";
 
@@ -89,18 +91,18 @@ export interface SelectFieldConfig extends BaseFieldConfig {
   type: "select" | "multiselect" | "radio";
   options: FieldOption[];
   defaultValue?: string;
-  multiple?: boolean;
   handleOnChange?: (value: string) => void;
 }
 
 export interface DateFieldConfig extends Omit<BaseFieldConfig, "onChange"> {
-  type: "date";
   id: string;
-  mode?: "single" | "multiple" | "range" | "time";
-  onChange?: Hook | Hook[];
+  name?: string;
+  mode?: "single" | "multiple" | "range";
+  pickerType?: "date" | "datetime" | "time";
+  handleOnChange?: Hook | Hook[];
   defaultDate?: DateOption;
-  minDate?: Date;
-  maxDate?: Date;
+  placeholder?: string;
+  disabled?: boolean;
 }
 
 export interface SwitchFieldConfig extends BaseFieldConfig {
@@ -218,6 +220,7 @@ export interface FormRendererProps {
   onSubmit: (data: any, form: UseFormReturn<any>) => void | Promise<void>;
   onError?: (errors: any, form: UseFormReturn<any>) => void;
   onCancel?: () => void;
+  setValue?: UseFormSetValue<any>;
   defaultValues?: Record<string, any>;
   className?: string;
   submitButtonText?: string;

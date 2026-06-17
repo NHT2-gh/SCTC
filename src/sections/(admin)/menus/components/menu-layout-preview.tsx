@@ -1,6 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { MenuLayoutItem } from "@/types/menu";
+import { MenuItemCard } from "@/components/menu";
+import { useFormContext, useWatch } from "react-hook-form";
+import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
+import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
 
 export default function MenuLayoutPreview({
   items,
@@ -9,29 +14,55 @@ export default function MenuLayoutPreview({
   items: MenuLayoutItem[];
   onSelect: (item: MenuLayoutItem) => void;
 }) {
-  const [itemActive, setItemActive] = useState<string>();
+  const editForm = useFormContext<MenuLayoutItemEditValidation>();
+  const dataEditing = useWatch({ control: editForm.control });
+  const [mode, setMode] = useState<"preview" | "editing">("preview");
   return (
-    <div className="flex-1 p-10 max-w-full flex justify-center items-center overflow-auto border border-brand-200">
-      <div className="w-[1440px] p-4 h-fit min-h-[500px] border">
+    <div className="flex-2 p-10 max-w-full rounded-xl items-center overflow-auto border-2 border-brand-200 space-y-10">
+      <Switch
+        name="preview-mode"
+        value={mode === "editing"}
+        label="Edit Mode"
+        onChange={(value) => setMode(value ? "editing" : "preview")}
+      />
+      <div
+        className={cn(
+          "w-[375px] mx-auto overflow-auto p-4 h-[812px] border-2 rounded-xl",
+        )}
+      >
         <div className="relative">
           {items.map((item) => (
             <div
               key={item.id}
-              className="border hover:border-black focus:bg-neutral-500"
+              className="overflow-hidden rounded-xl flex flex-col items-center hover:opacity-80"
               onClick={() => {
-                setItemActive(item.id);
                 onSelect(item);
+                if (mode !== "editing") setMode("editing");
               }}
               style={{
-                background: itemActive === item.id ? "gray" : "none",
+                opacity:
+                  mode === "editing"
+                    ? dataEditing.id === item.id
+                      ? "1"
+                      : "0.2"
+                    : "1",
+                cursor: "pointer",
                 position: "absolute",
-                top: item.y,
-                left: item.x,
-                width: item.w,
-                height: item.h,
+                top: dataEditing.id === item.id ? dataEditing.y : item.y,
+                left: dataEditing.id === item.id ? dataEditing.x : item.x,
+                width: dataEditing.id === item.id ? dataEditing.w : item.w,
+                height: dataEditing.id === item.id ? dataEditing.h : item.h,
               }}
             >
-              {item.drinks.name}
+              <MenuItemCard
+                item={item.menu_items.products}
+                className={cn("bg-transparent", {
+                  "flex-row-reverse text-right":
+                    dataEditing.id === item.id && dataEditing?.x
+                      ? dataEditing.x > 1
+                      : item.x > 1,
+                })}
+              />
             </div>
           ))}
         </div>

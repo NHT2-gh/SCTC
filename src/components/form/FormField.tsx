@@ -21,10 +21,10 @@ import { cn } from "@/lib/utils";
 
 const fieldComponents: Record<FieldType, React.ComponentType<any>> = {
   text: TextInput,
-  email: Input,
+  email: TextInput,
   password: PasswordInput,
   url: UrlPrefixInput,
-  tel: PhoneInput,
+  tel: TextInput,
   number: NumberInput,
   textarea: Textarea,
   select: Select,
@@ -54,10 +54,6 @@ export default function FormField({
 }: FieldRendererProps) {
   const FieldComponent = fieldComponents[field.type];
 
-  const error = field.name
-    ? form?.formState.errors[field.name]?.message
-    : undefined;
-
   if (!FieldComponent) {
     console.warn(`No component found for field type: ${field.type}`);
     return (
@@ -68,8 +64,12 @@ export default function FormField({
       </div>
     );
   }
+
+  if (field.hidden) {
+    return null;
+  }
   return (
-    <div className={className}>
+    <div className={cn("field-item h-fit", field.className, className)}>
       {field.type !== "switch" && (
         <Label
           className={cn("mb-1", { "h-0 mb-0": !field.label })}
@@ -87,62 +87,84 @@ export default function FormField({
           <Controller
             control={form.control}
             name={field.name}
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
-              <FieldComponent
-                {...field}
-                disabled={disabled}
-                onChange={onChange}
-                onBlur={onBlur}
-                value={value}
-                name={name}
-                ref={ref}
-              >
-                {children}
-              </FieldComponent>
+            render={({
+              field: { onChange, onBlur, value, name, ref },
+              fieldState,
+            }) => (
+              <>
+                <FieldComponent
+                  {...field}
+                  disabled={disabled}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  name={name}
+                  ref={ref}
+                >
+                  {children}
+                </FieldComponent>
+
+                {fieldState.error?.message && (
+                  <p
+                    className={`mt-1.5 text-xs ${
+                      fieldState.error?.message
+                        ? "text-error-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {fieldState.error?.message as string}
+                  </p>
+                )}
+              </>
             )}
           />
         ) : (
           <Controller
             control={form.control}
             name={field.name}
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
-              <FieldComponent
-                {...field}
-                id={field.name}
-                disabled={disabled}
-                handleOnChange={(
-                  value: string | Date | number,
-                  currentDateString?: string,
-                ) => {
-                  if (currentDateString) {
-                    onChange(currentDateString);
-                  } else {
-                    onChange(value);
-                  }
-                }}
-                defaultDate={field.type === "date" ? value : undefined}
-                onBlur={onBlur}
-                value={value}
-                name={name}
-                ref={ref}
-              >
-                {children}
-              </FieldComponent>
+            render={({
+              field: { onChange, onBlur, value, name, ref },
+              fieldState,
+            }) => (
+              <>
+                <FieldComponent
+                  {...field}
+                  id={field.name}
+                  disabled={disabled}
+                  handleOnChange={(
+                    value: string | number,
+                    currentDateString?: string,
+                  ) => {
+                    if (field.type === "date" && currentDateString) {
+                      onChange(currentDateString);
+                    } else {
+                      onChange(value);
+                    }
+                  }}
+                  onBlur={onBlur}
+                  value={value}
+                  name={name}
+                  ref={ref}
+                >
+                  {children}
+                </FieldComponent>
+                {fieldState.error?.message && (
+                  <p
+                    className={`mt-1.5 text-xs ${
+                      fieldState.error?.message
+                        ? "text-error-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {fieldState.error?.message as string}
+                  </p>
+                )}
+              </>
             )}
           />
         )
       ) : (
         <FieldComponent {...field} disabled={disabled} value={field.value} />
-      )}
-
-      {error && (
-        <p
-          className={`mt-1.5 text-xs ${
-            error ? "text-error-500" : "text-gray-500"
-          }`}
-        >
-          {error as string}
-        </p>
       )}
     </div>
   );

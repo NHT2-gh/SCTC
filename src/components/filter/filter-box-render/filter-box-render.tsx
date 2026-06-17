@@ -26,14 +26,21 @@ export default function FilterBoxRender({
       className={cn("m-3 border rounded-lg bg-neutral-50 ", className)}
     >
       <div className="grid p-3 gap-5 grid-cols-[repeat(auto-fill,minmax(200px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-        {filterConfigs.map((config) => (
-          <FilterItemRender
-            key={config.key}
-            config={config}
-            value={filterValues[config.key]}
-            onChange={(value) => handleFilterChange(config.key, value)}
-          />
-        ))}
+        {filterConfigs
+          .filter(
+            (item) =>
+              !("options" in item) ||
+              item.options === undefined ||
+              item.options.length > 0,
+          )
+          .map((config) => (
+            <FilterItemRender
+              key={config.key}
+              config={config}
+              value={filterValues[config.key]}
+              onChange={(value) => handleFilterChange(config.key, value)}
+            />
+          ))}
       </div>
       {/* <div className="flex items-center justify-end gap-2">
         <Button variant="primary" size="sm">

@@ -12,5 +12,10 @@ export const mutationKeys = {
   menuItems: {
     add: ["menu-items", "add"],
     initLayout: ["menu-items", "init-layout"],
+    updateLayout: ["menu-item", "update-layout"],
+  },
+
+  order: {
+    add: ["order", "add"],
   },
 };

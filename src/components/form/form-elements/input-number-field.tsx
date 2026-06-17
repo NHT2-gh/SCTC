@@ -12,10 +12,10 @@ export default function InputNumberField({
     <Controller
       name={fieldConfig.name!}
       control={control}
-      render={({ field: { onChange, onBlur, value, name, ref } }) => (
+      render={({ field: { onChange, onBlur, value, name } }) => (
         <NumberInput
           {...fieldConfig}
-          ref={ref}
+          ref={fieldConfig.ref}
           type="number"
           name={name}
           onBlur={onBlur}

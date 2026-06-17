@@ -1,21 +1,11 @@
 "use client";
-
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.css";
-import Hook = flatpickr.Options.Hook;
-import DateOption = flatpickr.Options.DateOption;
 import { CalenderIcon } from "@/icons";
-
-export type PropsType = {
-  id: string;
-  name?: string;
-  mode?: "single" | "multiple" | "range" | "time";
-  handleOnChange?: Hook | Hook[];
-  defaultDate?: DateOption;
-  placeholder?: string;
-  disabled?: boolean;
-};
+import { DateFieldConfig } from "../form/type";
+import { Instance } from "flatpickr/dist/types/instance";
+import { cn } from "@/lib/utils";
 
 export default function DatePicker({
   id,
@@ -25,37 +15,66 @@ export default function DatePicker({
   defaultDate,
   placeholder,
   disabled,
-}: PropsType) {
+  pickerType,
+}: DateFieldConfig) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const pickerRef = useRef<Instance | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    const flatPickr = flatpickr(`#${id}`, {
-      mode: mode || "single",
+    if (!inputRef.current) return;
+
+    const options: flatpickr.Options.Options = {
+      mode: mode ?? "single",
       static: true,
       monthSelectorType: "static",
-      dateFormat: "Y-m-d",
-      defaultDate,
+      defaultDate: defaultDate,
       onChange: handleOnChange,
-    });
+    };
+
+    switch (pickerType) {
+      case "datetime":
+        options.enableTime = true;
+        options.dateFormat = "Y-m-d H:i";
+        break;
+
+      case "time":
+        options.enableTime = true;
+        options.noCalendar = true;
+        options.dateFormat = "H:i";
+        break;
+
+      default:
+        options.dateFormat = "Y-m-d";
+    }
+
+    pickerRef.current = flatpickr(inputRef.current, options);
+    setIsMobile(pickerRef.current.isMobile);
 
     return () => {
-      if (!Array.isArray(flatPickr)) {
-        flatPickr.destroy();
-      }
+      pickerRef.current?.destroy();
+      pickerRef.current = null;
     };
-  }, [mode, handleOnChange, id, defaultDate]);
+  }, []);
 
   return (
     <div className="relative z-30">
       <input
         id={id}
+        ref={inputRef}
         name={name}
         placeholder={placeholder}
         disabled={disabled}
-        className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30  bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700  dark:focus:border-brand-800"
+        className={cn(
+          "h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30  bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700  dark:focus:border-brand-800",
+          { hidden: isMobile },
+        )}
       />
 
-      <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
-        <CalenderIcon className="size-6" />
-      </span>
+      {!isMobile && (
+        <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
+          <CalenderIcon className="size-6" />
+        </span>
+      )}
     </div>
   );
 }

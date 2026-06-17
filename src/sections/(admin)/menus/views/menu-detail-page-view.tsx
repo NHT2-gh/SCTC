@@ -2,13 +2,12 @@
 import React, { useCallback, useState } from "react";
 import { useAddMenuItems, useGetMenuDetail } from "@/hooks/queries/use-menu";
 import { MainContainer } from "@/components/common/page-layout";
-import { DrinkCard, DrinksSearchBox } from "../components";
+import { ProductCard, DrinksSearchBox } from "../components";
 import { diffBasicArray } from "@/utils/diff-array";
 import { showToast } from "@/lib/toast";
 import { mapErrorToMessage } from "@/lib/error/app-error";
 import { Button } from "@/components/ui/button";
 import { LayoutIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/config/app-routes";
 import Link from "next/link";
 
@@ -19,12 +18,11 @@ interface MenuDetailProps {
 export default function MenuDetailPageView({ id }: MenuDetailProps) {
   const { data: menuItems, isLoading } = useGetMenuDetail(id);
   const addMenuItems = useAddMenuItems();
-  const router = useRouter();
   const handleAddItems = useCallback(async (ids: string[]) => {
     const originalArray =
       menuItems?.data && menuItems?.data?.length > 0
         ? menuItems?.data.map((item) => {
-            return item.drinks.id;
+            return item.products.id;
           })
         : undefined;
 
@@ -54,7 +52,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
         {!isLoading && menuItems?.data && (
           <DrinksSearchBox
             itemsIds={menuItems?.data.map((item) => {
-              return item.drinks.id;
+              return item.products.id;
             })}
             onAdd={(ids) => handleAddItems(ids)}
           />
@@ -71,7 +69,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
           <span className="italic">Chưa có item nào được thêm</span>
         )}
         {menuItems?.data.map((item) => (
-          <DrinkCard key={item.id} item={item} />
+          <ProductCard key={item.id} item={item.products} />
         ))}
       </section>
     </MainContainer>

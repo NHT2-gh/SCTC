@@ -1,5 +1,5 @@
 "use client";
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 
 import { cn, debounce } from "@/lib/utils";
 import { TextFieldConfig } from "@/components/form/type";
@@ -35,6 +35,10 @@ export default memo(function TextInput({
   const [inputValue, setInputValue] = useState<string>(
     defaultValue || value || "",
   );
+
+  useEffect(() => {
+    setInputValue(value || defaultValue || "");
+  }, [value, defaultValue]);
 
   const debouncedSendRequest = useMemo(() => {
     return debounce((value: string) => {

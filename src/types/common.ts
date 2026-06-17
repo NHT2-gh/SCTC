@@ -24,6 +24,11 @@ export interface GetWithFilterParams {
   filters?: Record<string, FilterValue>;
 }
 
+export interface ServerActionResponse<T> extends MutationResult {
+  data: T;
+  error: string | Error | null;
+}
+
 export enum SystemRole {
   super_admin = "Quản trị cấp cao",
   admin = "Quản trị viên",

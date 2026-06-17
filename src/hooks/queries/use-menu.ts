@@ -1,6 +1,7 @@
 "use client";
 import { mutationKeys } from "@/config/mutation-keys";
 import { queryKeys } from "@/config/query-keys";
+import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
 import { menuService } from "@/services/menu.service";
 import { GetWithFilterParams } from "@/types/common";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -34,9 +35,9 @@ export function useAddMenuItems() {
   });
 }
 
-export function useGetMenuLayouts(menuId: string) {
+export function useGetMenuLayouts(menuId: string, isPublic?: boolean) {
   return useQuery({
-    queryKey: queryKeys.menu.layout(menuId),
+    queryKey: queryKeys.menu.layout(menuId, isPublic),
     queryFn: () => menuService.getMenuLayoutItems(menuId),
   });
 }
@@ -49,6 +50,21 @@ export function useInitLayoutMenu() {
     onSuccess: (_, menuId) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.menu.layout(menuId),
+      });
+    },
+  });
+}
+
+export function useUpdateLayoutItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: mutationKeys.menuItems.updateLayout,
+    mutationFn: (payload: MenuLayoutItemEditValidation) =>
+      menuService.updateMenuLayoutItem(payload),
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.menu.layout(payload.menuId),
       });
     },
   });

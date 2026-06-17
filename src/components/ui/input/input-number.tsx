@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { cn, debounce } from "@/lib/utils";
 import { formatCurrency as formatCurrencyUtil } from "@/utils/format-data";
 import { NumberFieldConfig } from "../../form/type";
@@ -33,8 +33,13 @@ export default function NumberInput({
   ...props
 }: NumberFieldConfig) {
   const [inputValue, setInputValue] = useState<number>(
-    defaultValue || value || 0,
+    value || defaultValue || 0,
   );
+
+  useEffect(() => {
+    setInputValue(value || defaultValue || 0);
+  }, [value, defaultValue]);
+
   const debouncedSendRequest = useMemo(() => {
     return debounce(
       (value: string) => handleOnChange?.(Number(value)),
@@ -57,6 +62,7 @@ export default function NumberInput({
         name={name}
         type={type}
         placeholder={placeholder}
+        defaultValue={defaultValue}
         value={inputValue}
         onChange={onChange}
         min={min}

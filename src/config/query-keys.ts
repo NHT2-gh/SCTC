@@ -17,9 +17,13 @@ export const queryKeys = {
   menu: {
     getAll: (params?: GetWithFilterParams) => ["menus", params],
     detail: (id: string) => ["menus", id],
-    layout: (id: string) => ["menu-layout", id],
+    layout: (id: string, isPublished?: boolean) => [
+      "menu-layout",
+      id,
+      isPublished,
+    ],
   },
-  drink: {
+  product: {
     getAll: (params?: GetWithFilterParams) => ["drinks", params],
   },
 };

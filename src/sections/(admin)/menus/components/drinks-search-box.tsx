@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/input";
 import { SearchBar } from "@/components/search-bar";
 import { formatCurrency } from "@/utils/format-data";
-import { useGetAllDrink } from "@/hooks/queries/use-drink";
+import { useGetAllProduct } from "@/hooks/queries/use-product";
 
 interface DrinksSearchBoxProps {
   onAdd: (drinkIds: string[]) => void;
@@ -16,7 +16,7 @@ export default function DrinksSearchBox({
   itemsIds,
 }: DrinksSearchBoxProps) {
   const [searchDrink, setSearchDrink] = useState<string | undefined>(undefined);
-  const { data: drinks, isLoading } = useGetAllDrink({
+  const { data: drinks, isLoading } = useGetAllProduct({
     searchText: searchDrink,
   });
   const [selectedDrinks, setSelectedDrinks] = useState<string[]>(

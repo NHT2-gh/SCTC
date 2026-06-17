@@ -12,10 +12,10 @@ export default function InputTextField({
     <Controller
       name={fieldConfig.name!}
       control={control}
-      render={({ field: { onChange, onBlur, value, name, ref } }) => (
+      render={({ field: { onChange, onBlur, value, name } }) => (
         <TextInput
           {...fieldConfig}
-          ref={ref}
+          ref={fieldConfig.ref}
           type="text"
           name={name}
           onBlur={onBlur}

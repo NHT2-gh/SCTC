@@ -10,7 +10,7 @@ import StepperLayout from "./layouts/StepperLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormRendererProps, FormSchema } from "./type";
 import AccordionLayout from "./layouts/AccordionLayout";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { useForm, UseFormReturn, FieldValues, useWatch } from "react-hook-form";
 import Form from "./Form";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +22,7 @@ export default function FormRenderer({
   defaultValues,
   disabled = false,
   className,
+  setValue,
   submitButtonText = "Submit",
   showSubmitButton = true,
 }: FormRendererProps) {
@@ -30,6 +31,10 @@ export default function FormRenderer({
     defaultValues,
     "onChange",
   );
+
+  const {
+    formState: { errors },
+  } = form;
 
   // Reset form with new default values when they change
   useEffect(() => {
@@ -40,6 +45,7 @@ export default function FormRenderer({
 
   const handleSubmit = form.handleSubmit(
     (data) => {
+      console.log("ping");
       onSubmit(data, form);
     },
     (errors) => {
@@ -160,14 +166,14 @@ export default function FormRenderer({
 }
 
 // Export hook for external form control
-export function useFormRenderer<T>(
+export function useFormRenderer<T extends FieldValues = FieldValues>(
   schema: FormSchema,
   defaultValues?: T,
   mode: "onChange" | "onBlur" | "onSubmit" = "onChange",
-): UseFormReturn {
-  return useForm({
+): UseFormReturn<T> {
+  return useForm<T>({
     resolver: schema.validation ? zodResolver(schema.validation) : undefined,
-    defaultValues: defaultValues || schema.defaultValues,
+    defaultValues: (defaultValues || schema.defaultValues) as any,
     mode,
   });
 }

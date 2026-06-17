@@ -1,26 +1,30 @@
 import { supabase } from "@/supabase/supabaseClients";
-import { Menu, MenuItem, MenuLayoutItem, MenuType } from "@/types/menu";
+import {
+  ItemOptionDetail,
+  Menu,
+  MenuItem,
+  MenuItemOption,
+  MenuLayoutItem,
+} from "@/types/menu";
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import {
   GetWithFilterParams,
   MutationResult,
   ResponseStandard,
 } from "@/types/common";
-import { success } from "zod";
+import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
 
-export class MenuService {
+class MenuService {
   private baseTable: string;
-  private drinkMenuTable: string;
-  private cocktailMenuTable: string;
-  private foodMenuTable: string;
+  private menuItemsTable: string;
   private layoutMenuTable: string;
+  private itemOptionsDetailTable: string;
 
   constructor() {
     this.baseTable = "menus";
-    this.drinkMenuTable = "menu_drinks";
-    this.cocktailMenuTable = "cocktail_menus";
-    this.foodMenuTable = "food_menus";
+    this.menuItemsTable = "menu_items";
     this.layoutMenuTable = "menu_layout_items";
+    this.itemOptionsDetailTable = "item_options_detail";
   }
 
   async getAllMenus(
@@ -38,15 +42,15 @@ export class MenuService {
 
   async getMenuDetail(id: string): Promise<ResponseStandard<MenuItem[]>> {
     const query = supabase
-      .from(this.drinkMenuTable)
+      .from(this.menuItemsTable)
       .select(
-        `*,
-           drinks!inner(
-           *
-           ) 
+        `
+          *,
+          products!inner(
+            *
+          ) 
         `,
       )
-
       .eq("menu_id", id);
 
     const { data: items, error } = await query;
@@ -72,7 +76,7 @@ export class MenuService {
     });
 
     if (!itemsUpdate) return { success: false };
-    const query = supabase.from(this.drinkMenuTable).insert(itemsUpdate);
+    const query = supabase.from(this.menuItemsTable).insert(itemsUpdate);
     const { error } = await query;
     if (error) handlePostgresError(error);
     return {
@@ -89,10 +93,12 @@ export class MenuService {
       .from(this.layoutMenuTable)
       .select(
         `
-            *,
-            drinks!inner(
-            *
-            )
+        *,
+        menu_items!inner(
+            products!inner(
+                    *
+                )
+        )
         `,
       )
       .eq("menu_id", menuId);
@@ -111,12 +117,108 @@ export class MenuService {
     const query = supabase.rpc("init_menu_layout", { p_menu_id: menuId });
     const { statusText, error } = await query;
 
-    console.log(menuId);
-
     if (error) handlePostgresError(error);
     return {
       success: true,
       message: statusText,
+    };
+  }
+
+  async updateMenuLayoutItem(
+    data: MenuLayoutItemEditValidation,
+  ): Promise<MutationResult> {
+    const query = supabase
+      .from(this.layoutMenuTable)
+      .update({
+        x: data.x,
+        y: data.y,
+        w: data.w,
+        h: data.h,
+      })
+      .eq("id", data.id);
+
+    const { error } = await query;
+
+    if (error) handlePostgresError(error);
+    return {
+      success: true,
+    };
+  }
+
+  // Public
+
+  async getMenuLayoutPublic(): Promise<ResponseStandard<MenuLayoutItem[]>> {
+    const query = supabase.from(this.layoutMenuTable).select(
+      `
+        *,
+        menu_items!inner(
+        *,
+            products!inner(
+                    *
+                )
+        )
+        `,
+    );
+
+    const { data: menuLayoutItems, error } = await query;
+
+    if (error) handlePostgresError(error);
+
+    return {
+      data: menuLayoutItems || [],
+      success: true,
+    };
+  }
+
+  async getMenuItemOptionsDetail(
+    menuItemId: string,
+  ): Promise<ResponseStandard<ItemOptionDetail[]>> {
+    const query = supabase
+      .from(this.itemOptionsDetailTable)
+      .select(
+        `
+        *,
+        menu_items_options!inner(
+            *,
+            components!inner(
+              *
+            )
+        )
+        `,
+      )
+      .eq("menu_item_id", menuItemId);
+
+    const { data, error } = await query;
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
+      data: data || [],
+    };
+  }
+
+  async getMenuItem(menuItemId: string): Promise<ResponseStandard<MenuItem>> {
+    const query = supabase
+      .from(this.menuItemsTable)
+      .select(
+        `
+            *,
+            products!inner(
+                *
+            )
+        `,
+      )
+      .eq("id", menuItemId)
+      .single();
+
+    const { data: menuItem, error } = await query;
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
+      data: menuItem,
     };
   }
 }

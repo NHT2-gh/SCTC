@@ -1,10 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { showToast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { APP_ROUTES } from "@/config/app-routes";
 import { mapErrorToMessage } from "@/lib/error/app-error";
-import { useGetMenuLayouts, useInitLayoutMenu } from "@/hooks/queries/use-menu";
+import {
+  useGetMenuLayouts,
+  useInitLayoutMenu,
+  useUpdateLayoutItem,
+} from "@/hooks/queries/use-menu";
 import { MainContainer } from "@/components/common/page-layout";
 import {
   MenuLayoutItemEdit,
@@ -12,6 +16,10 @@ import {
   MenuLayoutPreview,
 } from "../components";
 import { MenuLayoutItem } from "@/types/menu";
+import { FormProvider, useForm } from "react-hook-form";
+import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Form from "@/components/form/Form";
 
 interface MenuLayoutPageViewProps {
   menuId: string;
@@ -20,8 +28,23 @@ export default function MenuLayoutPageView({
   menuId,
 }: MenuLayoutPageViewProps) {
   const initLayout = useInitLayoutMenu();
+  const updateLayoutItem = useUpdateLayoutItem();
   const { data: layoutMenuItems } = useGetMenuLayouts(menuId);
   const [itemSelected, setItemSelected] = useState<MenuLayoutItem | null>(null);
+  const editLayoutItemForm = useForm<MenuLayoutItemEditValidation>({
+    resolver: zodResolver(MenuLayoutItemEditValidation),
+    defaultValues: {
+      menuId: menuId,
+      id: itemSelected?.id,
+      x: itemSelected?.x,
+      y: itemSelected?.y,
+      w: itemSelected?.w,
+      h: itemSelected?.h,
+    },
+  });
+
+  const { handleSubmit, setValue } = editLayoutItemForm;
+
   const handleInitLayout = async () => {
     try {
       const result = await initLayout.mutateAsync(menuId);
@@ -36,6 +59,25 @@ export default function MenuLayoutPageView({
       mapErrorToMessage(error);
     }
   };
+
+  const onSubmit = async (data: MenuLayoutItemEditValidation) => {
+    try {
+      const result = await updateLayoutItem.mutateAsync(data);
+      if (result.success) showToast.success({ title: "Cập nhật thành công" });
+      else showToast.error({ title: "Thất bại" });
+    } catch {}
+  };
+
+  useEffect(() => {
+    if (itemSelected) {
+      setValue("menuId", menuId);
+      setValue("id", itemSelected.id);
+      setValue("w", itemSelected.w);
+      setValue("h", itemSelected.h);
+      setValue("x", itemSelected.x);
+      setValue("y", itemSelected.y);
+    }
+  }, [itemSelected]);
 
   return (
     <MainContainer
@@ -59,26 +101,48 @@ export default function MenuLayoutPageView({
           Khởi tạo layout cho menu
         </Button>
       </div>
-      <section className="space-y-10">
-        {layoutMenuItems?.data && (
-          <>
-            <MenuLayoutPreview
-              items={layoutMenuItems.data}
-              onSelect={(item) => setItemSelected(item)}
-            />
-            <div className="flex gap-10">
-              <MenuLayoutItems
-                items={layoutMenuItems?.data}
-                onSelect={(item) => {
-                  setItemSelected(item);
-                }}
+      <FormProvider {...editLayoutItemForm}>
+        <section className="flex gap-10 space-y-10">
+          {layoutMenuItems?.data && (
+            <>
+              <MenuLayoutPreview
+                items={layoutMenuItems.data}
+                onSelect={(item) => setItemSelected(item)}
               />
+              <section className="flex-3 space-y-4">
+                {itemSelected && (
+                  <section className="flex-1  bg-neutral-50 rounded-xl h-fit p-3">
+                    <div className="">
+                      {itemSelected.menu_items.products.name}
+                    </div>
+                    <Form
+                      className="grid !grid-cols-2 gap-y-5  h-fit"
+                      onSubmit={handleSubmit(onSubmit, (err) => {
+                        console.log("VALIDATION ERROR", err);
+                      })}
+                    >
+                      <MenuLayoutItemEdit />
+                      <Button
+                        disabled={updateLayoutItem.isPending}
+                        type="submit"
+                      >
+                        {updateLayoutItem.isPending ? "Updating" : "Apply"}
+                      </Button>
+                    </Form>
+                  </section>
+                )}
 
-              {itemSelected && <MenuLayoutItemEdit item={itemSelected} />}
-            </div>
-          </>
-        )}
-      </section>
+                <MenuLayoutItems
+                  items={layoutMenuItems?.data}
+                  onSelect={(item) => {
+                    setItemSelected(item);
+                  }}
+                />
+              </section>
+            </>
+          )}
+        </section>
+      </FormProvider>
     </MainContainer>
   );
 }

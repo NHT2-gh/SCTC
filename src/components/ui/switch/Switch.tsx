@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface SwitchProps {
   label?: string;
@@ -21,7 +21,9 @@ export default function Switch({
   color = "blue",
 }: SwitchProps) {
   const [isChecked, setIsChecked] = useState(defaultValue || value);
-
+  useEffect(() => {
+    setIsChecked(value);
+  }, [value]);
   const handleToggle = () => {
     if (disabled) return;
     const newCheckedState = !isChecked;

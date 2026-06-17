@@ -38,10 +38,8 @@ interface TableCellProps {
 // Table Component
 const Table: React.FC<TableProps> = ({ children, className }) => {
   return (
-    <div className="max-w-full overflow-x-auto">
-      <table className={`${className} w-full scrollbar-hidden`}>
-        {children}
-      </table>
+    <div className={cn("max-w-full overflow-x-auto", className)}>
+      <table className={` w-full scrollbar-hidden`}>{children}</table>
     </div>
   );
 };

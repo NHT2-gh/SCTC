@@ -42,14 +42,17 @@ export default function CheckboxsFilterItem({
 
   return (
     <ul className={`${className}, space-y-2`}>
-      <li>
-        <Checkbox
-          onChange={() => handleCheckedOption("all")}
-          label="Tất cả"
-          checked={selectedOptions.length === config.options.length}
-          id={"all"}
-        />
-      </li>
+      {config.isSelectAll && (
+        <li>
+          <Checkbox
+            onChange={() => handleCheckedOption("all")}
+            label="Tất cả"
+            checked={selectedOptions.length === config.options.length}
+            id={"all"}
+          />
+        </li>
+      )}
+
       {config.options.map((option) => (
         <li key={option.value}>
           <Checkbox

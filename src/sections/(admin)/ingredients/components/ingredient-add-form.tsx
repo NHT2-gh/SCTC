@@ -1,8 +1,8 @@
 "use client";
+import React from "react";
 import FormRenderer from "@/components/form/FormRenderer";
 import { ingredientFormSchema } from "@/schemas/form-schemas/ingredient-form-schema";
 import { IngredientValidationSchema } from "@/schemas/validation/ingredient.validation";
-import React from "react";
 
 const defaultValues: Record<keyof IngredientValidationSchema, string | number> =
   {

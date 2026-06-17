@@ -12,6 +12,7 @@ export interface BaseFilterItemConfig {
   subLabel?: string;
   isMultiple?: boolean;
   disable?: boolean;
+  isSelectAll?: boolean;
 }
 export interface Checkboxs extends BaseFilterItemConfig {
   type: "checkbox";

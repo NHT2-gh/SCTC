@@ -36,4 +36,16 @@ export const APP_ROUTES = {
           : `${APP_ROUTES.ADMIN.MENUS.DETAIL(menuId)}/layouts`,
     },
   },
+
+  GUEST: {
+    PRODUCT: {
+      VIEW_DETAIL: (id: string) => `/${id}`,
+    },
+    CART: {
+      VIEW: "/cart",
+    },
+    CHECKOUT: {
+      VIEW: "/checkout",
+    },
+  },
 };

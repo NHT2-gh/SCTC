@@ -1,22 +1,10 @@
 import { ChevronDownIcon } from "@/icons";
 import React from "react";
-import { FieldOption } from "../../form/type";
-
-interface SelectProps {
-  id?: string;
-  name?: string;
-  options: FieldOption[];
-  placeholder?: string;
-  className?: string;
-  defaultValue?: string;
-  disabled?: boolean;
-  value?: string;
-  readOnly?: boolean;
-  handleOnChange?: (value: string) => void;
-}
+import { SelectFieldConfig } from "../../form/type";
 
 export default function Select({
   id,
+  type = "select",
   name,
   options,
   className,
@@ -26,13 +14,14 @@ export default function Select({
   placeholder = "Select an option",
   readOnly = false,
   handleOnChange,
-}: SelectProps) {
+  ...props
+}: SelectFieldConfig) {
   const [valueSelected, setValueSelected] = React.useState(
-    defaultValue || value,
+    defaultValue || value || "",
   );
 
   React.useEffect(() => {
-    setValueSelected(defaultValue || value);
+    setValueSelected(defaultValue || value || "");
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -42,7 +31,7 @@ export default function Select({
   };
 
   return (
-    <div className="relative">
+    <div className="relative" hidden={props.hidden}>
       <select
         id={id}
         name={name}

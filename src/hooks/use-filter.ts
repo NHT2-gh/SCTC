@@ -63,7 +63,6 @@ export function useFilter({ filterConfigs, onSubmit }: UseFilterOptions) {
    * 5. Actions
    * ---------------------------------- */
   const updateFilter = (key: string, value: FilterValue) => {
-    console.log(key, value);
     setFilterValues((prev) => ({
       ...prev,
       [key]: value,

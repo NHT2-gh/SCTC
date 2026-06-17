@@ -1,18 +1,18 @@
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import { supabase } from "@/supabase/supabaseClients";
 import { GetWithFilterParams, ResponseStandard } from "@/types/common";
-import { Drink } from "@/types/menu";
+import { Product } from "@/types/menu";
 
-class DrinkService {
+class ProductService {
   private tableName: string;
 
   constructor() {
-    this.tableName = "drinks";
+    this.tableName = "products";
   }
 
-  async getAllDrinks(
+  async getAllProduct(
     params?: GetWithFilterParams,
-  ): Promise<ResponseStandard<Drink[]>> {
+  ): Promise<ResponseStandard<Product[]>> {
     const query = supabase.from(this.tableName).select(`*`);
 
     if (params?.searchText === "/all") {
@@ -28,6 +28,24 @@ class DrinkService {
       data: drinks || [],
     };
   }
+
+  // Public
+  async getProductDetail(id: string): Promise<ResponseStandard<Product>> {
+    const query = supabase
+      .from(this.tableName)
+      .select(`*`)
+      .eq("id", id)
+      .single();
+
+    const { data, error } = await query;
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
+      data: data,
+    };
+  }
 }
 
-export const drinkService = new DrinkService();
+export const productService = new ProductService();
