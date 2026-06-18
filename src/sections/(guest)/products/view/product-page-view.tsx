@@ -9,7 +9,7 @@ import { useFilter } from "@/hooks/use-filter";
 import { delagothic, itim } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { SelectedOption } from "@/types/cart";
-import { MenuOptionType } from "@/types/menu";
+import { OptionType } from "@/types/menu";
 import { ProductDetail } from "@/types/product";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
@@ -27,6 +27,7 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
   >([]);
   const { updateFilter, clearFilters, filterValues, applyFilters } = useFilter({
     filterConfigs: productOptionSchame || [],
+    initSubmit: false,
     onSubmit(filters) {
       const selectedOptions = Object.entries(filters).flatMap(
         ([_, value]) =>
@@ -50,7 +51,7 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
   useEffect(() => {
     if (options) {
       const productOptionsSchema: FilterItemConfig[] = Object.entries(
-        MenuOptionType,
+        OptionType,
       ).map(([key, value]) => ({
         key: key,
         type: "checkbox",

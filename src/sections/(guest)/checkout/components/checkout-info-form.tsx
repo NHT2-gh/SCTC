@@ -13,10 +13,13 @@ import { useWatch } from "react-hook-form";
 import { useCheckout } from "@/hooks/use-checkout";
 import { useCreateOrder } from "@/hooks/queries/use-order";
 import { useCart } from "@/hooks/use-cart";
+import { useRouter } from "next/navigation";
+import { APP_ROUTES } from "@/config/app-routes";
 
 export default function CheckoutInfoForm() {
   const { checkoutInfo, updateCheckout } = useCheckout();
   const { items } = useCart();
+  const router = useRouter();
   const createOrder = useCreateOrder();
   const checkoutForm = useFormRenderer<CheckoutFormValidationType>(
     checkoutFormSchema,
@@ -29,7 +32,11 @@ export default function CheckoutInfoForm() {
     name: "delivery_method",
     control: checkoutForm.control,
   });
-  const { handleSubmit, setValue } = checkoutForm;
+  const {
+    handleSubmit,
+    setValue,
+    formState: { isLoading },
+  } = checkoutForm;
   const onSubmit = async (data: CheckoutFormValidationType) => {
     updateCheckout({
       customer: data.customer,
@@ -43,9 +50,9 @@ export default function CheckoutInfoForm() {
         checkoutInfo: data,
       });
 
-      if (result.success) showToast.success({ title: "Ping" });
+      router.push(APP_ROUTES.GUEST.ORDER.VIEW(result.data.tracking_order));
     } catch (error) {
-      console.log(error);
+      showToast.error({ title: "Đặt hàng thất bại" });
     }
   };
 
@@ -77,8 +84,12 @@ export default function CheckoutInfoForm() {
           ),
         )}
       </Form>
-      <Button onClick={handleSubmit(onSubmit)} type="submit">
-        Đặt hàng
+      <Button
+        disabled={isLoading}
+        onClick={handleSubmit(onSubmit)}
+        type="submit"
+      >
+        {isLoading ? "Đang xử lý" : "Đặt hàng"}
       </Button>
     </div>
   );

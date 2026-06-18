@@ -47,5 +47,8 @@ export const APP_ROUTES = {
     CHECKOUT: {
       VIEW: "/checkout",
     },
+    ORDER: {
+      VIEW: (trackingCode: string) => `/order/${trackingCode}`,
+    },
   },
 };

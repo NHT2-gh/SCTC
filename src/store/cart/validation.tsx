@@ -1,5 +1,5 @@
 import { CartItem } from "@/types/cart";
-import { MenuOptionType } from "@/types/menu";
+import { OptionType } from "@/types/menu";
 
 export type CartValidationIssue =
   | {
@@ -16,7 +16,7 @@ export type CartValidationIssue =
     }
   | {
       type: "OPTION_LIMIT_EXCEEDED";
-      option_type: MenuOptionType;
+      option_type: OptionType;
     };
 
 export interface CartValidationResult {

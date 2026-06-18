@@ -6,7 +6,7 @@ export enum MenuEnumType {
   food = "Food",
 }
 
-export enum MenuOptionType {
+export enum OptionType {
   topping = "Topping",
   extra = "Extra",
   upgrade = "Upgrade",
@@ -51,7 +51,7 @@ export interface MenuItemOption {
   id: string;
   price: number;
   components: Component;
-  option_type: keyof typeof MenuOptionType;
+  option_type: keyof typeof OptionType;
 }
 
 export interface ItemOptionDetail {

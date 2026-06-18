@@ -1,4 +1,5 @@
 import { FilterValue } from "@/components/filter/filter-box-render/type";
+import { ErrorCode } from "react-dropzone";
 
 // Other types used across the application
 export interface Pagination {
@@ -26,7 +27,7 @@ export interface GetWithFilterParams {
 
 export interface ServerActionResponse<T> extends MutationResult {
   data: T;
-  error: string | Error | null;
+  error: ErrorCode | string | null;
 }
 
 export enum SystemRole {

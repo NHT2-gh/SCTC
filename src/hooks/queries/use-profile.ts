@@ -7,6 +7,13 @@ export function useProfile(userId: string) {
     queryKey: queryKeys.profile.getProfile(userId),
     queryFn: () => profileService.getProfile(userId),
     enabled: !!userId,
+
+    staleTime: Infinity,
+    gcTime: Infinity,
+
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
   });
 }
 

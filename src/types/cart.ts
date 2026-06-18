@@ -1,11 +1,11 @@
-import { MenuItem, MenuOptionType } from "./menu";
+import { MenuItem, OptionType } from "./menu";
 
 export interface SelectedOption {
   id: string;
   component_id: string;
   component_name: string;
   price: number;
-  option_type: keyof typeof MenuOptionType;
+  option_type: keyof typeof OptionType;
   limit: number;
 }
 

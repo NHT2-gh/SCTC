@@ -10,9 +10,14 @@ import { useUrlParams } from "./use-url-state";
 interface UseFilterOptions {
   filterConfigs: FilterItemConfig[];
   onSubmit?: (filters: Record<string, FilterValue>) => void;
+  initSubmit?: boolean;
 }
 
-export function useFilter({ filterConfigs, onSubmit }: UseFilterOptions) {
+export function useFilter({
+  filterConfigs,
+  onSubmit,
+  initSubmit = true,
+}: UseFilterOptions) {
   /* ----------------------------------
    * 1. Default filters
    * ---------------------------------- */
@@ -48,7 +53,11 @@ export function useFilter({ filterConfigs, onSubmit }: UseFilterOptions) {
   const submittedRef = useRef(false);
 
   useEffect(() => {
-    if (!submittedRef.current && Object.keys(urlParams).length > 0) {
+    if (
+      !submittedRef.current &&
+      Object.keys(urlParams).length > 0 &&
+      initSubmit
+    ) {
       onSubmit?.(urlParams as Record<string, FilterValue>);
       submittedRef.current = true;
     }
