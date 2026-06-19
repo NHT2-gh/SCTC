@@ -97,9 +97,10 @@ export function useFilter({
         } else {
           next[key] = newValue as FilterValue;
         }
-      } else if (String(currentValue) === valueToRemove) {
+      } else if (String(currentValue) === String(valueToRemove)) {
         delete next[key];
       }
+
       return next;
     });
   };

@@ -20,10 +20,10 @@ export default function FilterItemLayout({
   // const [isExpanded, setIsExpanded] = React.useState(true);
 
   return (
-    <div className={cn("space-y-3 h-full", className)}>
+    <div className={cn("filter-item space-y-3 h-full", className)}>
       <div className="flex items-center justify-between">
         {label && (
-          <Label className="text-sm/[120%] font-bold  text-text-primary inline-block">
+          <Label className="filter-item-label text-sm/[120%] font-bold  text-text-primary inline-block">
             {label}
           </Label>
         )}

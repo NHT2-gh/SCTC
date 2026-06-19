@@ -42,14 +42,6 @@ export default function FilterBoxRender({
             />
           ))}
       </div>
-      {/* <div className="flex items-center justify-end gap-2">
-        <Button variant="primary" size="sm">
-          Áp dụng
-        </Button>
-        <Button variant="outline" size="sm" onClick={handleClearAllFilters}>
-          Xoá tất cả
-        </Button>
-      </div> */}
     </div>
   );
 }

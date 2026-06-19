@@ -38,6 +38,7 @@ export const APP_ROUTES = {
   },
 
   GUEST: {
+    ROOT: "/",
     PRODUCT: {
       VIEW_DETAIL: (id: string) => `/${id}`,
     },

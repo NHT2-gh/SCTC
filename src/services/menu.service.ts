@@ -221,6 +221,21 @@ class MenuService {
       data: menuItem,
     };
   }
+
+  async getFixedOptions(): Promise<ResponseStandard<MenuItemOption[]>> {
+    const query = supabase
+      .from("menu_items_options")
+      .select(`*`)
+      .in("option_type", ["ice", "sweet"]);
+
+    const { data: fixedOptions, error } = await query;
+
+    if (error) handlePostgresError(error);
+    return {
+      success: true,
+      data: fixedOptions || [],
+    };
+  }
 }
 
 export const menuService = new MenuService();

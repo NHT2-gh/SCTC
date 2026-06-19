@@ -10,6 +10,8 @@ export enum OptionType {
   topping = "Topping",
   extra = "Extra",
   upgrade = "Upgrade",
+  ice = "Lượng đá",
+  sweet = "Độ ngọt",
 }
 
 export type MenuType = keyof typeof MenuEnumType;
@@ -52,6 +54,7 @@ export interface MenuItemOption {
   price: number;
   components: Component;
   option_type: keyof typeof OptionType;
+  option_name: string;
 }
 
 export interface ItemOptionDetail {

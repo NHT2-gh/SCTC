@@ -14,7 +14,7 @@ interface MenuPageViewProps {
 export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
   const windowSize = useWindowSize();
   return (
-    <section className="pt-4">
+    <section className="pt-4 bg-[#FFFAEA] after:absolute after:inset-0 after:content-['']  after:bg-[url('/images/backgrounds/bg-menu.webp')] after:bg-cover after:bg-no-repeat after:opacity-10">
       <div className="px-[3.125rem] mb-4">
         <div
           className="bg-[url('/images/logo/logo-text.webp')] w-[7rem] aspect-[93/56] bg-cover bg-center bg-no-repeat relative before:absolute before:top-3 before:left-[-3.125rem] before:bg-[url('/images/logo/logo-hand-2.webp')] before:bg-cover before:bg-center before:bg-no-repeat before:aspect-square before:size-[4.125rem]
@@ -29,7 +29,7 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
             .map((item) => (
               <div
                 key={item.id}
-                className="overflow-hidden rounded-xl flex flex-col items-center hover:opacity-80"
+                className="overflow-hidden z-1 rounded-xl flex flex-col items-center hover:opacity-80"
                 style={{
                   cursor: "pointer",
                   position: "absolute",

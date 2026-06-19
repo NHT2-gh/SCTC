@@ -9,9 +9,6 @@ import {
   mergeDuplicatedItems,
   normalizeSelectedOptions,
 } from "./helper";
-import { uuid } from "zod";
-import { randomUUID } from "node:crypto";
-import { generateBillCode } from "@/utils/random-bill-code";
 import { v4 as uuidv4 } from "uuid";
 
 export type CartStore = CartState & CartActions;
@@ -49,6 +46,8 @@ export const useCartStore = create<CartStore>()(
               ),
             };
           }
+
+          console.log(normalizedOptions, incoming, existing);
 
           const newItem: CartItem = {
             id: uuidv4(),

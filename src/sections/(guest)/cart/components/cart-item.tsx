@@ -34,9 +34,14 @@ export default function CartItem({ item }: { item: CartItem }) {
           </h2>
 
           {item.selected_options && item.selected_options.length > 0 && (
-            <div className="">
+            <div className="flex gap-1">
               {item.selected_options.map((option) => (
-                <span key={option.id}>{option.component_name}</span>
+                <span
+                  className="inline-flex text-[#79725B] gap-1 after:content-[','] last:after:hidden"
+                  key={option.id}
+                >
+                  {option.component_name}
+                </span>
               ))}
             </div>
           )}

@@ -69,3 +69,10 @@ export function useUpdateLayoutItem() {
     },
   });
 }
+
+export function useGetFixedOptions() {
+  return useQuery({
+    queryKey: ["fixed-options"],
+    queryFn: () => menuService.getFixedOptions(),
+  });
+}
