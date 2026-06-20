@@ -1,33 +1,35 @@
-"use client";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
-import FloatingCartButton from "@/components/cart/floaing-cart-button";
-import { NavigationBar } from "@/components/common/navigation-bar";
 import { FilterBoxRender } from "@/components/filter/filter-box-render";
-import { FilterItemConfig } from "@/components/filter/filter-box-render/type";
+import {
+  FilterItemConfig,
+  FilterValue,
+} from "@/components/filter/filter-box-render/type";
 import Label from "@/components/form/label/label";
 import { NumberInput, Textarea } from "@/components/ui/input";
-import { APP_ROUTES } from "@/config/app-routes";
-import { useCart } from "@/hooks/use-cart";
+import { useGetProductOptions } from "@/hooks/queries/use-product";
 import { useFilter } from "@/hooks/use-filter";
 import { delagothic, itim } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import { SelectedOption } from "@/types/cart";
+import { CartItem, SelectedOption } from "@/types/cart";
 import { OptionType } from "@/types/menu";
-import { ProductDetail } from "@/types/product";
 import { formatCurrency } from "@/utils/format-data";
-import { MinusIcon, PlusIcon } from "lucide-react";
-import Image from "next/image";
+import { MinusIcon, PlusIcon, X } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
-import CustomNumberInput from "./components/custom-number-input";
+import CustomNumberInput from "../../products/view/components/custom-number-input";
 
-interface ProductPageViewProps {
-  product: ProductDetail;
+interface EditProductInfoProps {
+  cartItem: CartItem;
+  onClose: () => void;
+  onSubmit: () => void;
 }
 
-export default function ProductPageView({ product }: ProductPageViewProps) {
-  const { info, options } = product;
-  const { add } = useCart();
-  const [quantity, setQuantity] = useState<number>(1);
+export default function EditProductInfo({
+  cartItem,
+  onClose,
+}: EditProductInfoProps) {
+  const product = cartItem.menu_item.products;
+  const { data: productOptions } = useGetProductOptions(cartItem.menu_item.id);
+  const [quantity, setQuantity] = useState<number>(cartItem.quantity);
   const [productOptionSchame, setProductOptionSchame] = useState<
     FilterItemConfig[]
   >([]);
@@ -37,33 +39,25 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
     filterValues,
     applyFilters,
     removeFilter,
+    setFilterValue,
   } = useFilter({
     filterConfigs: productOptionSchame,
     initSubmit: false,
     onSubmit(filters) {
       const selectedOptions = Object.entries(filters).flatMap(([_, value]) => {
         if (!value) return [];
-
         const findOption = (optionId: string) => {
-          const opt = options.custom.find(
-            (o) => String(o.id) === String(optionId),
+          const opt = productOptions?.data.custom.find(
+            (o) => o.id === optionId,
           );
-          if (opt)
-            return {
-              ...opt,
-              id: String(opt.id),
-            };
-          const fixedOpt = options.fixed.find(
+          if (opt) return opt;
+          const fixedOpt = productOptions?.data.fixed.find(
             (o) => String(o.id) === String(optionId),
           );
 
           if (fixedOpt) {
-            return {
-              ...fixedOpt,
-              id: String(fixedOpt.id),
-            } as SelectedOption;
+            return fixedOpt;
           }
-
           return null;
         };
 
@@ -77,17 +71,11 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
         }
         return [];
       });
-
-      add({
-        menu_item: product.info,
-        quantity: quantity,
-        selected_options: selectedOptions,
-      });
     },
   });
 
   useEffect(() => {
-    if (options.custom && options.custom.length > 0) {
+    if (productOptions?.data.custom && productOptions.data.custom.length > 0) {
       const productOptionsSchema: FilterItemConfig[] = Object.entries(
         OptionType,
       ).map(([key, value]) => ({
@@ -95,7 +83,7 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
         type: "checkbox",
         label: value,
         isMultiple: true,
-        options: options.custom
+        options: productOptions.data.custom
           .filter((option) => option.option_type == key)
           .map((option) => ({
             label: `${option.component_name} (+${formatCurrency(option.price)})`,
@@ -106,43 +94,63 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
 
       setProductOptionSchame(productOptionsSchema);
     }
-  }, [options.custom]);
+  }, [productOptions]);
+
+  useEffect(() => {
+    const { selected_options } = cartItem;
+
+    const defaultFilterValues = selected_options.reduce<
+      Record<string, FilterValue>
+    >((acc, option) => {
+      const customGroup = productOptions?.data.custom.find(
+        (g) => g.option_type === option.option_type,
+      );
+      const fixedGroup = productOptions?.data.fixed.find(
+        (g) => g.option_type === option.option_type,
+      );
+
+      if (customGroup) {
+        acc[option.option_type] = [
+          ...((acc[option.option_type] as string[]) ?? []),
+          option.id,
+        ];
+      } else if (fixedGroup) {
+        acc[option.option_type] = option.id;
+      }
+
+      return acc;
+    }, {});
+    setFilterValue(defaultFilterValues);
+  }, [cartItem, productOptions?.data.custom]);
 
   const totalPrice = useMemo(() => {
-    const basePrice = product.info.products.selling_price;
+    const basePrice = product.selling_price;
 
     const optionPrice = Object.entries(filterValues).flatMap(([_, value]) =>
       Array.isArray(value)
         ? value
             .map((optionId) =>
-              options.custom.find((option) => String(option.id) === optionId),
+              productOptions?.data.custom.find(
+                (option) => option.id === optionId,
+              ),
             )
             .filter(Boolean)
         : [],
     );
 
     return (
-      basePrice * quantity +
+      basePrice +
       optionPrice.reduce((total, option) => total + (option?.price ?? 0), 0)
     );
-  }, [filterValues, options, product.info.products.selling_price, quantity]);
+  }, [filterValues, productOptions?.data.custom, product.selling_price]);
 
   return (
-    <section className="bg-[#750e0e] [&_hr]:border-[#E2DDCD]">
-      <NavigationBar backHref={APP_ROUTES.GUEST.ROOT} />
-      <div className="product-image mb-10 flex justify-center">
-        <Image
-          width={136}
-          height={136}
-          src={
-            info.products.image_url || "/images/product-images/matcha-latte.png"
-          }
-          alt={info.products.name}
-          className="mx-auto rotate-20"
-        />
-      </div>
-
-      <div className="space-y-3 p-5 rounded-tl-[1.875rem] rounded-tr-[1.875rem] bg-[#FFFAEA]">
+    <>
+      <div
+        onClick={onClose}
+        className="fixed h-screen w-screen bg-black opacity-20"
+      />
+      <div className="z-[10] space-y-3 p-5 absolute bottom-0 left-0 right-0 rounded-tl-[1.875rem] rounded-tr-[1.875rem] bg-[#FFFAEA]">
         <div className="flex justify-between">
           <div className="">
             <h1
@@ -151,16 +159,15 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
                 delagothic.className,
               )}
             >
-              {info.products.name}
+              {product.name}
             </h1>
 
             <span className={cn("text-black text-sm text-balance")}>
-              {info.products.description ||
-                "Hạt cà Arabica Dark (pha máy), sữa đặc"}
+              {product.description || "Hạt cà Arabica Dark (pha máy), sữa đặc"}
             </span>
           </div>
           <span className={cn("text-[#FEA806]", delagothic.className)}>
-            {formatCurrency(info.products.selling_price)}
+            {formatCurrency(product.selling_price)}
           </span>
         </div>
 
@@ -171,8 +178,8 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
                 {OptionType[type as keyof typeof OptionType]}
               </Label>
               <div className="flex gap-2.5">
-                {options.fixed
-                  .filter((item) => item.option_type === type)
+                {productOptions?.data.fixed
+                  ?.filter((item) => item.option_type === type)
                   .map((option) => (
                     <button
                       key={option.id}
@@ -182,7 +189,7 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
                           : updateFilter(option.option_type, String(option.id));
                       }}
                       className={cn(
-                        "rounded-full text-sm px-2 py-1 border border-[#E2DDCD]",
+                        "rounded-full px-2 py-1 border border-[#E2DDCD]",
                         {
                           "border-[#B60F14B2] bg-[#B60F1426]":
                             filterValues[option.option_type] ===
@@ -227,6 +234,8 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
           />
         </div>
 
+        <p className="w-fit">Tạm tính: {formatCurrency(totalPrice)} </p>
+
         <div className="flex items-center gap-5">
           <CustomNumberInput
             value={quantity}
@@ -248,8 +257,6 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
           </button>
         </div>
       </div>
-
-      <FloatingCartButton />
-    </section>
+    </>
   );
 }

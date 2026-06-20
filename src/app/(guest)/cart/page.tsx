@@ -1,6 +1,10 @@
 import { CartPageView } from "@/sections/(guest)/cart/view";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default function Cartpage() {
-  return <CartPageView />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CartPageView />
+    </Suspense>
+  );
 }

@@ -10,7 +10,7 @@ export default function GuestLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#FFFAEACC] [&_header]:bg-[#FFFAEACC]">
+    <div className="min-h-screen bg-[#FFFAEA] [&_header]:bg-[#FFFAEACC]">
       {/* Main Content Area */}
       <div className={`transition-all duration-300 ease-in-out `}>
         {/* Header */}

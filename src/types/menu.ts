@@ -55,6 +55,7 @@ export interface MenuItemOption {
   components: Component;
   option_type: keyof typeof OptionType;
   option_name: string;
+  description?: string;
 }
 
 export interface ItemOptionDetail {

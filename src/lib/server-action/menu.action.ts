@@ -3,7 +3,6 @@ import { ServerActionResponse } from "@/types/common";
 import { MenuLayoutItem } from "@/types/menu";
 import { mapErrorToMessage } from "../error/app-error";
 import { ProductDetail } from "@/types/product";
-import { OptionsAdapter } from "@/adapters/options.adapter";
 
 export async function serverActionGetMenuLayoutPublic(): Promise<
   ServerActionResponse<MenuLayoutItem[]>
@@ -22,7 +21,7 @@ export async function serverActionGetMenuItemInfo(
 ): Promise<ServerActionResponse<ProductDetail | null>> {
   const [info, options] = await Promise.all([
     menuService.getMenuItem(menuItemId),
-    menuService.getMenuItemOptionsDetail(menuItemId),
+    menuService.getProductOptions(menuItemId),
   ]).catch(() => {
     return [null, null];
   });
@@ -36,7 +35,7 @@ export async function serverActionGetMenuItemInfo(
   }
 
   return {
-    data: { info: info.data, options: OptionsAdapter(options.data) },
+    data: { info: info.data, options: options.data },
     success: true,
     error: null,
   };

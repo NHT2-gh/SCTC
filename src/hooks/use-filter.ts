@@ -114,6 +114,10 @@ export function useFilter({
     updateUrlParams(resetParams);
   };
 
+  const setFilterValue = (value: Record<string, FilterValue>) => {
+    setFilterValues(value);
+  };
+
   const applyFilters = () => {
     const params: Record<string, unknown> = {};
     filterConfigs.forEach((c) => {
@@ -134,5 +138,6 @@ export function useFilter({
     removeFilter,
     clearFilters,
     applyFilters,
+    setFilterValue,
   };
 }

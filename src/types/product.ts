@@ -3,5 +3,8 @@ import { MenuItem } from "./menu";
 
 export interface ProductDetail {
   info: MenuItem;
-  options: SelectedOption[];
+  options: {
+    custom: SelectedOption[];
+    fixed: SelectedOption[];
+  };
 }

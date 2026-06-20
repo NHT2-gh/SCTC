@@ -12,6 +12,7 @@ export default function DateRangeFilter({
   return (
     <DatePicker
       id={config.key}
+      type="date"
       mode="range"
       placeholder="Chọn khoảng thời gian"
       defaultDate={value}

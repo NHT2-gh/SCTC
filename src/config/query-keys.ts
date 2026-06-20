@@ -25,5 +25,12 @@ export const queryKeys = {
   },
   product: {
     getAll: (params?: GetWithFilterParams) => ["drinks", params],
+    detail: {
+      getProductOptions: (menuItemId: string) => [
+        "product-detail",
+        "opions",
+        menuItemId,
+      ],
+    },
   },
 };

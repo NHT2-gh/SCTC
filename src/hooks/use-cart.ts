@@ -9,13 +9,14 @@ export function useCart() {
   );
   const isEmpty = useCartStore((state) => state.items.length === 0);
   const add = useCartStore((state) => state.add_item);
+  const updateQuantity = useCartStore((state) => state.update_quantity);
 
   const cartSummary = useMemo(() => getCartSummary(items), [items]);
 
   return {
     //Action
     add,
-
+    updateQuantity,
     //State
     items,
     count,

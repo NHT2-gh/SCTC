@@ -13,12 +13,12 @@ export default function FloatingCartButton() {
       className="fixed bottom-20 right-2 "
       href={APP_ROUTES.GUEST.CART.VIEW}
     >
-      <button className="relative size-14 aspect-square rounded-full bg-[#FEEEB8] flex justify-center items-center">
-        <IcCart className="size-7 text-white" />
-        <span className="absolute -top-1 -left-2 bg-black text-white size-6 text-sm inline-flex justify-center items-center rounded-full aspect-square">
-          {count}
-        </span>
-      </button>
+      {/* <button className="relative p-3 aspect-square rounded-full bg-[#FEEEB8] flex justify-center items-center"> */}
+      <IcCart className="size-14 text-white" />
+      <span className="absolute -top-1 -left-2 bg-black text-white size-6 text-sm inline-flex justify-center items-center rounded-full aspect-square">
+        {count}
+      </span>
+      {/* </button> */}
     </Link>
   );
 }

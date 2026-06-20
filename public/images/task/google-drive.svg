@@ -8,8 +8,8 @@
 <path d="M25.1211 24.5981H33.747C33.7038 25.6234 33.259 26.2226 33.259 26.2226L32.9346 26.7855C32.9115 26.8186 32.8976 26.8374 32.8976 26.8374L32.1917 28.0766L30.6071 30.8348C30.5608 30.9465 30.5067 31.0487 30.4496 31.1462C30.4279 31.1792 30.4079 31.2154 30.3847 31.2468C30.3785 31.2562 30.3723 31.2657 30.3662 31.2751C30.17 31.5519 29.9507 31.7658 29.7314 31.934C29.5383 32.0787 29.3962 32.1463 29.3962 32.1463L25.1211 24.5981Z" fill="#EA4335"/>
 </g>
 <defs>
-<filter id="filter0_d_2306_11136" x="-2" y="-1" width="44" height="44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<filter id="filter0_d_2306_11136" x="-2" y="-1" width="44" height="44" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+<feFlood floodOpacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="1"/>
 <feGaussianBlur stdDeviation="1"/>

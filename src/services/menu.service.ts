@@ -13,6 +13,8 @@ import {
   ResponseStandard,
 } from "@/types/common";
 import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
+import { SelectedOption } from "@/types/cart";
+import { FixedOptionAdapter, OptionsAdapter } from "@/adapters/options.adapter";
 
 class MenuService {
   private baseTable: string;
@@ -172,7 +174,7 @@ class MenuService {
 
   async getMenuItemOptionsDetail(
     menuItemId: string,
-  ): Promise<ResponseStandard<ItemOptionDetail[]>> {
+  ): Promise<ResponseStandard<SelectedOption[]>> {
     const query = supabase
       .from(this.itemOptionsDetailTable)
       .select(
@@ -188,14 +190,20 @@ class MenuService {
       )
       .eq("menu_item_id", menuItemId);
 
-    const { data, error } = await query;
+    const { data: raw, error } = await query;
 
     if (error) handlePostgresError(error);
-
-    return {
-      success: true,
-      data: data || [],
-    };
+    if (raw) {
+      return {
+        success: true,
+        data: OptionsAdapter(raw) || [],
+      };
+    } else {
+      return {
+        success: true,
+        data: [],
+      };
+    }
   }
 
   async getMenuItem(menuItemId: string): Promise<ResponseStandard<MenuItem>> {
@@ -222,7 +230,7 @@ class MenuService {
     };
   }
 
-  async getFixedOptions(): Promise<ResponseStandard<MenuItemOption[]>> {
+  async getFixedOptions(): Promise<ResponseStandard<SelectedOption[]>> {
     const query = supabase
       .from("menu_items_options")
       .select(`*`)
@@ -231,9 +239,35 @@ class MenuService {
     const { data: fixedOptions, error } = await query;
 
     if (error) handlePostgresError(error);
+
+    try {
+      FixedOptionAdapter(fixedOptions as MenuItemOption[]);
+    } catch (error) {
+      console.log(error);
+    }
+
     return {
       success: true,
-      data: fixedOptions || [],
+      data: FixedOptionAdapter(fixedOptions as MenuItemOption[]) || [],
+    };
+  }
+
+  async getProductOptions(
+    menuItemId: string,
+  ): Promise<
+    ResponseStandard<{ custom: SelectedOption[]; fixed: SelectedOption[] }>
+  > {
+    const [customOptions, fiexedOptions] = await Promise.all([
+      this.getMenuItemOptionsDetail(menuItemId),
+      this.getFixedOptions(),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        custom: customOptions.data || [],
+        fixed: fiexedOptions.data || [],
+      },
     };
   }
 }

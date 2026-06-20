@@ -3,8 +3,14 @@ import React from "react";
 import Image from "next/image";
 import { ImageOff } from "lucide-react";
 import { formatCurrency } from "@/utils/format-data";
+import { useCart } from "@/hooks/use-cart";
+import { useUrlState } from "@/hooks/use-url-state";
+import CustomNumberInput from "../../products/view/components/custom-number-input";
+import { CloseIcon } from "@/icons";
 
 export default function CartItem({ item }: { item: CartItem }) {
+  const { updateQuantity } = useCart();
+  const [_, setEditCartItem] = useUrlState("edit");
   const itemPrice =
     item.menu_item.products.selling_price +
     item.selected_options.reduce(
@@ -13,31 +19,35 @@ export default function CartItem({ item }: { item: CartItem }) {
     );
 
   return (
-    <div className="cart-item flex items-center gap-4">
-      {item.menu_item.products.image_url ? (
-        <Image
-          src={item.menu_item.products.image_url}
-          alt={item.menu_item.products.name}
-          width={80}
-          height={80}
-        />
-      ) : (
-        <div className="size-[3.75rem] aspect-square bg-neutral-200 flex justify-center items-center rounded-lg">
+    <div className="cart-item w-full flex gap-2">
+      <div
+        onClick={() => setEditCartItem(item.id)}
+        className="size-[3.75rem] cursor-pointer aspect-square flex justify-center items-center rounded-lg"
+      >
+        {item.menu_item.products.image_url ? (
+          <Image
+            src={item.menu_item.products.image_url}
+            alt={item.menu_item.products.name}
+            width={60}
+            height={60}
+          />
+        ) : (
           <ImageOff />
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="w-full flex justify-between items-center text-xs">
-        <div className="text-xs">
-          <h2>
-            {item.menu_item.products.name} x {item.quantity}
-          </h2>
+        <div
+          onClick={() => setEditCartItem(item.id)}
+          className="text-xs text-left cursor-pointer space-y-1.5"
+        >
+          <h2>{item.menu_item.products.name}</h2>
 
           {item.selected_options && item.selected_options.length > 0 && (
             <div className="flex gap-1">
               {item.selected_options.map((option) => (
                 <span
-                  className="inline-flex text-[#79725B] gap-1 after:content-[','] last:after:hidden"
+                  className="inline-flex text-[#6E6E6E] gap-1 after:content-[','] last:after:hidden"
                   key={option.id}
                 >
                   {option.component_name}
@@ -45,12 +55,20 @@ export default function CartItem({ item }: { item: CartItem }) {
               ))}
             </div>
           )}
-          <p className="italic">{item.note || "Đây là note"}</p>
-          {item.note && (
-            <span className=" italic">{item.note || "Đây là note"}</span>
-          )}
+
+          <p className="text-[#B60F14] text-base">
+            {formatCurrency(itemPrice)}
+          </p>
+
+          {item.note && <span className=" italic">{item.note}</span>}
         </div>
-        <span>{formatCurrency(itemPrice)}</span>
+
+        <CustomNumberInput
+          value={item.quantity}
+          setValue={(value) =>
+            updateQuantity({ item_id: item.id, quantity: value })
+          }
+        />
       </div>
     </div>
   );

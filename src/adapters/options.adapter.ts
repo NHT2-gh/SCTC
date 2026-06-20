@@ -1,15 +1,29 @@
 import { SelectedOption } from "@/types/cart";
-import { ItemOptionDetail } from "@/types/menu";
+import { ItemOptionDetail, MenuItemOption } from "@/types/menu";
 
 export function OptionsAdapter(options: ItemOptionDetail[]): SelectedOption[] {
   return options.map((option) => {
     return {
-      id: option.id,
+      id: String(option.id),
       component_id: option.menu_items_options.components.id,
-      component_name: option.menu_items_options.components.name,
+      component_name: option.menu_items_options.option_name,
       price: option.menu_items_options.price,
       option_type: option.menu_items_options.option_type,
+      description: option.menu_items_options.description,
       limit: option.limit,
     };
   });
+}
+
+export function FixedOptionAdapter(
+  fiexedOptions: MenuItemOption[],
+): SelectedOption[] {
+  return fiexedOptions.map((option) => ({
+    id: String(option.id),
+    component_id: String(option.id),
+    component_name: option.option_name,
+    description: option.description,
+    price: option.price,
+    option_type: option.option_type,
+  }));
 }

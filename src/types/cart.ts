@@ -6,7 +6,8 @@ export interface SelectedOption {
   component_name: string;
   price: number;
   option_type: keyof typeof OptionType;
-  limit: number;
+  description?: string;
+  limit?: number;
 }
 
 export interface CartItem {
@@ -27,10 +28,6 @@ export interface AddCartItemPayload {
 export interface UpdateCartItemQuantityPayload {
   item_id: string;
   quantity: number;
-}
-export interface UpdateCartItemOptionsPayload {
-  item_id: string;
-  selected_options: SelectedOption[];
 }
 
 export interface UpdateCartItemNotePayload {
