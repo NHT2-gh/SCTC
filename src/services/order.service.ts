@@ -1,11 +1,14 @@
-import { errorMessageMap } from "@/lib/error/app-error";
-import { AppError, ErrorCode } from "@/lib/error/error-codes";
+import { ErrorCode } from "@/lib/error/error-codes";
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import { CheckoutInfo } from "@/store/checkout/config";
 import { supabase } from "@/supabase/supabaseClients";
 import { CartItem } from "@/types/cart";
-import { MutationResult, ResponseStandard } from "@/types/common";
-import { Order, OrderDetail } from "@/types/order";
+import {
+  GetWithFilterParams,
+  MutationResult,
+  ResponseStandard,
+} from "@/types/common";
+import { Order, OrderDetail, UpdateOrderDTO } from "@/types/order";
 
 class OrderService {
   private baseTable: string;
@@ -62,6 +65,41 @@ class OrderService {
     return {
       success: true,
       data: orderDetail,
+    };
+  }
+
+  async getAllOrder(
+    params?: GetWithFilterParams,
+  ): Promise<ResponseStandard<Order[]>> {
+    const query = supabase
+      .from(this.baseTable)
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    const { data: orders, error } = await query;
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
+      data: orders || [],
+    };
+  }
+
+  async updateOrderStatus(data: UpdateOrderDTO): Promise<MutationResult> {
+    const query = supabase
+      .from(this.baseTable)
+      .update({
+        status: data.status,
+      })
+      .eq("id", data.order_id);
+
+    const { error } = await query;
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
     };
   }
 }

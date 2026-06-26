@@ -8,8 +8,13 @@ export function useCart() {
     state.items.reduce((acc, item) => acc + item.quantity, 0),
   );
   const isEmpty = useCartStore((state) => state.items.length === 0);
+  const isHydrated = useCartStore((state) => state.isHydrated);
   const add = useCartStore((state) => state.add_item);
   const updateQuantity = useCartStore((state) => state.update_quantity);
+  const updateNote = useCartStore((state) => state.update_note);
+  const updateCartItemOptions = useCartStore((state) => state.update_options);
+  const remove = useCartStore((state) => state.remove_item);
+  const clearCart = useCartStore((state) => state.clear);
 
   const cartSummary = useMemo(() => getCartSummary(items), [items]);
 
@@ -17,10 +22,15 @@ export function useCart() {
     //Action
     add,
     updateQuantity,
+    clearCart,
+    updateNote,
+    updateCartItemOptions,
+    remove,
     //State
     items,
     count,
     isEmpty,
     cartSummary,
+    isLoading: !isHydrated,
   };
 }

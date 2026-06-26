@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { MenuType } from "@/types/menu";
 import { useGetMenus } from "@/hooks/queries/use-menu";
 import { MainContainer } from "@/components/common/page-layout";
 import { MenuCard } from "../components";
@@ -11,7 +10,19 @@ export default function MenusPageView() {
   const { data: menus } = useGetMenus();
   const router = useRouter();
   return (
-    <MainContainer title={"Quản lý Menu"}>
+    <MainContainer
+      title={"Quản lý Menu"}
+      links={[
+        {
+          label: "Danh sách menu",
+          href: APP_ROUTES.ADMIN.MENUS.BASE,
+        },
+        {
+          label: "Tạo menu",
+          href: APP_ROUTES.ADMIN.MENUS.BASE,
+        },
+      ]}
+    >
       <div className="space-y-4">
         {menus?.data.map((item) => (
           <MenuCard

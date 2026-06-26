@@ -1,7 +1,11 @@
 "use client";
 import { mutationKeys } from "@/config/mutation-keys";
 import { queryKeys } from "@/config/query-keys";
-import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
+import {
+  MenuLayoutItemEditValidation,
+  ProductInfoValidation,
+  ProductOptionValidation,
+} from "@/schemas/validation/menu.validation";
 import { menuService } from "@/services/menu.service";
 import { productService } from "@/services/product.service";
 import { GetWithFilterParams } from "@/types/common";
@@ -75,5 +79,40 @@ export function useGetFixedOptions() {
   return useQuery({
     queryKey: ["fixed-options"],
     queryFn: () => menuService.getFixedOptions(),
+  });
+}
+
+export function useUpsertProductOption() {
+  return useMutation({
+    mutationKey: mutationKeys.menuItems.updateOptions,
+    mutationFn: (
+      payload: Pick<
+        ProductOptionValidation,
+        "menuItemId" | "id" | "limit" | "option_id"
+      >[],
+    ) => menuService.upsertProductOptions(payload),
+  });
+}
+
+export function useUpdateProductInfo(menuId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: mutationKeys.product.update,
+    mutationFn: (payload: ProductInfoValidation) =>
+      menuService.updateProductInfo(payload),
+
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.menu.detail(menuId),
+      });
+    },
+  });
+}
+
+export function useAllOption(params?: GetWithFilterParams) {
+  return useQuery({
+    queryKey: queryKeys.options(params),
+    queryFn: () => menuService.getAllOptions(params),
   });
 }

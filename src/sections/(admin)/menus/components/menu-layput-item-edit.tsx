@@ -1,3 +1,4 @@
+"use client";
 import { FormField } from "@/components/form";
 import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
 import React from "react";
@@ -11,17 +12,10 @@ export default function MenuLayputItemEdit() {
       <FormField
         form={editForm}
         field={{
-          name: "w",
-          label: "Width",
+          name: "page",
+          label: "Trang",
           type: "number",
-        }}
-      />
-      <FormField
-        form={editForm}
-        field={{
-          name: "h",
-          label: "Height",
-          type: "number",
+          min: 1,
         }}
       />
       <FormField
@@ -37,6 +31,22 @@ export default function MenuLayputItemEdit() {
         field={{
           name: "y",
           label: "Y",
+          type: "number",
+        }}
+      />
+      <FormField
+        form={editForm}
+        field={{
+          name: "w",
+          label: "Width",
+          type: "number",
+        }}
+      />
+      <FormField
+        form={editForm}
+        field={{
+          name: "h",
+          label: "Height",
           type: "number",
         }}
       />

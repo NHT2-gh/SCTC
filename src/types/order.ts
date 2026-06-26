@@ -1,5 +1,5 @@
 import { DeliveryMethod } from "./checkout";
-import { OptionType } from "./menu";
+import { MenuItem, OptionType } from "./menu";
 
 export enum OrderStatus {
   PENDING = "pending",
@@ -17,8 +17,9 @@ export interface Order {
   customer_phone: string;
   notes: string | null;
   subtotal: number;
-  status?: OrderStatus;
+  status: OrderStatus;
   pick_up_time: string;
+  order_items_count: number;
   delivery_method: keyof typeof DeliveryMethod;
   tracking_order: string;
   created_at: string;
@@ -53,4 +54,19 @@ export interface OrderItem {
     product_description: string | null;
     product_selling_price: number;
   };
+}
+
+export interface OrderItemCard {
+  id: string;
+  order_id: string;
+  quantity: number;
+  total_price: number;
+  options: OptionItem[];
+  menu_items: MenuItem;
+  line_note: string | null;
+}
+
+export interface UpdateOrderDTO {
+  order_id: string;
+  status: OrderStatus;
 }

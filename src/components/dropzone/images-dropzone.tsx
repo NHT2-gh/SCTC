@@ -3,7 +3,7 @@ import React from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Check, ClosedCaption, Loader2, UploadCloud, X } from "lucide-react";
+import { Check, Loader2, UploadCloud, X } from "lucide-react";
 import { ComponentCard } from "../common/component-card";
 import { deleteImage } from "@/supabase/storage/storageClinets";
 import { cn } from "@/lib/utils";
@@ -43,11 +43,8 @@ export default function ImagesDropzone({
       status: "idle" as UploadStatus,
     }));
 
-    console.log(newImages[0].previewUrl);
-
     onChange([...(images || []), ...newImages]);
   };
-
   const handleRemoveImage = async (id: string) => {
     const imageToRemove = images.find((img) => img.id === id);
     if (imageToRemove) {
@@ -113,9 +110,9 @@ export default function ImagesDropzone({
               <Image
                 src={image.previewUrl}
                 alt="Uploaded"
-                width={150}
-                height={150}
-                className={cn("rounded-sm aspect-square object-cover")}
+                width={100}
+                height={100}
+                className={cn("rounded-sm aspect-square object-contain")}
               />
             </div>
           ))}
@@ -140,7 +137,7 @@ export default function ImagesDropzone({
           <div className="dz-message flex flex-col items-center m-0!">
             {/* Icon Container */}
             <div className="mb-[22px] flex justify-center">
-              <div className="flex h-[68px] w-[68px]  items-center justify-center rounded-full bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-400">
+              <div className="hidden md:flex h-[68px] w-[68px] items-center justify-center rounded-full bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-400">
                 <svg
                   className="fill-current"
                   width="29"

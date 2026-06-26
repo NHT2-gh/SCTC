@@ -47,8 +47,16 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
     }
   }, []);
   return (
-    <MainContainer title={"Thiết lập Menu"}>
-      <div className="flex justify-between">
+    <MainContainer
+      title={"Thiết lập Menu"}
+      links={[
+        {
+          label: "Quản lý menu",
+          href: APP_ROUTES.ADMIN.MENUS.BASE,
+        },
+      ]}
+    >
+      <div className="md:flex md:gap-10 md:justify-between space-y-5">
         {!isLoading && menuItems?.data && (
           <DrinksSearchBox
             itemsIds={menuItems?.data.map((item) => {
@@ -64,12 +72,17 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
           </Button>
         </Link>
       </div>
-      <section className="grid grid-cols-[repeat(auto-fill,150px)] gap-3">
+      <section className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,300px)] gap-3">
         {menuItems?.data.length === 0 && (
           <span className="italic">Chưa có item nào được thêm</span>
         )}
         {menuItems?.data.map((item) => (
-          <ProductCard key={item.id} item={item.products} />
+          <Link
+            key={item.id}
+            href={APP_ROUTES.ADMIN.MENUS.ITEMS.DETAIL(id, item.id)}
+          >
+            <ProductCard item={item.products} />
+          </Link>
         ))}
       </section>
     </MainContainer>

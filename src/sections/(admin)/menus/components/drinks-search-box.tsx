@@ -15,9 +15,9 @@ export default function DrinksSearchBox({
   onAdd,
   itemsIds,
 }: DrinksSearchBoxProps) {
-  const [searchDrink, setSearchDrink] = useState<string | undefined>(undefined);
+  const [searchDrink, setSearchDrink] = useState<string | null>(null);
   const { data: drinks, isLoading } = useGetAllProduct({
-    searchText: searchDrink,
+    searchText: searchDrink!,
   });
   const [selectedDrinks, setSelectedDrinks] = useState<string[]>(
     itemsIds || [],
@@ -29,12 +29,12 @@ export default function DrinksSearchBox({
 
   return (
     <div className="flex items-center gap-3 ">
-      <div className="relative w-[400px]">
+      <div className="relative w-full max-w-[400px]">
         <SearchBar
-          className="h-10 w-full border-brand-500 border-[1.5px] bg-amber-50"
+          className="h-10 w-full border-[1.5px] bg-amber-50"
           handleKeyDown={(value) => setSearchDrink(value)}
           handleOnChange={(value) => {
-            if (!value.trim()) setSearchDrink(undefined);
+            if (!value.trim()) setSearchDrink(null);
             else if (value === "/all") {
               setSearchDrink("/all");
             }
@@ -102,7 +102,7 @@ export default function DrinksSearchBox({
           onClick={() => {
             onAdd(selectedDrinks);
             setSelectedDrinks([]);
-            setSearchDrink(undefined);
+            setSearchDrink(null);
           }}
         >
           Thêm {selectedDrinks.length} đồ uống

@@ -32,10 +32,8 @@ export default function RootLayout({
         <AppProviders>
           <ThemeProvider>
             <SidebarProvider>
-              <AuthProvider>
-                {children}
-                <ToastProvider />
-              </AuthProvider>
+              {children}
+              <ToastProvider />
             </SidebarProvider>
           </ThemeProvider>
         </AppProviders>

@@ -14,7 +14,7 @@ export function normalizeSelectedOptions(
 }
 
 export function buildCartItemKey(
-  item: Pick<CartItem, "menu_item" | "selected_options" | "note">,
+  item: Pick<CartItem, "menu_item" | "selected_options" | "line_note">,
 ) {
   const optionIds = normalizeSelectedOptions(item.selected_options).map(
     (o) => o.id,
@@ -23,13 +23,13 @@ export function buildCartItemKey(
   return JSON.stringify({
     menu_item: item.menu_item,
     selected_options: optionIds,
-    note: item.note?.trim() ?? "",
+    line_note: item.line_note?.trim() ?? "",
   });
 }
 
 export function isSameCartItem(
-  a: Pick<CartItem, "menu_item" | "selected_options" | "note">,
-  b: Pick<CartItem, "menu_item" | "selected_options" | "note">,
+  a: Pick<CartItem, "menu_item" | "selected_options" | "line_note">,
+  b: Pick<CartItem, "menu_item" | "selected_options" | "line_note">,
 ) {
   return buildCartItemKey(a) === buildCartItemKey(b);
 }

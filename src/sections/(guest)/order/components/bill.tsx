@@ -10,7 +10,7 @@ interface BillComponentProps {
 
 export default function Bill({ data }: BillComponentProps) {
   return (
-    <article className="bill-box max-w-[87%] h-fit text-sm opacity-[0.97] px-3.5 py-8 border-brand-500 space-y-4 [&_hr]:border-dashed bg-[url('/images/backgrounds/bill-card-1.webp')] bg-cover [&_hr]:border-[#000000B2]">
+    <article className="bill-box max-w-[87%] mx-auto h-fit text-sm opacity-[0.97] px-3.5 py-8 border-brand-500 space-y-4 [&_hr]:border-dashed bg-[url('/images/backgrounds/bill-card-1.webp')] bg-cover [&_hr]:border-[#000000B2]">
       <div className="w-full flex items-center justify-between text-center">
         <Image
           width={100}
@@ -58,10 +58,10 @@ export default function Bill({ data }: BillComponentProps) {
             </div>
             {item.order_item.options && (
               <ul className="flex gap-1">
-                {item.order_item.options.map((option) => (
+                {item.order_item.options.map((option, idx) => (
                   <li
+                    key={idx}
                     className="inline-flex text-[#79725B] gap-1 after:content-[','] last:after:hidden"
-                    key={option.id}
                   >
                     {option.name}
                   </li>

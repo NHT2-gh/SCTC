@@ -6,7 +6,6 @@ import { formatCurrency } from "@/utils/format-data";
 import { useCart } from "@/hooks/use-cart";
 import { useUrlState } from "@/hooks/use-url-state";
 import CustomNumberInput from "../../products/view/components/custom-number-input";
-import { CloseIcon } from "@/icons";
 
 export default function CartItem({ item }: { item: CartItem }) {
   const { updateQuantity } = useCart();
@@ -19,51 +18,53 @@ export default function CartItem({ item }: { item: CartItem }) {
     );
 
   return (
-    <div className="cart-item w-full flex gap-2">
+    <div className="cart-item w-full flex gap-3">
       <div
         onClick={() => setEditCartItem(item.id)}
         className="size-[3.75rem] cursor-pointer aspect-square flex justify-center items-center rounded-lg"
       >
         {item.menu_item.products.image_url ? (
           <Image
-            src={item.menu_item.products.image_url}
+            unoptimized
+            src={item.menu_item.products.image_url[0]}
             alt={item.menu_item.products.name}
-            width={60}
-            height={60}
+            width={50}
+            height={50}
           />
         ) : (
           <ImageOff />
         )}
       </div>
 
-      <div className="w-full flex justify-between items-center text-xs">
+      <div className="w-full flex justify-between items-center text-xs gap-3">
         <div
           onClick={() => setEditCartItem(item.id)}
-          className="text-xs text-left cursor-pointer space-y-1.5"
+          className="text-xs text-left cursor-pointer space-y-1.5 grow"
         >
           <h2>{item.menu_item.products.name}</h2>
 
           {item.selected_options && item.selected_options.length > 0 && (
-            <div className="flex gap-1">
+            <p className="overflow-hidden space-x-0.5 text-nowrap max-w-[10.5625rem] text-ellipsis">
               {item.selected_options.map((option) => (
                 <span
-                  className="inline-flex text-[#6E6E6E] gap-1 after:content-[','] last:after:hidden"
+                  className="inline-flex text-[#6E6E6E] gap-0.5 after:content-[','] last:after:hidden"
                   key={option.id}
                 >
                   {option.component_name}
                 </span>
               ))}
-            </div>
+            </p>
           )}
 
           <p className="text-[#B60F14] text-base">
             {formatCurrency(itemPrice)}
           </p>
 
-          {item.note && <span className=" italic">{item.note}</span>}
+          {item.line_note && <span className=" italic">{item.line_note}</span>}
         </div>
 
         <CustomNumberInput
+          className="[&_button]:bg-[unset] [&_svg]:text-[#8D1111] [&_.number-input]:bg-[#E2DDCD99]"
           value={item.quantity}
           setValue={(value) =>
             updateQuantity({ item_id: item.id, quantity: value })

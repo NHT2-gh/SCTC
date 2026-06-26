@@ -4,7 +4,7 @@ import { cn, debounce } from "@/lib/utils";
 import { formatCurrency as formatCurrencyUtil } from "@/utils/format-data";
 import { NumberFieldConfig } from "../../form/type";
 
-const baseClasses = `relative h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30`;
+const baseClasses = `number-input relative h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30`;
 const variantClasses = {
   disabled: ` text-gray-500 border-gray-300 opacity-40 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700 opacity-40`,
   error: ` border-error-500 focus:border-error-300 focus:ring-error-500/20 dark:text-error-400 dark:border-error-500 dark:focus:border-error-800`,
@@ -33,7 +33,7 @@ export default function NumberInput({
   ...props
 }: NumberFieldConfig) {
   const [inputValue, setInputValue] = useState<number>(
-    value || defaultValue || 0,
+    value || defaultValue || min || 0,
   );
 
   useEffect(() => {

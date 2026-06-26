@@ -1,7 +1,5 @@
 "use client";
-
 import React from "react";
-import AppHeader from "@/layout/AppHeader";
 import { itim } from "@/lib/fonts";
 
 export default function GuestLayout({

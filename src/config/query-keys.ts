@@ -33,4 +33,11 @@ export const queryKeys = {
       ],
     },
   },
+
+  options: (params?: GetWithFilterParams) => ["options", params],
+
+  order: {
+    getAll: () => ["orders"],
+    detail: (trackingCode: string) => ["orders", trackingCode],
+  },
 };

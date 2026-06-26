@@ -1,6 +1,6 @@
-import { ChevronDownIcon } from "@/icons";
 import React from "react";
 import { SelectFieldConfig } from "../../form/type";
+import { ChevronDownIcon } from "lucide-react";
 
 export default function Select({
   id,

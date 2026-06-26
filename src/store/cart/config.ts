@@ -19,6 +19,7 @@ export const CUSTOMER_LIMITS = {
 
 export interface CartState {
   items: CartItem[];
+  isHydrated: boolean;
 }
 
 export interface CartActions {
@@ -27,6 +28,7 @@ export interface CartActions {
   update_quantity(payload: UpdateCartItemQuantityPayload): void;
   update_options(payload: UpdateCartItemOptionsPayload): void;
   update_note(payload: UpdateCartItemNotePayload): void;
+  setHydrated: (value: boolean) => void;
   clear(): void;
 }
 

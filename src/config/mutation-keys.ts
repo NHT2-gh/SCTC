@@ -13,9 +13,16 @@ export const mutationKeys = {
     add: ["menu-items", "add"],
     initLayout: ["menu-items", "init-layout"],
     updateLayout: ["menu-item", "update-layout"],
+    updateOptions: ["menu-item", "update-options"],
   },
 
   order: {
     add: ["order", "add"],
+    update: ["order", "updated"],
+  },
+
+  product: {
+    add: ["product", "add"],
+    update: ["product", "update"],
   },
 };

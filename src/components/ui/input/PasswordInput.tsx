@@ -1,7 +1,6 @@
 import React from "react";
 import Input, { InputProps } from "./Input";
-import { EyeIcon } from "lucide-react";
-import { EyeCloseIcon } from "@/icons";
+import { EyeClosed, EyeIcon } from "lucide-react";
 
 export default function PasswordInput({ ...props }: InputProps) {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -19,7 +18,7 @@ export default function PasswordInput({ ...props }: InputProps) {
         {showPassword ? (
           <EyeIcon className="fill-gray-500 dark:fill-gray-400" />
         ) : (
-          <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
+          <EyeClosed className="fill-gray-500 dark:fill-gray-400" />
         )}
       </span>
     </div>

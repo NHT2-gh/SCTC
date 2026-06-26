@@ -5,6 +5,7 @@ import {
   MenuItem,
   MenuItemOption,
   MenuLayoutItem,
+  Product,
 } from "@/types/menu";
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import {
@@ -12,7 +13,11 @@ import {
   MutationResult,
   ResponseStandard,
 } from "@/types/common";
-import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
+import {
+  MenuLayoutItemEditValidation,
+  ProductInfoValidation,
+  ProductOptionValidation,
+} from "@/schemas/validation/menu.validation";
 import { SelectedOption } from "@/types/cart";
 import { FixedOptionAdapter, OptionsAdapter } from "@/adapters/options.adapter";
 
@@ -67,12 +72,12 @@ class MenuService {
 
   async addMenuItems(
     menuId: string,
-    drinkIds: string[],
+    productIds: string[],
   ): Promise<MutationResult> {
-    if (!menuId || !drinkIds) return { success: false };
-    const itemsUpdate = drinkIds.map((id) => {
+    if (!menuId || !productIds) return { success: false };
+    const itemsUpdate = productIds.map((id) => {
       return {
-        drink_id: id,
+        product_id: id,
         menu_id: menuId,
       };
     });
@@ -136,6 +141,7 @@ class MenuService {
         y: data.y,
         w: data.w,
         h: data.h,
+        page: data.page,
       })
       .eq("id", data.id);
 
@@ -144,6 +150,83 @@ class MenuService {
     if (error) handlePostgresError(error);
     return {
       success: true,
+    };
+  }
+
+  async updateProductInfo(
+    data: ProductInfoValidation,
+  ): Promise<MutationResult> {
+    const query = supabase
+      .from("products")
+      .update({
+        name: data.name,
+        selling_price: data.selling_price,
+        description: data.description,
+        image_url: data.image_url,
+      })
+      .eq("id", data.id);
+
+    const { error } = await query;
+
+    if (error) handlePostgresError(error);
+    return {
+      success: true,
+    };
+  }
+
+  async upsertProductOptions(
+    data: Pick<
+      ProductOptionValidation,
+      "menuItemId" | "id" | "limit" | "option_id"
+    >[],
+  ): Promise<MutationResult> {
+    const query = supabase.from(this.itemOptionsDetailTable).upsert(
+      data.map((option) => ({
+        id: option.id,
+        option_id: option.option_id,
+        menu_item_id: option.menuItemId,
+        limit: option.limit,
+      })),
+    );
+
+    const { error } = await query;
+
+    if (error) handlePostgresError(error);
+    return {
+      success: true,
+    };
+  }
+
+  async getAllOptions(
+    params?: GetWithFilterParams,
+  ): Promise<ResponseStandard<MenuItemOption[]>> {
+    const query = supabase.from("menu_items_options").select(
+      `*,
+      components!inner(
+        *
+      )
+      `,
+    );
+
+    if (params?.filters?.type === "fixed") {
+      query.in("option_type", ["ice", "sweet"]);
+    } else {
+      query.notIn("option_type", ["ice", "sweet"]);
+    }
+
+    if (params?.searchText) {
+      if (params.searchText !== "/all") {
+        query.ilike("option_name", `%${params.searchText}%`);
+      }
+    }
+
+    const { data: options, error } = await query;
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: false,
+      data: options || [],
     };
   }
 

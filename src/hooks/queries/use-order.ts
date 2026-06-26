@@ -1,8 +1,13 @@
 import { mutationKeys } from "@/config/mutation-keys";
+import { queryKeys } from "@/config/query-keys";
 import { orderService } from "@/services/order.service";
 import { CheckoutInfo } from "@/store/checkout/config";
+import { subscribeOrders } from "@/supabase/realtime/order.sub";
 import { CartItem } from "@/types/cart";
-import { useMutation } from "@tanstack/react-query";
+import { ResponseStandard } from "@/types/common";
+import { Order, UpdateOrderDTO } from "@/types/order";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export function useCreateOrder() {
   return useMutation({
@@ -11,5 +16,77 @@ export function useCreateOrder() {
       cartItems: CartItem[];
       checkoutInfo: CheckoutInfo;
     }) => orderService.createOrder(payload.cartItems, payload.checkoutInfo),
+  });
+}
+
+export function useGetAllOrder() {
+  return useQuery({
+    queryKey: queryKeys.order.getAll(),
+    queryFn: () => orderService.getAllOrder(),
+  });
+}
+
+export function useOrderRealtime() {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const unsubscribe = subscribeOrders({
+      onInsert(order) {
+        queryClient.setQueryData(
+          queryKeys.order.getAll(),
+          (current: ResponseStandard<Order[]>) => {
+            if (!current) return current;
+
+            return {
+              ...current,
+              data: [order, ...current.data],
+            };
+          },
+        );
+      },
+
+      onUpdate(updatedOrder) {
+        queryClient.setQueryData(
+          queryKeys.order.getAll(),
+          (current: ResponseStandard<Order[]>) => {
+            if (!current) return current;
+            console.log(current);
+            return {
+              ...current,
+              data: current.data.map((order: Order) =>
+                order.id === updatedOrder.id ? updatedOrder : order,
+              ),
+            };
+          },
+        );
+      },
+    });
+
+    return unsubscribe;
+  }, [queryClient]);
+}
+
+export function useUpdateOrderStatus() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: mutationKeys.order.update,
+    mutationFn: (payload: UpdateOrderDTO) =>
+      orderService.updateOrderStatus(payload),
+
+    onSuccess(_, variables) {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.order.getAll(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.order.detail(variables.order_id),
+      });
+    },
+  });
+}
+
+export function useGetDetailOrder(trackingCode: string) {
+  return useQuery({
+    queryKey: queryKeys.order.detail(trackingCode),
+    queryFn: () => orderService.getOrderDetail(trackingCode),
   });
 }

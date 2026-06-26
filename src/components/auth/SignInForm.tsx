@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { ChevronLeftIcon } from "@/icons";
+
 import { APP_ROUTES } from "@/config/app-routes";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +15,7 @@ import { showToast } from "@/lib/toast";
 import { DEFAULT_LOGIN_REDIRECT } from "@/config/auth-routes";
 import { signInWithEmail } from "@/lib/server-action/auth.action";
 import { FormField } from "../form";
+import { ChevronLeftIcon } from "lucide-react";
 
 export default function SignInForm() {
   const router = useRouter();

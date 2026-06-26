@@ -3,13 +3,13 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
-import { ChevronDownIcon, HorizontaLDots } from "../icons/index";
 import { NavItem } from "@/types/nav";
 import { getIcon } from "@/utils/iconMap";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { SystemRole } from "@/types/common";
 import Image from "next/image";
+import { ChevronDownIcon, EllipsisIcon } from "lucide-react";
 
 interface AppSidebarProps<
   T extends Record<string, { title: string; items: NavItem[] }>,
@@ -186,7 +186,7 @@ export default function AppSidebar<
           {isExpanded || isHovered || isMobileOpen ? (
             <span>{title}</span>
           ) : (
-            <HorizontaLDots />
+            <EllipsisIcon />
           )}
         </h2>
         {renderMenuItems(subMenu, menuType)}

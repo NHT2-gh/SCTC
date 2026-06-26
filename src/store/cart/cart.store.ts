@@ -17,6 +17,13 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
+      isHydrated: false,
+
+      setHydrated(value) {
+        set({
+          isHydrated: value,
+        });
+      },
 
       add_item: (payload) => {
         set((state) => {
@@ -27,7 +34,7 @@ export const useCartStore = create<CartStore>()(
           const incoming = {
             menu_item: payload.menu_item,
             selected_options: normalizedOptions,
-            note: payload.note?.trim(),
+            line_note: payload.line_note?.trim(),
           };
 
           const existing = state.items.find((item) =>
@@ -47,14 +54,12 @@ export const useCartStore = create<CartStore>()(
             };
           }
 
-          console.log(normalizedOptions, incoming, existing);
-
           const newItem: CartItem = {
             id: uuidv4(),
             menu_item: payload.menu_item,
             quantity: payload.quantity ?? 1,
             selected_options: normalizedOptions,
-            note: payload.note?.trim(),
+            line_note: payload.line_note?.trim(),
           };
 
           return {
@@ -131,6 +136,12 @@ export const useCartStore = create<CartStore>()(
       partialize: (state) => ({
         items: state.items,
       }),
+
+      onRehydrateStorage: () => {
+        return (state) => {
+          state?.setHydrated(true);
+        };
+      },
     },
   ),
 );

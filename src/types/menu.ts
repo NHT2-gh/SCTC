@@ -28,9 +28,9 @@ export interface Menu {
 export interface Product {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   selling_price: number;
-  image_url: string;
+  image_url: string[];
   is_active: boolean;
 }
 
@@ -47,6 +47,7 @@ export interface MenuLayoutItem {
   y: number;
   w: number;
   h: number;
+  page: number;
 }
 
 export interface MenuItemOption {
@@ -60,6 +61,7 @@ export interface MenuItemOption {
 
 export interface ItemOptionDetail {
   id: string;
+  option_id: string;
   menu_item_id: string;
   menu_items_options: MenuItemOption;
   menu_items: MenuItem;

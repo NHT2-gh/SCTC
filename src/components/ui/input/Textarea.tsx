@@ -30,7 +30,7 @@ export default function Textarea({
         id={id}
         placeholder={placeholder}
         rows={rows}
-        value={value}
+        value={value || ""}
         onChange={onChange}
         disabled={disabled}
         maxLength={maxLength}

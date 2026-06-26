@@ -15,10 +15,10 @@ import { SelectedOption } from "@/types/cart";
 import { OptionType } from "@/types/menu";
 import { ProductDetail } from "@/types/product";
 import { formatCurrency } from "@/utils/format-data";
-import { MinusIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useMemo, useState } from "react";
 import CustomNumberInput from "./components/custom-number-input";
+import { showToast } from "@/lib/toast";
 
 interface ProductPageViewProps {
   product: ProductDetail;
@@ -26,6 +26,7 @@ interface ProductPageViewProps {
 
 export default function ProductPageView({ product }: ProductPageViewProps) {
   const { info, options } = product;
+  const [lineNote, setLineNote] = useState<string>("");
   const { add } = useCart();
   const [quantity, setQuantity] = useState<number>(1);
   const [productOptionSchame, setProductOptionSchame] = useState<
@@ -37,16 +38,16 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
     filterValues,
     applyFilters,
     removeFilter,
+    setFilterValue,
   } = useFilter({
     filterConfigs: productOptionSchame,
     initSubmit: false,
     onSubmit(filters) {
       const selectedOptions = Object.entries(filters).flatMap(([_, value]) => {
         if (!value) return [];
-
         const findOption = (optionId: string) => {
           const opt = options.custom.find(
-            (o) => String(o.id) === String(optionId),
+            (o) => String(o.option_id) === String(optionId),
           );
           if (opt)
             return {
@@ -54,7 +55,7 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
               id: String(opt.id),
             };
           const fixedOpt = options.fixed.find(
-            (o) => String(o.id) === String(optionId),
+            (o) => String(o.option_id) === String(optionId),
           );
 
           if (fixedOpt) {
@@ -81,8 +82,11 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
       add({
         menu_item: product.info,
         quantity: quantity,
+        line_note: lineNote,
         selected_options: selectedOptions,
       });
+
+      showToast.success({ title: "Bỏ túi thành công" });
     },
   });
 
@@ -99,10 +103,27 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
           .filter((option) => option.option_type == key)
           .map((option) => ({
             label: `${option.component_name} (+${formatCurrency(option.price)})`,
-            value: String(option.id),
+            value: String(option.option_id),
             count: option.limit,
           })),
       }));
+
+      const normalOptions = options.fixed.reduce(
+        (acc, option) => {
+          _product_setting.fixedOptionType.map((type) => {
+            if (
+              option.option_type === type &&
+              option.component_name === "Bình thường"
+            ) {
+              acc[type] = String(option.option_id);
+            }
+          });
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+
+      setFilterValue(normalOptions);
 
       setProductOptionSchame(productOptionsSchema);
     }
@@ -115,7 +136,9 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
       Array.isArray(value)
         ? value
             .map((optionId) =>
-              options.custom.find((option) => String(option.id) === optionId),
+              options.custom.find(
+                (option) => String(option.option_id) === optionId,
+              ),
             )
             .filter(Boolean)
         : [],
@@ -128,106 +151,120 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
   }, [filterValues, options, product.info.products.selling_price, quantity]);
 
   return (
-    <section className="bg-[#750e0e] [&_hr]:border-[#E2DDCD]">
+    <section className="bg-[#8D1111] [&_hr]:border-[#E2DDCD] relative">
       <NavigationBar backHref={APP_ROUTES.GUEST.ROOT} />
       <div className="product-image mb-10 flex justify-center">
         <Image
-          width={136}
-          height={136}
+          unoptimized
+          width={160}
+          height={160}
+          quality={100}
           src={
-            info.products.image_url || "/images/product-images/matcha-latte.png"
+            info.products.image_url
+              ? info.products.image_url[0]
+              : "/images/product-images/matcha-latte.png"
           }
           alt={info.products.name}
-          className="mx-auto rotate-20"
+          className="mx-auto"
         />
       </div>
 
-      <div className="space-y-3 p-5 rounded-tl-[1.875rem] rounded-tr-[1.875rem] bg-[#FFFAEA]">
-        <div className="flex justify-between">
+      <div className="rounded-tl-[1.875rem] rounded-tr-[1.875rem] bg-[#FFFAEA]">
+        <div className="space-y-3 p-5">
           <div className="">
-            <h1
-              className={cn(
-                "font-medium leading-tight line-clamp-2 text-[1.25rem] text-[#8D1111]",
-                delagothic.className,
-              )}
-            >
-              {info.products.name}
-            </h1>
-
-            <span className={cn("text-black text-sm text-balance")}>
-              {info.products.description ||
-                "Hạt cà Arabica Dark (pha máy), sữa đặc"}
-            </span>
-          </div>
-          <span className={cn("text-[#FEA806]", delagothic.className)}>
-            {formatCurrency(info.products.selling_price)}
-          </span>
-        </div>
-
-        {_product_setting.fixedOptionType.map((type) => (
-          <div key={type} className={cn("space-y-4")}>
-            <div className="space-y-2">
-              <Label className={cn("text-black", delagothic.className)}>
-                {OptionType[type as keyof typeof OptionType]}
-              </Label>
-              <div className="flex gap-2.5">
-                {options.fixed
-                  .filter((item) => item.option_type === type)
-                  .map((option) => (
-                    <button
-                      key={option.id}
-                      onClick={() => {
-                        filterValues[option.option_type] === String(option.id)
-                          ? removeFilter(type)
-                          : updateFilter(option.option_type, String(option.id));
-                      }}
-                      className={cn(
-                        "rounded-full text-sm px-2 py-1 border border-[#E2DDCD]",
-                        {
-                          "border-[#B60F14B2] bg-[#B60F1426]":
-                            filterValues[option.option_type] ===
-                            String(option.id),
-                        },
-                      )}
-                    >
-                      {option.component_name}
-                    </button>
-                  ))}
-              </div>
+            <div className="flex justify-between">
+              <h1
+                className={cn(
+                  "font-medium leading-tight line-clamp-2 text-[1.25rem] text-[#8D1111]",
+                  delagothic.className,
+                )}
+              >
+                {info.products.name}
+              </h1>
+              <span className={cn("text-[#FEA806]", delagothic.className)}>
+                {formatCurrency(info.products.selling_price)}
+              </span>
             </div>
-            <hr />
-          </div>
-        ))}
 
-        {productOptionSchame && productOptionSchame.length > 0 && (
-          <FilterBoxRender
-            filterConfigs={productOptionSchame}
-            handleFilterChange={updateFilter}
-            handleClearAllFilters={clearFilters}
-            filterValues={filterValues}
-            className={cn(
-              "bg-[unset] border-none mx-0 [&>div]:p-0",
-              "[&_.filter-item-label]:font-delagothic",
+            {info.products.description && (
+              <span className={cn("text-black text-sm")}>
+                {info.products.description}
+              </span>
             )}
-          />
-        )}
+          </div>
 
-        <div className="space-y-2">
-          <Label className={cn("text-black", delagothic.className)}>
-            Ghi chú
-          </Label>
-          <Textarea
-            className="border border-[#E2DDCD]"
-            type={"textarea"}
-            rows={3}
-            placeholder="Thích gì ghi đó"
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-              console.log(e.target.value);
-            }}
-          />
+          {_product_setting.fixedOptionType.map((type) => (
+            <div key={type} className={cn("space-y-4")}>
+              <div className="space-y-2">
+                <Label className={cn("text-black", delagothic.className)}>
+                  {OptionType[type as keyof typeof OptionType]}
+                </Label>
+                <div className="flex gap-2.5">
+                  {options.fixed
+                    .filter((item) => item.option_type === type)
+                    .map((option) => (
+                      <button
+                        key={option.option_id}
+                        onClick={() => {
+                          filterValues[option.option_type] ===
+                          String(option.option_id)
+                            ? removeFilter(type)
+                            : updateFilter(
+                                option.option_type,
+                                String(option.option_id),
+                              );
+                        }}
+                        className={cn(
+                          "rounded-full text-sm px-2 py-1 border border-[#E2DDCD]",
+                          {
+                            "border-[#B60F14B2] bg-[#B60F1426]":
+                              filterValues[option.option_type] ===
+                                String(option.option_id) ||
+                              (!filterValues[type] &&
+                                option.component_name === "Bình thường"),
+                          },
+                        )}
+                      >
+                        {option.component_name}
+                      </button>
+                    ))}
+                </div>
+              </div>
+              <hr />
+            </div>
+          ))}
+
+          {productOptionSchame && productOptionSchame.length > 0 && (
+            <FilterBoxRender
+              filterConfigs={productOptionSchame}
+              handleFilterChange={updateFilter}
+              handleClearAllFilters={clearFilters}
+              filterValues={filterValues}
+              className={cn(
+                "bg-[unset] border-none mx-0 [&>div]:p-0",
+                "[&_.filter-item-label]:font-delagothic",
+              )}
+            />
+          )}
+
+          <div className="space-y-2">
+            <Label className={cn("text-black", delagothic.className)}>
+              Ghi chú
+            </Label>
+            <Textarea
+              className="border border-[#E2DDCD]"
+              type={"textarea"}
+              rows={3}
+              value={lineNote}
+              placeholder="Thích gì ghi đó"
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                setLineNote(e.target.value);
+              }}
+            />
+          </div>
         </div>
 
-        <div className="flex items-center gap-5">
+        <div className="w-full flex items-center gap-5 sticky bottom-[-1.5px] p-1.5 after:absolute after:inset-0 after:z-[-1] after:bg-[linear-gradient(90deg,rgba(255,250,234,0)_0%,rgba(255,250,234,0.3)_25.96%)] after:backdrop-blur-[20px] after:blur-[1px]">
           <CustomNumberInput
             value={quantity}
             setValue={(value) => setQuantity(value)}

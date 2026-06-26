@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { FormField } from "@/components/form";
 import { checkoutFormSchema } from "@/schemas/form-schemas/checkout-form-schema";
 import { CheckoutFormValidationType } from "@/schemas/validation/checkout.validation";
@@ -18,14 +18,14 @@ import { APP_ROUTES } from "@/config/app-routes";
 
 export default function CheckoutInfoForm() {
   const { checkoutInfo, updateCheckout } = useCheckout();
-  const { items } = useCart();
+  const { items, clearCart } = useCart();
   const router = useRouter();
   const createOrder = useCreateOrder();
   const checkoutForm = useFormRenderer<CheckoutFormValidationType>(
     checkoutFormSchema,
     {
       customer: checkoutInfo.customer,
-      delivery_method: checkoutInfo.delivery_method,
+      delivery_method: checkoutInfo.delivery_method || "pickup_now",
     },
   );
   const deliveryMethodValue = useWatch({
@@ -50,6 +50,7 @@ export default function CheckoutInfoForm() {
         checkoutInfo: data,
       });
 
+      clearCart();
       router.push(APP_ROUTES.GUEST.ORDER.VIEW(result.data.tracking_order));
     } catch (error) {
       showToast.error({ title: "Đặt hàng thất bại" });
@@ -89,7 +90,7 @@ export default function CheckoutInfoForm() {
         onClick={handleSubmit(onSubmit)}
         type="submit"
       >
-        {isLoading ? "Đang xử lý" : "Đặt hàng"}
+        {isLoading ? "Đừng có nhấn nữa đang ấy" : "Chính thức chốt đơn"}
       </Button>
     </div>
   );

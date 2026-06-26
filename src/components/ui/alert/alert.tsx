@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 import { Toast } from "react-hot-toast";
@@ -116,19 +117,28 @@ const Alert: React.FC<AlertProps> = ({
 
   return (
     <div
-      className={`rounded-xl border p-4 z-[1000]  ${variantClasses[variant].container} ${t?.visible ? "animate-enter" : "animate-leave"}`}
+      className={cn(
+        "rounded-full border p-2 z-[1000] animate-leave",
+        variantClasses[variant].container,
+        { "animate-enter": t?.visible },
+      )}
     >
       <div className="flex items-start gap-3">
-        <div className={`-mt-0.5 ${variantClasses[variant].icon}`}>
+        <div
+          className={cn("-mt-0.5 rounded-full ", variantClasses[variant].icon)}
+        >
           {icons[variant]}
         </div>
 
         <div>
-          <h4 className="mb-1 text-sm font-semibold text-gray-800 dark:text-white/90">
+          <h4 className="text-sm font-semibold text-gray-800 dark:text-white/90">
             {title}
           </h4>
-
-          <p className="text-sm text-gray-500 dark:text-gray-400">{message}</p>
+          {message && (
+            <p className="text-sm mt-1 text-gray-500 dark:text-gray-400">
+              {message}
+            </p>
+          )}
 
           {showLink && (
             <Link

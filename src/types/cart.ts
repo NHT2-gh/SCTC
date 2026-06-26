@@ -6,6 +6,8 @@ export interface SelectedOption {
   component_name: string;
   price: number;
   option_type: keyof typeof OptionType;
+  option_id: string;
+  menu_item_id?: string;
   description?: string;
   limit?: number;
 }
@@ -15,14 +17,14 @@ export interface CartItem {
   menu_item: MenuItem;
   quantity: number;
   selected_options: SelectedOption[];
-  note?: string;
+  line_note?: string;
 }
 
 export interface AddCartItemPayload {
   menu_item: MenuItem;
   quantity?: number;
   selected_options?: SelectedOption[];
-  note?: string;
+  line_note?: string;
 }
 
 export interface UpdateCartItemQuantityPayload {

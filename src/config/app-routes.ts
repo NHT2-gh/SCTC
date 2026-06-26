@@ -34,6 +34,19 @@ export const APP_ROUTES = {
         !type
           ? `${menuId}/layouts`
           : `${APP_ROUTES.ADMIN.MENUS.DETAIL(menuId)}/layouts`,
+      ITEMS: {
+        DETAIL: (menuId: string, itemId: string) =>
+          `${APP_ROUTES.ADMIN.MENUS.DETAIL(menuId)}/${itemId}`,
+      },
+    },
+
+    PRODUCTS: {
+      BASE: "/admin/products",
+      ADD: () => `${APP_ROUTES.ADMIN.PRODUCTS.BASE}/add`,
+    },
+
+    ORDER: {
+      BASE: "/admin/orders",
     },
   },
 

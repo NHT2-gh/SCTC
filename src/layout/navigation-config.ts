@@ -43,9 +43,24 @@ const NavItems: NavItem[] = [
     name: "Menu",
     path: APP_ROUTES.ADMIN.MENUS.BASE,
     subItems: [
+      { name: "Add Product", path: APP_ROUTES.ADMIN.PRODUCTS.ADD() },
+
       {
-        name: "Drinks Menu",
+        name: "Menus",
         path: APP_ROUTES.ADMIN.MENUS.BASE,
+      },
+    ],
+    role: ["admin"],
+  },
+
+  {
+    icon: "task",
+    name: "Orders",
+    path: APP_ROUTES.ADMIN.ORDER.BASE,
+    subItems: [
+      {
+        name: "Order List",
+        path: APP_ROUTES.ADMIN.ORDER.BASE,
       },
     ],
     role: ["admin"],

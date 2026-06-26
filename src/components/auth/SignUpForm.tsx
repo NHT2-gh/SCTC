@@ -1,5 +1,4 @@
 "use client";
-import { ChevronLeftIcon } from "@/icons";
 import Link from "next/link";
 import React from "react";
 
@@ -18,6 +17,7 @@ import { showToast } from "@/lib/toast";
 import { mapErrorToMessage } from "@/lib/error/app-error";
 import { profileService } from "@/services/profile.service";
 import { FormField } from "../form";
+import { ChevronLeftIcon } from "lucide-react";
 
 export default function SignUpForm() {
   const form = useForm<SignUpDataType>({

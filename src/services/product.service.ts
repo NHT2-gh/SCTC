@@ -1,6 +1,11 @@
 import { handlePostgresError } from "@/lib/error/postgres-error";
+import { ProductInfoValidation } from "@/schemas/validation/menu.validation";
 import { supabase } from "@/supabase/supabaseClients";
-import { GetWithFilterParams, ResponseStandard } from "@/types/common";
+import {
+  GetWithFilterParams,
+  MutationResult,
+  ResponseStandard,
+} from "@/types/common";
 import { Product } from "@/types/menu";
 
 class ProductService {
@@ -26,6 +31,18 @@ class ProductService {
     return {
       success: true,
       data: drinks || [],
+    };
+  }
+
+  async addProduct(data: ProductInfoValidation): Promise<MutationResult> {
+    const query = supabase.from(this.tableName).insert(data);
+
+    const { error } = await query;
+
+    if (error) handlePostgresError(error);
+    return {
+      success: true,
+      message: "Add product successfully",
     };
   }
 

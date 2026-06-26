@@ -2,10 +2,10 @@
 import { useEffect, useRef, useState } from "react";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.css";
-import { CalenderIcon } from "@/icons";
 import { DateFieldConfig } from "../form/type";
 import { Instance } from "flatpickr/dist/types/instance";
 import { cn } from "@/lib/utils";
+import { Calendar } from "lucide-react";
 
 export default function DatePicker({
   id,
@@ -72,7 +72,7 @@ export default function DatePicker({
 
       {!isMobile && (
         <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
-          <CalenderIcon className="size-6" />
+          <Calendar className="size-6" />
         </span>
       )}
     </div>

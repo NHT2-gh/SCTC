@@ -4,45 +4,14 @@ import {
   IcModalAlertInfoIcon,
   IcModalAlertWarningIcon,
 } from "@/assets/svgs";
-import {
-  AiIcon,
-  BoxCubeIcon,
-  CalenderIcon,
-  CallIcon,
-  CartIcon,
-  ChatIcon,
-  GridIcon,
-  ListIcon,
-  MailIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
-  TaskIcon,
-  UserCircleIcon,
-  UserIcon,
-} from "@/icons";
-import { PackageIcon } from "lucide-react";
+
+import { BoxIcon, FileText, Grid, Grid2X2, PackageIcon } from "lucide-react";
 
 export const iconMap = {
-  grid: GridIcon,
-  ai: AiIcon,
-  cart: CartIcon,
-  calendar: CalenderIcon,
-  userCircle: UserCircleIcon,
-  task: TaskIcon,
-  list: ListIcon,
-  table: TableIcon,
-  page: PageIcon,
-  pieChart: PieChartIcon,
-  boxCube: BoxCubeIcon,
-  plugin: PlugInIcon,
-  chat: ChatIcon,
-  call: CallIcon,
-  mail: MailIcon,
-  user: UserIcon,
   package: PackageIcon,
-
+  grid: Grid2X2,
+  boxCube: BoxIcon,
+  task: FileText,
   "modal-alert-success": IcModalAlertSuccessIcon,
   "modal-alert-info": IcModalAlertInfoIcon,
   "modal-alert-warning": IcModalAlertWarningIcon,
@@ -53,5 +22,5 @@ export type IconKey = keyof typeof iconMap;
 
 export function getIcon(iconKey: string) {
   const IconComponent = iconMap[iconKey as IconKey];
-  return IconComponent || GridIcon; // Fallback to GridIcon if not found
+  return IconComponent || Grid; // Fallback to GridIcon if not found
 }

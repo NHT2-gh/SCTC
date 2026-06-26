@@ -100,6 +100,7 @@ export function useUrlState(key: string, defaultValue: string = "") {
       }
 
       const newUrl = params.toString() ? `?${params.toString()}` : "";
+      console.log(newUrl);
       const finalUrl = `${window.location.pathname}${newUrl}`;
       router.push(finalUrl, { scroll: false });
     },

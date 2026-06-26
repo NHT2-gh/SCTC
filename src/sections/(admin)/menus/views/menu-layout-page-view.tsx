@@ -16,10 +16,11 @@ import {
   MenuLayoutPreview,
 } from "../components";
 import { MenuLayoutItem } from "@/types/menu";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Form from "@/components/form/Form";
+import { FormField } from "@/components/form";
 
 interface MenuLayoutPageViewProps {
   menuId: string;
@@ -40,6 +41,7 @@ export default function MenuLayoutPageView({
       y: itemSelected?.y,
       w: itemSelected?.w,
       h: itemSelected?.h,
+      page: itemSelected?.page,
     },
   });
 
@@ -76,6 +78,7 @@ export default function MenuLayoutPageView({
       setValue("h", itemSelected.h);
       setValue("x", itemSelected.x);
       setValue("y", itemSelected.y);
+      setValue("page", itemSelected.page);
     }
   }, [itemSelected]);
 
@@ -122,6 +125,22 @@ export default function MenuLayoutPageView({
                       })}
                     >
                       <MenuLayoutItemEdit />
+
+                      <FormField
+                        field={{
+                          name: "row",
+                          label: "Hàng",
+                          min: 1,
+                          type: "number",
+                          handleOnChange: (value: number) => {
+                            const h = 110;
+                            if (value !== 1) setValue("y", h * (value - 1) + 8);
+                            else setValue("y", 0);
+                            if (value % 2 === 0) setValue("x", 8);
+                            else setValue("x", 0);
+                          },
+                        }}
+                      />
                       <Button
                         disabled={updateLayoutItem.isPending}
                         type="submit"

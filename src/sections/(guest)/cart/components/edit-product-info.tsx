@@ -5,7 +5,7 @@ import {
   FilterValue,
 } from "@/components/filter/filter-box-render/type";
 import Label from "@/components/form/label/label";
-import { NumberInput, Textarea } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/input";
 import { useGetProductOptions } from "@/hooks/queries/use-product";
 import { useFilter } from "@/hooks/use-filter";
 import { delagothic, itim } from "@/lib/fonts";
@@ -13,23 +13,26 @@ import { cn } from "@/lib/utils";
 import { CartItem, SelectedOption } from "@/types/cart";
 import { OptionType } from "@/types/menu";
 import { formatCurrency } from "@/utils/format-data";
-import { MinusIcon, PlusIcon, X } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import CustomNumberInput from "../../products/view/components/custom-number-input";
+import { useCart } from "@/hooks/use-cart";
 
 interface EditProductInfoProps {
   cartItem: CartItem;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (cartItem: CartItem) => void;
 }
 
 export default function EditProductInfo({
   cartItem,
   onClose,
 }: EditProductInfoProps) {
-  const product = cartItem.menu_item.products;
   const { data: productOptions } = useGetProductOptions(cartItem.menu_item.id);
+  const { updateQuantity, updateNote, updateCartItemOptions } = useCart();
   const [quantity, setQuantity] = useState<number>(cartItem.quantity);
+  const [lineNote, setLineNote] = useState<string | undefined>(
+    cartItem.line_note ? cartItem.line_note : undefined,
+  );
   const [productOptionSchame, setProductOptionSchame] = useState<
     FilterItemConfig[]
   >([]);
@@ -48,15 +51,18 @@ export default function EditProductInfo({
         if (!value) return [];
         const findOption = (optionId: string) => {
           const opt = productOptions?.data.custom.find(
-            (o) => o.id === optionId,
+            (o) => o.option_id === optionId,
           );
           if (opt) return opt;
           const fixedOpt = productOptions?.data.fixed.find(
-            (o) => String(o.id) === String(optionId),
+            (o) => String(o.option_id) === String(optionId),
           );
 
           if (fixedOpt) {
-            return fixedOpt;
+            return {
+              ...fixedOpt,
+              id: String(fixedOpt.id),
+            } as SelectedOption;
           }
           return null;
         };
@@ -71,8 +77,21 @@ export default function EditProductInfo({
         }
         return [];
       });
+
+      console.log(selectedOptions);
+
+      Promise.all([
+        updateCartItemOptions({
+          item_id: cartItem.id,
+          selected_options: selectedOptions,
+        }),
+        updateQuantity({ item_id: cartItem.id, quantity }),
+        lineNote && updateNote({ item_id: cartItem.id, note: lineNote }),
+      ]);
+      onClose();
     },
   });
+  const product = cartItem.menu_item.products;
 
   useEffect(() => {
     if (productOptions?.data.custom && productOptions.data.custom.length > 0) {
@@ -87,7 +106,7 @@ export default function EditProductInfo({
           .filter((option) => option.option_type == key)
           .map((option) => ({
             label: `${option.component_name} (+${formatCurrency(option.price)})`,
-            value: String(option.id),
+            value: String(option.option_id),
             count: option.limit,
           })),
       }));
@@ -112,14 +131,15 @@ export default function EditProductInfo({
       if (customGroup) {
         acc[option.option_type] = [
           ...((acc[option.option_type] as string[]) ?? []),
-          option.id,
+          String(option.option_id),
         ];
       } else if (fixedGroup) {
-        acc[option.option_type] = option.id;
+        acc[option.option_type] = String(option.option_id);
       }
 
       return acc;
     }, {});
+
     setFilterValue(defaultFilterValues);
   }, [cartItem, productOptions?.data.custom]);
 
@@ -131,7 +151,7 @@ export default function EditProductInfo({
         ? value
             .map((optionId) =>
               productOptions?.data.custom.find(
-                (option) => option.id === optionId,
+                (option) => option.option_id === optionId,
               ),
             )
             .filter(Boolean)
@@ -146,97 +166,104 @@ export default function EditProductInfo({
 
   return (
     <>
-      <div
-        onClick={onClose}
-        className="fixed h-screen w-screen bg-black opacity-20"
-      />
-      <div className="z-[10] space-y-3 p-5 absolute bottom-0 left-0 right-0 rounded-tl-[1.875rem] rounded-tr-[1.875rem] bg-[#FFFAEA]">
-        <div className="flex justify-between">
-          <div className="">
-            <h1
-              className={cn(
-                "font-medium leading-tight line-clamp-2 text-[1.25rem] text-[#8D1111]",
-                delagothic.className,
-              )}
-            >
-              {product.name}
-            </h1>
+      <div onClick={onClose} className="fixed h-[100vh] w-screen bg-black/10" />
 
-            <span className={cn("text-black text-sm text-balance")}>
-              {product.description || "Hạt cà Arabica Dark (pha máy), sữa đặc"}
+      <div className="z-[30] max-h-[60vh] border overflow-y-scroll scrollbar-hidden absolute bottom-[2rem] left-0 right-0 rounded-tl-[1.875rem] rounded-tr-[1.875rem] bg-[#FFFAEA]">
+        <div className="space-y-3 p-5">
+          <div className="flex justify-between">
+            <div className="">
+              <h1
+                className={cn(
+                  "font-medium leading-tight line-clamp-2 text-[1.25rem] text-[#8D1111]",
+                  delagothic.className,
+                )}
+              >
+                {product.name}
+              </h1>
+
+              {product.description && (
+                <span className={cn("text-black text-sm ")}>
+                  {product.description}
+                </span>
+              )}
+            </div>
+            <span className={cn("text-[#FEA806]", delagothic.className)}>
+              {formatCurrency(product.selling_price)}
             </span>
           </div>
-          <span className={cn("text-[#FEA806]", delagothic.className)}>
-            {formatCurrency(product.selling_price)}
-          </span>
-        </div>
 
-        {_product_setting.fixedOptionType.map((type) => (
-          <div key={type} className={cn("space-y-4")}>
-            <div className="space-y-2">
-              <Label className={cn("text-black", delagothic.className)}>
-                {OptionType[type as keyof typeof OptionType]}
-              </Label>
-              <div className="flex gap-2.5">
-                {productOptions?.data.fixed
-                  ?.filter((item) => item.option_type === type)
-                  .map((option) => (
-                    <button
-                      key={option.id}
-                      onClick={() => {
-                        filterValues[option.option_type] === String(option.id)
-                          ? removeFilter(type)
-                          : updateFilter(option.option_type, String(option.id));
-                      }}
-                      className={cn(
-                        "rounded-full px-2 py-1 border border-[#E2DDCD]",
-                        {
-                          "border-[#B60F14B2] bg-[#B60F1426]":
-                            filterValues[option.option_type] ===
-                            String(option.id),
-                        },
-                      )}
-                    >
-                      {option.component_name}
-                    </button>
-                  ))}
+          {_product_setting.fixedOptionType.map((type) => (
+            <div key={type} className={cn("space-y-4")}>
+              <div className="space-y-2">
+                <Label className={cn("text-black", delagothic.className)}>
+                  {OptionType[type as keyof typeof OptionType]}
+                </Label>
+                <div className="flex gap-2.5">
+                  {productOptions?.data.fixed
+                    ?.filter((item) => item.option_type === type)
+                    .map((option) => (
+                      <button
+                        key={option.option_id}
+                        onClick={() => {
+                          filterValues[option.option_type] ===
+                          String(option.option_id)
+                            ? removeFilter(type)
+                            : updateFilter(
+                                option.option_type,
+                                String(option.option_id),
+                              );
+                        }}
+                        className={cn(
+                          "rounded-full px-2 py-1 border border-[#E2DDCD]",
+                          {
+                            "border-[#B60F14B2] bg-[#B60F1426]":
+                              filterValues[option.option_type] ===
+                                String(option.option_id) ||
+                              (!filterValues[type] &&
+                                option.component_name === "Bình thường"),
+                          },
+                        )}
+                      >
+                        {option.component_name}
+                      </button>
+                    ))}
+                </div>
               </div>
+              <hr />
             </div>
-            <hr />
+          ))}
+
+          {productOptionSchame && productOptionSchame.length > 0 && (
+            <FilterBoxRender
+              filterConfigs={productOptionSchame}
+              handleFilterChange={updateFilter}
+              handleClearAllFilters={clearFilters}
+              filterValues={filterValues}
+              className={cn(
+                "bg-[unset] border-none mx-0 [&>div]:p-0",
+                "[&_.filter-item-label]:font-delagothic",
+              )}
+            />
+          )}
+
+          <div className="space-y-2">
+            <Label className={cn("text-black", delagothic.className)}>
+              Ghi chú
+            </Label>
+            <Textarea
+              className="border border-[#E2DDCD]"
+              type={"textarea"}
+              rows={3}
+              value={lineNote}
+              placeholder="Thích gì ghi đó"
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                setLineNote(e.target.value);
+              }}
+            />
           </div>
-        ))}
-
-        {productOptionSchame && productOptionSchame.length > 0 && (
-          <FilterBoxRender
-            filterConfigs={productOptionSchame}
-            handleFilterChange={updateFilter}
-            handleClearAllFilters={clearFilters}
-            filterValues={filterValues}
-            className={cn(
-              "bg-[unset] border-none mx-0 [&>div]:p-0",
-              "[&_.filter-item-label]:font-delagothic",
-            )}
-          />
-        )}
-
-        <div className="space-y-2">
-          <Label className={cn("text-black", delagothic.className)}>
-            Ghi chú
-          </Label>
-          <Textarea
-            className="border border-[#E2DDCD]"
-            type={"textarea"}
-            rows={3}
-            placeholder="Thích gì ghi đó"
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-              console.log(e.target.value);
-            }}
-          />
         </div>
 
-        <p className="w-fit">Tạm tính: {formatCurrency(totalPrice)} </p>
-
-        <div className="flex items-center gap-5">
+        <div className="w-full flex items-center gap-5 sticky bottom-[-1.5px] p-1.5 after:absolute after:inset-0 after:z-[-1] after:bg-[linear-gradient(90deg,rgba(255,250,234,0)_0%,rgba(255,250,234,0.3)_25.96%)] after:backdrop-blur-[20px] after:blur-[2px]">
           <CustomNumberInput
             value={quantity}
             setValue={(value) => setQuantity(value)}
@@ -249,7 +276,7 @@ export default function EditProductInfo({
             onClick={() => applyFilters()}
           >
             <span className=" text-sm text-white ">
-              Bỏ túi
+              Cập nhật
               <span className={itim.className}>
                 {" -"} {formatCurrency(totalPrice)}
               </span>
