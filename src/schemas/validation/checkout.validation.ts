@@ -15,7 +15,7 @@ export const checkoutValidation = z.object({
     Object.entries(DeliveryMethod).map(([key, _]) => key),
   ),
   pickup_at: z.string().optional(),
-  note: z.string().max(10, "Số lượng kí tự không vượt quá 100").optional(),
+  note: z.string().max(100, "Số lượng kí tự không vượt quá 100").optional(),
 });
 
 export const checkoutFormValidation = checkoutValidation.superRefine(

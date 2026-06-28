@@ -15,12 +15,14 @@ import { useCreateOrder } from "@/hooks/queries/use-order";
 import { useCart } from "@/hooks/use-cart";
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/config/app-routes";
+import { delagothic } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
 
 export default function CheckoutInfoForm() {
-  const { checkoutInfo, updateCheckout } = useCheckout();
-  const { items, clearCart } = useCart();
   const router = useRouter();
+  const { items, clearCart } = useCart();
   const createOrder = useCreateOrder();
+  const { checkoutInfo, updateCheckout } = useCheckout();
   const checkoutForm = useFormRenderer<CheckoutFormValidationType>(
     checkoutFormSchema,
     {
@@ -85,13 +87,18 @@ export default function CheckoutInfoForm() {
           ),
         )}
       </Form>
-      <Button
+
+      <button
         disabled={isLoading}
         onClick={handleSubmit(onSubmit)}
         type="submit"
+        className={cn(
+          "flex-3 bg-[#8D1111] text-white py-4 px-2 rounded-full",
+          delagothic.className,
+        )}
       >
         {isLoading ? "Đừng có nhấn nữa đang ấy" : "Chính thức chốt đơn"}
-      </Button>
+      </button>
     </div>
   );
 }

@@ -38,9 +38,6 @@ export default function Bill({ data }: BillComponentProps) {
           <p>Hình thức nhận hàng: </p>{" "}
           <span>{DeliveryMethod[data.order.delivery_method]}</span>
         </li>
-        <li>
-          <p>Thanh toán: </p> <span>Tiền mặt</span>
-        </li>
       </ul>
       <hr />
 
@@ -71,20 +68,26 @@ export default function Bill({ data }: BillComponentProps) {
           </li>
         ))}
       </ul>
+
       <hr />
+
       <ul className="px-3 [&>li]:flex [&>li]:justify-between [&>li]:items-center">
         <li>
           <p>Tổng cộng:</p> <span>{formatCurrency(data.order.subtotal)}</span>
         </li>
+
+        <li className="text-start !block mt-4">
+          <span className="font-semibold">Ghi chú:</span>
+          {data.order.notes ?? "Không có ghi chú"}
+        </li>
       </ul>
+
       <hr />
 
-      <div className="text-center space-y-4">
-        <p>
-          * Túi tiền của bạn có thể sẽ khóc một chút, nhưng ít nhất bạn sẽ vui
-          vẻ khi thưởng thức một ly nước ngon {":)"}
-        </p>
-      </div>
+      <p className="text-center space-y-4">
+        * Túi tiền của bạn có thể sẽ khóc một chút, nhưng ít nhất bạn sẽ vui vẻ
+        khi thưởng thức một ly nước ngon {":)"}
+      </p>
     </article>
   );
 }

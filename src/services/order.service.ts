@@ -74,7 +74,7 @@ class OrderService {
     const query = supabase
       .from(this.baseTable)
       .select("*")
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
 
     const { data: orders, error } = await query;
 

@@ -15,7 +15,7 @@ export const productInfoValidation = z.object({
   id: z.string(),
   name: z.string(),
   selling_price: z.number(),
-  description: z.string().nullable(),
+  description: z.string().nullable().optional(),
   image_url: z.array(z.string()).nullable().optional(),
 });
 
@@ -35,7 +35,7 @@ export const productOptionValidation = z.object({
 
 export const menuItemEditValidation = z.object({
   info: productInfoValidation,
-  options: z.array(productOptionValidation),
+  options: z.array(productOptionValidation).optional(),
 });
 
 export type ProductOptionValidation = z.infer<typeof productOptionValidation>;

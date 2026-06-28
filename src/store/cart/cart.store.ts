@@ -119,7 +119,7 @@ export const useCartStore = create<CartStore>()(
 
             return {
               ...item,
-              note: payload.note.trim(),
+              line_note: payload.note.trim(),
             };
           }),
         }));

@@ -71,8 +71,8 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
           component_id: option.component_id,
           price: option.price,
           option_type: option.option_type,
-          description: option.description,
-          limit: option.limit,
+          description: option.description || "",
+          limit: option.limit || 0,
         };
       }),
     },
@@ -136,7 +136,9 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
   };
   //Handle options
   const currentOptions = editForm.getValues("options");
+
   const handleChangeItems = (ids: string[]) => {
+    if (!currentOptions) return [];
     const nextOptions = ids.flatMap((id) => {
       const existed = currentOptions.find((o) => o.option_id === id);
 
@@ -177,7 +179,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
       });
     }
 
-    if (dirtyFields.options) {
+    if (dirtyFields.options && data.options && currentOptions) {
       const { upsert, deleted } = diffArray<ProductOptionValidation>({
         current: currentOptions,
         initial: data.options,
@@ -231,48 +233,52 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
         isUploading={isUploading}
       />
 
-      <ComponentCard title={"Options"}>
-        <SearchSelecter
-          onChange={(ids) => handleChangeItems(ids)}
-          defaultSelectedOption={currentOptions.map(
-            (item) => String(item.option_id)!,
-          )}
-        />
-        <Table>
-          <TableHeader
-            columns={[
-              {
-                title: "Tên Option",
-                key: "name",
-              },
-              {
-                title: "Giá",
-                key: "price",
-              },
-              {
-                title: "Số lượng tối đa",
-                key: "limit",
-              },
-            ]}
+      {currentOptions && (
+        <ComponentCard title={"Options"}>
+          <SearchSelecter
+            onChange={(ids) => handleChangeItems(ids)}
+            defaultSelectedOption={currentOptions.map(
+              (item) => String(item.option_id)!,
+            )}
           />
+          <Table>
+            <TableHeader
+              columns={[
+                {
+                  title: "Tên Option",
+                  key: "name",
+                },
+                {
+                  title: "Giá",
+                  key: "price",
+                },
+                {
+                  title: "Số lượng tối đa",
+                  key: "limit",
+                },
+              ]}
+            />
 
-          <TableBody>
-            {currentOptions.map((option) => (
-              <TableRow key={option.id}>
-                <TableCell>{option.option_name}</TableCell>
-                <TableCell>{formatCurrency(option.price)}</TableCell>
-                <TableCell>
-                  <InputNumber
-                    formatCurrency
-                    type="number"
-                    value={option.price}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </ComponentCard>
+            <TableBody>
+              {currentOptions.map((option, index) => (
+                <TableRow key={option.id}>
+                  <TableCell>{option.option_name}</TableCell>
+                  <TableCell>{formatCurrency(option.price)}</TableCell>
+                  <TableCell>
+                    <InputNumber
+                      handleOnChange={(value: number) =>
+                        setValue(`options.${index}.limit`, value)
+                      }
+                      type="number"
+                      value={option.limit}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </ComponentCard>
+      )}
 
       <Button
         type="submit"

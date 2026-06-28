@@ -20,7 +20,7 @@ export const checkoutFormSchema: FormSchema = {
       name: "note",
       label: "Ghi chú",
       placeholder: "Nhập ghi chú",
-      maxLength: 100,
+      maxLength: 1000,
       type: "textarea",
       className: "col-span-2",
     },

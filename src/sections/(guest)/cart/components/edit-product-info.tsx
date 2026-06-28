@@ -77,9 +77,6 @@ export default function EditProductInfo({
         }
         return [];
       });
-
-      console.log(selectedOptions);
-
       Promise.all([
         updateCartItemOptions({
           item_id: cartItem.id,

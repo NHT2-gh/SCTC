@@ -10,9 +10,23 @@ import OrderItemCard from "../components/order-item";
 import { showToast } from "@/lib/toast";
 import { useModal } from "@/hooks/useModal";
 import { ModalViewOrder } from "../components";
+import { useFilter } from "@/hooks/use-filter";
 
 export default function OrdersPageView() {
   const { data: orders, isPending, isLoading } = useGetAllOrder();
+  const { filterValues, updateFilter, removeFilter } = useFilter({
+    filterConfigs: [
+      {
+        type: "checkbox",
+        key: "status",
+        options: Object.entries(OrderStatus).map(([key, value]) => ({
+          label: value,
+          value: key,
+        })),
+      },
+    ],
+  });
+
   const updateOrderStatus = useUpdateOrderStatus();
   const modalViewOrder = useModal();
   const [orderSelected, setOrderSelected] = useState<string>();
@@ -42,6 +56,14 @@ export default function OrdersPageView() {
   return (
     <>
       <MainContainer title={"Orders"}>
+        <div className="flex gap-3 items-center">
+          {Object.entries(OrderStatus).map(([key, value]) => (
+            <button key={key} className="bg-neutral-100 rounded-xl py-2 px-4">
+              {value}
+            </button>
+          ))}
+        </div>
+
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {orders?.data.map((order) => (
             <OrderItemCard

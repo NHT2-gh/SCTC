@@ -23,7 +23,7 @@ const NavItems: NavItem[] = [
     role: ["admin"],
   },
   {
-    icon: "boxCube",
+    icon: "listOrdered",
     name: "Recipes",
     path: APP_ROUTES.ADMIN.RECIPES.DRINK_RECIPES(),
     subItems: [
@@ -39,12 +39,17 @@ const NavItems: NavItem[] = [
     role: ["admin"],
   },
   {
+    icon: "coffee",
+    name: "Product",
+    path: APP_ROUTES.ADMIN.PRODUCTS.ADD(),
+    role: ["admin"],
+    subItems: [{ name: "Add Product", path: APP_ROUTES.ADMIN.PRODUCTS.ADD() }],
+  },
+  {
     icon: "task",
     name: "Menu",
     path: APP_ROUTES.ADMIN.MENUS.BASE,
     subItems: [
-      { name: "Add Product", path: APP_ROUTES.ADMIN.PRODUCTS.ADD() },
-
       {
         name: "Menus",
         path: APP_ROUTES.ADMIN.MENUS.BASE,
@@ -54,7 +59,7 @@ const NavItems: NavItem[] = [
   },
 
   {
-    icon: "task",
+    icon: "receipt",
     name: "Orders",
     path: APP_ROUTES.ADMIN.ORDER.BASE,
     subItems: [

@@ -4,7 +4,7 @@ import { orderService } from "@/services/order.service";
 import { CheckoutInfo } from "@/store/checkout/config";
 import { subscribeOrders } from "@/supabase/realtime/order.sub";
 import { CartItem } from "@/types/cart";
-import { ResponseStandard } from "@/types/common";
+import { GetWithFilterParams, ResponseStandard } from "@/types/common";
 import { Order, UpdateOrderDTO } from "@/types/order";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -19,10 +19,10 @@ export function useCreateOrder() {
   });
 }
 
-export function useGetAllOrder() {
+export function useGetAllOrder(params?: GetWithFilterParams) {
   return useQuery({
-    queryKey: queryKeys.order.getAll(),
-    queryFn: () => orderService.getAllOrder(),
+    queryKey: queryKeys.order.getAll(params),
+    queryFn: () => orderService.getAllOrder(params),
   });
 }
 
