@@ -82,7 +82,7 @@ export default function SearchSelecter({
                     htmlFor={item.id}
                     className="w-full text-sm text-neutral-600 hover:text-neutral-900"
                   >
-                    {item.components.name}
+                    {item.option_name ? item.option_name : item.components.name}
                   </label>
 
                   <span className="text-xs">{formatCurrency(item.price)}</span>

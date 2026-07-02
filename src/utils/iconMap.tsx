@@ -14,6 +14,7 @@ import {
   ListOrderedIcon,
   PackageIcon,
   ReceiptIcon,
+  SettingsIcon,
 } from "lucide-react";
 
 export const iconMap = {
@@ -24,6 +25,7 @@ export const iconMap = {
   receipt: ReceiptIcon,
   coffee: CoffeeIcon,
   listOrdered: ListOrderedIcon,
+  setting: SettingsIcon,
   "modal-alert-success": IcModalAlertSuccessIcon,
   "modal-alert-info": IcModalAlertInfoIcon,
   "modal-alert-warning": IcModalAlertWarningIcon,

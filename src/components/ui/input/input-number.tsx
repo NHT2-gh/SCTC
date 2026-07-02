@@ -33,7 +33,7 @@ export default function NumberInput({
   ...props
 }: NumberFieldConfig) {
   const [inputValue, setInputValue] = useState<number>(
-    value || defaultValue || min || 0,
+    Number(value) || Number(defaultValue) || min || 0,
   );
 
   useEffect(() => {
@@ -109,7 +109,9 @@ export default function NumberInput({
           }`}
         >
           {"[ "}
-          {isNaN(value as number) ? 0 : formatCurrencyUtil(value as number)}
+          {isNaN(inputValue as number)
+            ? 0
+            : formatCurrencyUtil(inputValue as number)}
           {" ]"}
         </p>
       )}

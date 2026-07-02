@@ -1,3 +1,4 @@
+import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { mutationKeys } from "@/config/mutation-keys";
 import { queryKeys } from "@/config/query-keys";
 import { orderService } from "@/services/order.service";
@@ -5,17 +6,19 @@ import { CheckoutInfo } from "@/store/checkout/config";
 import { subscribeOrders } from "@/supabase/realtime/order.sub";
 import { CartItem } from "@/types/cart";
 import { GetWithFilterParams, ResponseStandard } from "@/types/common";
-import { Order, UpdateOrderDTO } from "@/types/order";
+import {
+  CreateOrderDTO,
+  Order,
+  OrderStatus,
+  UpdateOrderDTO,
+} from "@/types/order";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 export function useCreateOrder() {
   return useMutation({
     mutationKey: mutationKeys.order.add,
-    mutationFn: (payload: {
-      cartItems: CartItem[];
-      checkoutInfo: CheckoutInfo;
-    }) => orderService.createOrder(payload.cartItems, payload.checkoutInfo),
+    mutationFn: (payload: CreateOrderDTO) => orderService.createOrder(payload),
   });
 }
 
@@ -50,7 +53,6 @@ export function useOrderRealtime() {
           queryKeys.order.getAll(),
           (current: ResponseStandard<Order[]>) => {
             if (!current) return current;
-            console.log(current);
             return {
               ...current,
               data: current.data.map((order: Order) =>
@@ -75,10 +77,14 @@ export function useUpdateOrderStatus() {
 
     onSuccess(_, variables) {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.order.getAll(),
+        queryKey: queryKeys.order.detail(variables.trackingCode),
       });
       queryClient.invalidateQueries({
-        queryKey: queryKeys.order.detail(variables.order_id),
+        queryKey: queryKeys.order.getAll({
+          filters: {
+            status: variables.status,
+          },
+        }),
       });
     },
   });

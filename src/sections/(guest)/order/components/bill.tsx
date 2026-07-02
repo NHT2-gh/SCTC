@@ -1,14 +1,18 @@
 import React from "react";
 import Image from "next/image";
-import { OrderDetail } from "@/types/order";
+import { MapTextStatusOrder, OrderDetail, OrderStatus } from "@/types/order";
 import { DeliveryMethod } from "@/types/checkout";
 import { formatCurrency, formatDateTime } from "@/utils/format-data";
+import { CheckCircle } from "lucide-react";
+import { getCurrentTable } from "@/lib/table/get-current-table";
 
 interface BillComponentProps {
   data: OrderDetail;
 }
 
-export default function Bill({ data }: BillComponentProps) {
+export default async function Bill({ data }: BillComponentProps) {
+  const currentTable = await getCurrentTable();
+
   return (
     <article className="bill-box max-w-[87%] mx-auto h-fit text-sm opacity-[0.97] px-3.5 py-8 border-brand-500 space-y-4 [&_hr]:border-dashed bg-[url('/images/backgrounds/bill-card-1.webp')] bg-cover [&_hr]:border-[#000000B2]">
       <div className="w-full flex items-center justify-between text-center">
@@ -18,7 +22,10 @@ export default function Bill({ data }: BillComponentProps) {
           src={"/images/logo/logo-text-1.webp"}
           alt={"logo"}
         />
-        <p className="mt-3">No: {data.order.tracking_order}</p>
+        <div className="text-left">
+          {currentTable && <p className="w-fit">Bàn {currentTable.tableId}</p>}
+          <p className="mt-3">No: {data.order.tracking_order}</p>
+        </div>
       </div>
       <hr />
       <ul className="space-y-2 text-wrap [&>li]:flex [&>li>p]:w-[50%] [&>li]:items-center">
@@ -71,23 +78,31 @@ export default function Bill({ data }: BillComponentProps) {
 
       <hr />
 
-      <ul className="px-3 [&>li]:flex [&>li]:justify-between [&>li]:items-center">
+      <ul className="px-3 [&>li]:flex [&>li]:justify-between [&>li]:items-center space-y-4">
         <li>
           <p>Tổng cộng:</p> <span>{formatCurrency(data.order.subtotal)}</span>
         </li>
 
-        <li className="text-start !block mt-4">
+        <li className="text-start !block mt-4 italic">
           <span className="font-semibold">Ghi chú:</span>
-          {data.order.notes ?? "Không có ghi chú"}
+          {data.order.notes ?? " Không có ghi chú"}
         </li>
       </ul>
 
       <hr />
-
       <p className="text-center space-y-4">
         * Túi tiền của bạn có thể sẽ khóc một chút, nhưng ít nhất bạn sẽ vui vẻ
-        khi thưởng thức một ly nước ngon {":)"}
+        khi thưởng thức một ly nước ngon {":))))"}
       </p>
+
+      <div className="flex items-center justify-center gap-2">
+        {data.order.status === OrderStatus.COMPLETED && (
+          <CheckCircle className="stroke-2 text-green-700" />
+        )}
+        <span className="capitalize">
+          {MapTextStatusOrder[data.order.status]}
+        </span>
+      </div>
     </article>
   );
 }

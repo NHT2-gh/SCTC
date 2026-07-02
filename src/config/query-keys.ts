@@ -40,4 +40,8 @@ export const queryKeys = {
     getAll: (params?: GetWithFilterParams) => ["orders", params],
     detail: (trackingCode: string) => ["orders", trackingCode],
   },
+
+  overview: {
+    getAvailableTables: () => ["overview", "available-tables"],
+  },
 };

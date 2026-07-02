@@ -17,17 +17,11 @@ class ComponentService {
   async getAllComponents(
     searchName?: string,
   ): Promise<ResponseStandard<Component[]>> {
-    if (!searchName) {
-      return {
-        success: false,
-        data: [],
-      };
-    }
+    const query = supabase.from(this.tableName).select(`*`);
 
-    const query = supabase
-      .from(this.tableName)
-      .select(`*`)
-      .ilike("name", `%${searchName}%`);
+    if (searchName) {
+      query.ilike("name", `%${searchName}%`);
+    }
 
     const { data: components, error } = await query;
 

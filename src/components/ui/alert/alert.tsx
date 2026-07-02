@@ -118,7 +118,7 @@ const Alert: React.FC<AlertProps> = ({
   return (
     <div
       className={cn(
-        "rounded-full border p-2 z-[1000] animate-leave",
+        "rounded-full border p-2 z-[1001] animate-leave",
         variantClasses[variant].container,
         { "animate-enter": t?.visible },
       )}

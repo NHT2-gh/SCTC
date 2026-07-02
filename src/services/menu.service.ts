@@ -20,18 +20,21 @@ import {
 } from "@/schemas/validation/menu.validation";
 import { SelectedOption } from "@/types/cart";
 import { FixedOptionAdapter, OptionsAdapter } from "@/adapters/options.adapter";
+import { AddProductOptionValidation } from "@/schemas/validation/product-option.validation";
 
 class MenuService {
   private baseTable: string;
   private menuItemsTable: string;
   private layoutMenuTable: string;
   private itemOptionsDetailTable: string;
+  private menuItemsOptions: string;
 
   constructor() {
     this.baseTable = "menus";
     this.menuItemsTable = "menu_items";
     this.layoutMenuTable = "menu_layout_items";
     this.itemOptionsDetailTable = "item_options_detail";
+    this.menuItemsOptions = "menu_items_options";
   }
 
   async getAllMenus(
@@ -197,6 +200,24 @@ class MenuService {
     };
   }
 
+  async deleteMenuItemOption(payload: {
+    menuItemId: string;
+    optionId: string[];
+  }): Promise<MutationResult> {
+    const query = supabase
+      .from(this.itemOptionsDetailTable)
+      .delete()
+      .in("id", payload.optionId)
+      .eq("menu_item_id", payload.menuItemId);
+
+    const { error } = await query;
+
+    if (error) handlePostgresError(error);
+    return {
+      success: true,
+    };
+  }
+
   async getAllOptions(
     params?: GetWithFilterParams,
   ): Promise<ResponseStandard<MenuItemOption[]>> {
@@ -227,6 +248,19 @@ class MenuService {
     return {
       success: false,
       data: options || [],
+    };
+  }
+
+  async addProductOption(
+    data: AddProductOptionValidation,
+  ): Promise<MutationResult> {
+    const query = supabase.from(this.menuItemsOptions).insert(data);
+
+    const { error } = await query;
+
+    if (error) handlePostgresError(error);
+    return {
+      success: true,
     };
   }
 

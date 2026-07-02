@@ -47,6 +47,7 @@ export const APP_ROUTES = {
 
     ORDER: {
       BASE: "/admin/orders",
+      ADD: () => `${APP_ROUTES.ADMIN.BASE}/orders/add`,
     },
   },
 
@@ -62,7 +63,11 @@ export const APP_ROUTES = {
       VIEW: "/checkout",
     },
     ORDER: {
-      VIEW: (trackingCode: string) => `/order/${trackingCode}`,
+      VIEW: (trackingCode: string) => `/orders/${trackingCode}`,
+    },
+    TABLE: {
+      BASE: "/tables",
+      DETAIL: (token: string) => `${APP_ROUTES.GUEST.TABLE.BASE}/${token}`,
     },
   },
 };

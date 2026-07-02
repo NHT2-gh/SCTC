@@ -9,11 +9,15 @@ import React, { useEffect, useState } from "react";
 import OrderItemCard from "../components/order-item";
 import { showToast } from "@/lib/toast";
 import { useModal } from "@/hooks/useModal";
-import { ModalViewOrder } from "../components";
+import { FilterStatus, ModalViewOrder } from "../components";
 import { useFilter } from "@/hooks/use-filter";
+import { useUrlState } from "@/hooks/use-url-state";
 
 export default function OrdersPageView() {
-  const { data: orders, isPending, isLoading } = useGetAllOrder();
+  const modalViewOrder = useModal();
+  const [status, setStatus] = useUrlState("status");
+  const [orderIdView, setOrderIdView] = useUrlState("view_order");
+  const updateOrderStatus = useUpdateOrderStatus();
   const { filterValues, updateFilter, removeFilter } = useFilter({
     filterConfigs: [
       {
@@ -25,26 +29,30 @@ export default function OrdersPageView() {
         })),
       },
     ],
+    initSubmit: true,
+  });
+  const {
+    data: orders,
+    isPending,
+    isLoading,
+  } = useGetAllOrder({
+    filters: filterValues,
   });
 
-  const updateOrderStatus = useUpdateOrderStatus();
-  const modalViewOrder = useModal();
-  const [orderSelected, setOrderSelected] = useState<string>();
-
   useEffect(() => {
-    if (orderSelected) modalViewOrder.openModal();
-  }, [orderSelected]);
+    if (orderIdView) modalViewOrder.openModal();
+  }, [orderIdView]);
 
-  if (isLoading) return <div>Loading...</div>;
-
-  if (isPending || !orders) return <div>No orders</div>;
-
-  const handleUpdateStatus = async (order_id: string, status: OrderStatus) => {
+  const handleUpdateStatus = async (
+    tracking_order: string,
+    status: OrderStatus,
+  ) => {
     try {
       const result = await updateOrderStatus.mutateAsync({
-        order_id: order_id,
+        trackingCode: tracking_order,
         status: status,
       });
+
       if (result.success) {
         showToast.success({ title: "Order updated successfully" });
       }
@@ -56,21 +64,19 @@ export default function OrdersPageView() {
   return (
     <>
       <MainContainer title={"Orders"}>
-        <div className="flex gap-3 items-center">
-          {Object.entries(OrderStatus).map(([key, value]) => (
-            <button key={key} className="bg-neutral-100 rounded-xl py-2 px-4">
-              {value}
-            </button>
-          ))}
-        </div>
-
+        <FilterStatus
+          filterValues={filterValues}
+          updateFilter={updateFilter}
+          removeFilter={removeFilter}
+          countOrder={orders?.data.length}
+        />
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {orders?.data.map((order) => (
             <OrderItemCard
               key={order.tracking_order}
               order={order}
               onSelected={(orderId) => {
-                setOrderSelected(orderId);
+                setOrderIdView(orderId);
               }}
               onConfirm={(orderId) => {
                 handleUpdateStatus(orderId, OrderStatus.CONFIRMED);
@@ -80,11 +86,14 @@ export default function OrdersPageView() {
         </div>
       </MainContainer>
 
-      {modalViewOrder.isOpen && orderSelected && (
+      {modalViewOrder.isOpen && orderIdView && (
         <ModalViewOrder
           isOpen={modalViewOrder.isOpen}
-          onClose={modalViewOrder.closeModal}
-          trackingCode={orderSelected}
+          onClose={() => {
+            modalViewOrder.closeModal();
+            setOrderIdView(undefined);
+          }}
+          trackingCode={orderIdView}
           onUpdateStatus={handleUpdateStatus}
         />
       )}

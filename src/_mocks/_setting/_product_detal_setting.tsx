@@ -19,8 +19,8 @@ export const _product_setting = {
       value: 1,
     },
     [OrderStatus.PREPARING]: {
-      label: "Prepared",
-      color: "#",
+      label: "Preparing",
+      color: "#89cff0",
       value: 2,
     },
     [OrderStatus.READY]: {

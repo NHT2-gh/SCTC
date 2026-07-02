@@ -94,6 +94,20 @@ export function useUpsertProductOption() {
   });
 }
 
+export function useDeleteMenuItemOption() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: mutationKeys.menuItems.deleteOption,
+    mutationFn: (payload: { menuItemId: string; optionId: string[] }) =>
+      menuService.deleteMenuItemOption(payload),
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.menu.detail(payload.menuItemId),
+      });
+    },
+  });
+}
+
 export function useUpdateProductInfo(menuId: string) {
   const queryClient = useQueryClient();
 

@@ -13,7 +13,7 @@ import AvatarText from "../ui/avatar/AvatarText";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   function toggleDropdown() {
@@ -45,15 +45,10 @@ export default function UserDropdown() {
         className="flex items-center dropdown-toggle text-gray-700 dark:text-gray-400 dropdown-toggle"
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <AvatarText
-            name={profile?.full_name || ""}
-            className="w-full h-full"
-          />
+          <AvatarText name="Admin" className="w-full h-full" />
         </span>
 
-        <span className="block mr-1 font-medium text-theme-sm">
-          {profile?.full_name}
-        </span>
+        <span className="block mr-1 font-medium text-theme-sm">Chúng mình</span>
 
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
@@ -84,9 +79,9 @@ export default function UserDropdown() {
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
             {user?.email}
           </span>
-          <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
+          {/* <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
             {SystemRole[profile?.role as unknown as keyof typeof SystemRole]}
-          </span>
+          </span> */}
         </div>
 
         {/* <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-gray-200 dark:border-gray-800">

@@ -14,16 +14,35 @@ export function playNotificationSound() {
     console.error("Audio error:", err);
   });
 }
+export async function showOrderNotification(order: Order) {
+  if (typeof window === "undefined") return;
 
-export function showOrderNotification(order: Order) {
-  if (!("Notification" in window)) return;
+  if (!("Notification" in window)) {
+    console.warn("Browser không hỗ trợ Notification API");
+    return;
+  }
 
-  if (Notification.permission !== "granted") return;
+  await Notification.requestPermission();
 
-  new Notification("🛎️ Đơn hàng mới", {
+  console.log(Notification.permission);
+
+  if (Notification.permission !== "granted") {
+    console.warn("Chưa được cấp quyền notification");
+    return;
+  }
+
+  const notification = new Notification("🛎️ Đơn hàng mới", {
     body: `${order.tracking_order} - ${order.customer_name}`,
     icon: "/icons/logo-192.png",
+    tag: order.id, // tránh duplicate notification
+    requireInteraction: true, // giữ notification cho tới khi user đóng (Chrome hỗ trợ)
   });
+
+  notification.onclick = () => {
+    window.focus();
+    window.location.href = `/admin/orders`;
+    notification.close();
+  };
 }
 
 export default function OrderRealtimeListener() {
@@ -42,11 +61,7 @@ export default function OrderRealtimeListener() {
       },
 
       onUpdate(order) {
-        // Nếu muốn hiện toast khi đổi trạng thái
-        // showToast.info({
-        //   title: "Cập nhật đơn hàng",
-        //   description: `${order.tracking_order} → ${order.status}`,
-        // });
+        showOrderNotification(order);
       },
     });
 

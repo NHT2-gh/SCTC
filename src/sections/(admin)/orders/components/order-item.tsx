@@ -20,7 +20,9 @@ export default function OrderItemCard({
   return (
     <article
       onClick={() => onSelected(order.tracking_order)}
-      className="border rounded-lg p-4 cursor-pointer"
+      className={cn("border rounded-lg p-4 cursor-pointer", {
+        "border-brand-500 ": order.tables?.id,
+      })}
     >
       <div className="flex justify-between">
         <p>No: {order.tracking_order}</p>
@@ -38,6 +40,13 @@ export default function OrderItemCard({
           <span>{_product_setting.processOrder[order.status].label}</span>
         </div>
       </div>
+
+      {order.tables?.name && (
+        <p className="text-sm text-muted-foreground mt-2">
+          <span className="capitalize">{order.tables?.name}</span>
+        </p>
+      )}
+
       <p className="text-sm text-muted-foreground mt-2">
         Total items:
         <span className="capitalize">{order.order_items_count}</span>
@@ -55,7 +64,11 @@ export default function OrderItemCard({
       </p>
 
       {order.status === OrderStatus.PENDING && (
-        <Button size="sm" className="mt-4" onClick={() => onConfirm(order.id)}>
+        <Button
+          size="sm"
+          className="mt-4"
+          onClick={() => onConfirm(order.tracking_order)}
+        >
           Confirm order
         </Button>
       )}

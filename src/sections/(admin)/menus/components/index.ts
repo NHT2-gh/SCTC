@@ -7,3 +7,4 @@ export { default as MenuLayoutPreview } from "./menu-layout-preview";
 export { default as MenuLayoutItemEdit } from "./menu-layput-item-edit";
 
 export { default as MenuItemEditForm } from "./menu-item-edit-form";
+export { default as AddProductOptionForm } from "./add-product-option";

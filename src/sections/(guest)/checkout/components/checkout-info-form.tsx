@@ -8,20 +8,19 @@ import { SingleFilterButtonGroup } from "@/components/filter/single-toggle";
 import { DeliveryMethod } from "@/types/checkout";
 import { useFormRenderer } from "@/components/form/FormRenderer";
 import Form from "@/components/form/Form";
-import { Button } from "@/components/ui/button";
 import { useWatch } from "react-hook-form";
 import { useCheckout } from "@/hooks/use-checkout";
-import { useCreateOrder } from "@/hooks/queries/use-order";
 import { useCart } from "@/hooks/use-cart";
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/config/app-routes";
 import { delagothic } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
+import { useOrderHistory } from "@/hooks/use-order";
 
 export default function CheckoutInfoForm() {
   const router = useRouter();
+  const { addOrder } = useOrderHistory();
   const { items, clearCart } = useCart();
-  const createOrder = useCreateOrder();
   const { checkoutInfo, updateCheckout } = useCheckout();
   const checkoutForm = useFormRenderer<CheckoutFormValidationType>(
     checkoutFormSchema,
@@ -47,13 +46,31 @@ export default function CheckoutInfoForm() {
     });
 
     try {
-      const result = await createOrder.mutateAsync({
-        cartItems: items,
-        checkoutInfo: data,
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartItems: items,
+          checkoutInfo: data,
+        }),
       });
 
-      clearCart();
-      router.push(APP_ROUTES.GUEST.ORDER.VIEW(result.data.tracking_order));
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
+
+      const result = await res.json();
+
+      if (result.tracking_order) {
+        addOrder(result);
+        clearCart();
+        router.push(APP_ROUTES.GUEST.ORDER.VIEW(result.tracking_order));
+      } else {
+        throw new Error("Đặt hàng thất bại");
+      }
     } catch (error) {
       showToast.error({ title: "Đặt hàng thất bại" });
     }

@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
   user: User;
-  profile: Profile;
+  // profile: Profile;
   loading: boolean;
 }
 
@@ -20,7 +20,7 @@ export default function AuthProvider({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { data: profileUser } = useProfile(user?.id || "");
+  // const { data: profileUser } = useProfile(user?.id || "");
   useEffect(() => {
     const getUser = async () => {
       const {
@@ -43,9 +43,7 @@ export default function AuthProvider({
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ user: user!, profile: profileUser!, loading }}
-    >
+    <AuthContext.Provider value={{ user: user!, loading }}>
       {children}
     </AuthContext.Provider>
   );

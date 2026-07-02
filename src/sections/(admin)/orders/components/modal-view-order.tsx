@@ -5,7 +5,6 @@ import {
   useGetDetailOrder,
   useUpdateOrderStatus,
 } from "@/hooks/queries/use-order";
-import { Bill } from "@/sections/(guest)/order/components";
 import { OrderStatus } from "@/types/order";
 import React from "react";
 import OrderDetail from "./order-detail";
@@ -57,7 +56,7 @@ export default function ModalViewOrder({
           className="block mx-auto mt-5"
           onClick={() =>
             onUpdateStatus(
-              order.data.order.id,
+              order.data.order.tracking_order,
               Object.keys(_product_setting.processOrder)[
                 _product_setting.processOrder[order.data.order.status].value + 1
               ] as OrderStatus,

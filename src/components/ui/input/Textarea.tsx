@@ -22,7 +22,8 @@ export default function Textarea({
   disabled = false, // Disabled state
   className, // Additional custom styles
   maxLength,
-  variant = "default", // Error state
+  variant = "default",
+  // Error state
 }: TextareaFieldConfig) {
   return (
     <div>
@@ -30,7 +31,7 @@ export default function Textarea({
         id={id}
         placeholder={placeholder}
         rows={rows}
-        value={value || ""}
+        value={value}
         onChange={onChange}
         disabled={disabled}
         maxLength={maxLength}

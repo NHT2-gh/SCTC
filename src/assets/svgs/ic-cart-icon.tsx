@@ -1,13 +1,20 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 
-export default function ICCartIcon({ className }: { className: string }) {
+export default function ICCartIcon({
+  className,
+  style,
+}: {
+  className: string;
+  style?: CSSProperties;
+}) {
   return (
     <svg
-      width="55"
-      height="55"
+      width="60"
+      height="60"
       viewBox="0 0 55 55"
       fill="none"
       className={className}
+      style={style}
       xmlns="http://www.w3.org/2000/svg"
     >
       <g filter="url(#filter0_d_167_17)">

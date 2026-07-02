@@ -14,7 +14,11 @@ const nextConfig: NextConfig = {
     domains: ["oepbunibrnmvqudbwmvz.supabase.co", "i.pinimg.com"],
   },
 
-  allowedDevOrigins: ["http://192.168.1.33", "http://localhost:3000"],
+  allowedDevOrigins: [
+    "http://192.168.1.33",
+    "http://localhost:3000",
+    "https://terrier-key-fawn.ngrok-free.app",
+  ],
 };
 
 export default nextConfig;

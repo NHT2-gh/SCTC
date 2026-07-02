@@ -20,7 +20,7 @@ export default function MenuItemDetailPageView({
         { label: data.info.products.name },
       ]}
     >
-      <MenuItemEditForm data={data} />;
+      <MenuItemEditForm data={data} />
     </MainContainer>
   );
 }

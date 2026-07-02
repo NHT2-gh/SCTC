@@ -12,6 +12,7 @@ import InputNumber from "@/components/ui/input/input-number";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import {
   useAllOption,
+  useDeleteMenuItemOption,
   useUpdateProductInfo,
   useUpsertProductOption,
 } from "@/hooks/queries/use-menu";
@@ -30,6 +31,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { v4 } from "uuid";
+import { AddProductOptionForm } from ".";
+import { DataEmpty } from "@/components/common/table/state";
 
 export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
   const [isUploading, setIsUploading] = useState(false);
@@ -51,6 +54,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
   });
   const updateInfo = useUpdateProductInfo(data.info.menu_id);
   const upsertProductOptions = useUpsertProductOption();
+  const deleteProductOptions = useDeleteMenuItemOption();
   const editForm = useForm<MenuItemEditValidation>({
     resolver: zodResolver(menuItemEditValidation),
     mode: "onChange",
@@ -80,7 +84,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
   const {
     handleSubmit,
     setValue,
-    formState: { dirtyFields },
+    formState: { dirtyFields, isLoading },
   } = editForm;
 
   useEffect(() => {
@@ -139,12 +143,13 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
 
   const handleChangeItems = (ids: string[]) => {
     if (!currentOptions) return [];
+
     const nextOptions = ids.flatMap((id) => {
       const existed = currentOptions.find((o) => o.option_id === id);
 
       if (existed) return [existed];
 
-      const optionInfo = optionsData?.data.find((o) => o.id === id);
+      const optionInfo = optionsData?.data.find((o) => String(o.id) === id);
 
       if (!optionInfo) return [];
 
@@ -163,9 +168,9 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
   };
 
   //Submit form
-  const onSubmit = async (data: MenuItemEditValidation) => {
+  const onSubmit = async (formData: MenuItemEditValidation) => {
     try {
-      const reult = await updateInfo.mutateAsync(data.info);
+      const reult = await updateInfo.mutateAsync(formData.info);
 
       if (!reult.success) {
         throw new Error("Update failed");
@@ -182,7 +187,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
     if (dirtyFields.options && data.options && currentOptions) {
       const { upsert, deleted } = diffArray<ProductOptionValidation>({
         current: currentOptions,
-        initial: data.options,
+        initial: data.options.custom,
         dirtyFields: dirtyFields.options!,
       });
 
@@ -194,8 +199,20 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
             showToast.success({ title: "Thành công" });
         } catch {}
       }
+      if (deleted) {
+        try {
+          const deleteProductOptionResult =
+            await deleteProductOptions.mutateAsync({
+              menuItemId: data.info.id,
+              optionId: deleted,
+            });
+          if (deleteProductOptionResult.success)
+            showToast.success({ title: "Xoá thành công" });
+        } catch {}
+      }
     }
   };
+
   return (
     <section className="space-y-4">
       <Form
@@ -260,6 +277,17 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
             />
 
             <TableBody>
+              {currentOptions.length === 0 ||
+                (isLoading && (
+                  <DataEmpty
+                    message={
+                      isLoading
+                        ? "Đang tải dữ liệu"
+                        : "Không có dữ liệu phù hợp"
+                    }
+                    colSpan={4}
+                  />
+                ))}
               {currentOptions.map((option, index) => (
                 <TableRow key={option.id}>
                   <TableCell>{option.option_name}</TableCell>
@@ -277,6 +305,8 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
               ))}
             </TableBody>
           </Table>
+
+          <AddProductOptionForm />
         </ComponentCard>
       )}
 

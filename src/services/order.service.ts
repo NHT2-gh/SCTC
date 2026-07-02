@@ -8,29 +8,30 @@ import {
   MutationResult,
   ResponseStandard,
 } from "@/types/common";
-import { Order, OrderDetail, UpdateOrderDTO } from "@/types/order";
+import {
+  CreateOrderDTO,
+  Order,
+  OrderDetail,
+  UpdateOrderDTO,
+} from "@/types/order";
 
 class OrderService {
   private baseTable: string;
-  private orderItemTable: string;
 
   constructor() {
     this.baseTable = "orders";
-    this.orderItemTable = "order_items";
   }
 
-  async createOrder(
-    cartitems: CartItem[],
-    checkoutInfo: CheckoutInfo,
-  ): Promise<
+  async createOrder(data: CreateOrderDTO): Promise<
     ResponseStandard<{
       order_id: string;
       tracking_order: string;
     }>
   > {
     const query = supabase.rpc("create_order", {
-      p_checkout: checkoutInfo,
-      p_cart: cartitems,
+      p_order_type: data.order_type,
+      p_checkout: data.checkoutInfo,
+      p_cart: data.cartItems,
     });
 
     const { data: newOrder, error } = await query;
@@ -71,12 +72,30 @@ class OrderService {
   async getAllOrder(
     params?: GetWithFilterParams,
   ): Promise<ResponseStandard<Order[]>> {
-    const query = supabase
-      .from(this.baseTable)
-      .select("*")
-      .order("created_at", { ascending: false });
+    const query = supabase.from(this.baseTable).select(
+      `
+      *,
+      tables(
+        id,
+        name
+      )
+      `,
+    );
 
-    const { data: orders, error } = await query;
+    if (params?.filters) {
+      const arrayParamFilters = Object.entries(params?.filters);
+      arrayParamFilters.map(([key, value]) => {
+        if (value) {
+          query.eq(key, value as string);
+        }
+      });
+    }
+
+    const { data: orders, error } = await query.order("updated_at", {
+      ascending: true,
+    });
+
+    console.log(orders);
 
     if (error) handlePostgresError(error);
 
@@ -92,11 +111,20 @@ class OrderService {
       .update({
         status: data.status,
       })
-      .eq("id", data.order_id);
+      .eq("tracking_order", data.trackingCode)
+      .select()
+      .single();
 
-    const { error } = await query;
+    const { data: updatedOrder, error } = await query;
 
     if (error) handlePostgresError(error);
+
+    if (!updatedOrder) {
+      return {
+        success: false,
+        message: ErrorCode.NOT_FOUND,
+      };
+    }
 
     return {
       success: true,

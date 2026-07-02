@@ -8,7 +8,7 @@ import { Menu, NavItem } from "@/types/nav";
 const NavItems: NavItem[] = [
   {
     icon: "grid",
-    name: "Dashboard",
+    name: "Overview",
     path: APP_ROUTES.ADMIN.BASE,
     role: ["super_admin"],
   },
@@ -66,6 +66,10 @@ const NavItems: NavItem[] = [
       {
         name: "Order List",
         path: APP_ROUTES.ADMIN.ORDER.BASE,
+      },
+      {
+        name: "Add Order",
+        path: APP_ROUTES.ADMIN.ORDER.ADD(),
       },
     ],
     role: ["admin"],

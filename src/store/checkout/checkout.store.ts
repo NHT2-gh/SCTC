@@ -1,8 +1,7 @@
-import { CheckoutInfo, CheckoutState, CheckoutStore } from "./config";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { STORAGE_KEYS } from "../storage_keys";
-import { DeliveryMethod } from "@/types/checkout";
+import { CheckoutInfo, CheckoutState, CheckoutStore } from "./config";
 
 const createInitialCheckout = (): CheckoutInfo => ({
   customer: {

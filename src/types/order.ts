@@ -1,3 +1,5 @@
+import { CheckoutInfo } from "@/store/checkout/config";
+import { CartItem } from "./cart";
 import { DeliveryMethod } from "./checkout";
 import { MenuItem, OptionType } from "./menu";
 
@@ -9,6 +11,21 @@ export enum OrderStatus {
   READY = "ready",
   COMPLETED = "completed",
   CANCELLED = "cancelled",
+}
+
+export const MapTextStatusOrder: Record<OrderStatus, string> = {
+  [OrderStatus.PENDING]: "Đang chờ xác nhận",
+  [OrderStatus.CONFIRMED]: "Đã xác nhận",
+  [OrderStatus.PREPARING]: "Đang chuẩn bị",
+  [OrderStatus.DELIVERING]: "Đang giao hàng",
+  [OrderStatus.READY]: "Sẵn sàng",
+  [OrderStatus.COMPLETED]: "Đã hoàn thành",
+  [OrderStatus.CANCELLED]: "Đã hủy",
+};
+
+export enum OrderType {
+  dine_in = "dine_in",
+  take_away = "take_away",
 }
 
 export interface Order {
@@ -24,6 +41,11 @@ export interface Order {
   tracking_order: string;
   created_at: string;
   updated_at: string;
+  table_id?: number | null;
+  tables?: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface OrderDetail {
@@ -67,6 +89,13 @@ export interface OrderItemCard {
 }
 
 export interface UpdateOrderDTO {
-  order_id: string;
+  trackingCode: string;
   status: OrderStatus;
+}
+
+export interface CreateOrderDTO {
+  order_type: keyof typeof OrderType;
+  cartItems: CartItem[];
+  checkoutInfo: CheckoutInfo;
+  table_id?: number;
 }
