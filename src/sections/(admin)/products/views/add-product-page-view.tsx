@@ -88,6 +88,7 @@ export default function AddProductPageView() {
       if (result.success) {
         showToast.success({ title: "Thêm sản phẩm thành công" });
         reset();
+        setValue("id", v4());
       }
     } catch (error) {
       showToast.error({

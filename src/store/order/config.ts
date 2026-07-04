@@ -1,11 +1,11 @@
-import { Order, OrderStatus } from "@/types/order";
+import { Order, OrderStatus, AddOrderResponen } from "@/types/order";
 
 export interface OrderState {
-  orders: Order[];
+  orders: AddOrderResponen[];
 }
 
 export interface OrderActions {
-  addOrder: (order: Order) => void;
+  addOrder: (order: AddOrderResponen) => void;
 
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
 

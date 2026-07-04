@@ -16,6 +16,7 @@ import { APP_ROUTES } from "@/config/app-routes";
 import { delagothic } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { useOrderHistory } from "@/hooks/use-order";
+import { AddOrderResponen } from "@/types/order";
 
 export default function CheckoutInfoForm() {
   const router = useRouter();
@@ -62,10 +63,16 @@ export default function CheckoutInfoForm() {
         throw new Error(text);
       }
 
-      const result = await res.json();
+      const result = (await res.json()) as AddOrderResponen;
 
       if (result.tracking_order) {
-        addOrder(result);
+        addOrder({
+          order_id: result.order_id,
+          subtotal: result.subtotal,
+          status: result.status,
+          order_items_count: result.order_items_count,
+          tracking_order: result.tracking_order,
+        });
         clearCart();
         router.push(APP_ROUTES.GUEST.ORDER.VIEW(result.tracking_order));
       } else {

@@ -14,7 +14,7 @@ export enum OrderStatus {
 }
 
 export const MapTextStatusOrder: Record<OrderStatus, string> = {
-  [OrderStatus.PENDING]: "Đang chờ xác nhận",
+  [OrderStatus.PENDING]: "Chờ xác nhận",
   [OrderStatus.CONFIRMED]: "Đã xác nhận",
   [OrderStatus.PREPARING]: "Đang chuẩn bị",
   [OrderStatus.DELIVERING]: "Đang giao hàng",
@@ -98,4 +98,12 @@ export interface CreateOrderDTO {
   cartItems: CartItem[];
   checkoutInfo: CheckoutInfo;
   table_id?: number;
+}
+
+export interface AddOrderResponen {
+  order_id: string;
+  subtotal: number;
+  status: OrderStatus;
+  order_items_count: number;
+  tracking_order: string;
 }

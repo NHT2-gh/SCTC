@@ -1,23 +1,53 @@
 import React, { useEffect } from "react";
 import { useOrderHistory } from "@/hooks/use-order";
+import { CheckCircle, CheckIcon, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { formatCurrency } from "@/utils/format-data";
 
 export default function CurrentOrders() {
   const { activeOrders } = useOrderHistory();
-
+  const [view, setView] = useState(false);
   useEffect(() => {
-    if (activeOrders.length === 0) {
+    if (activeOrders && activeOrders.length === 0) {
       return;
     }
   }, [activeOrders]);
   return (
     <div
       slot="bottom"
-      className="max-w-[385px] w-full mx-auto h-fit fixed bottom-5 left-4 right-4 z-[100] flex justify-center bg-brand-800 rounded-full p-2"
+      className="max-w-[340px] w-full mx-auto h-fit fixed bottom-5 left-4 right-4 z-[100] bg-brand-800 rounded-3xl py-2 px-2"
     >
-      {activeOrders.length > 0 && (
-        <p className="text-white">
+      <button
+        onClick={() => setView(!view)}
+        className="text-white w-full flex items-center justify-between gap-2 px-4"
+      >
+        <p className="text-nowrap text-sm">
           Ỏooo, cục dàng đang có {activeOrders.length} đơn á nha !!!
         </p>
+
+        <ChevronDown
+          color="white"
+          className={cn("hover:cursor-pointer", { "rotate-180": view })}
+        />
+      </button>
+      {activeOrders.length > 0 && (
+        <div className={cn("mt-2 space-y-2", { hidden: !view })}>
+          {activeOrders.map((order) => (
+            <div
+              key={order.order_id}
+              className="flex items-center justify-between bg-brand-100/50 rounded-2xl p-2"
+            >
+              <p className="text-base">
+                No: <span>{order.tracking_order}</span>
+              </p>
+              <p>SL: {order.order_items_count}</p>
+              <p>{formatCurrency(order.subtotal)}</p>
+
+              {order.status === "completed" && <CheckCircle color="green" />}
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

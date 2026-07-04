@@ -14,7 +14,6 @@ export default function FloatingCartButton({
 }) {
   const { count, isLoading } = useCart();
   const router = useRouter();
-
   useEffect(() => {
     if (count === 0) {
       return;

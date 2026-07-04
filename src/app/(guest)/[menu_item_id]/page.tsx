@@ -1,3 +1,4 @@
+import LoadingPageView from "@/components/common/loading/loading-page-view";
 import { serverActionGetMenuItemInfo } from "@/lib/server-action/menu.action";
 import { ProductPageView } from "@/sections/(guest)/products/view";
 import { notFound } from "next/navigation";
@@ -14,7 +15,7 @@ export default async function ProductPage({
   if (!success || !data) return notFound();
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingPageView />}>
       <ProductPageView product={data} />
     </Suspense>
   );
