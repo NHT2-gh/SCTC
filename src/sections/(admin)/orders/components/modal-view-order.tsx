@@ -29,23 +29,21 @@ export default function ModalViewOrder({
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="pt-0 ">
       <div className="p-4 space-y-4">
-        <div className="w-full space-y-4">
-          <div className="capitalize flex gap-3 items-center">
-            <span
-              className={cn("size-4 rounded-full block", {
-                "animate-ping":
-                  _product_setting.processOrder[order.data.order.status].value <
-                  5,
-              })}
-              style={{
-                backgroundColor:
-                  _product_setting.processOrder[order.data.order.status].color,
-              }}
-            />
-            <span>
-              {_product_setting.processOrder[order.data.order.status].label}
-            </span>
-          </div>
+        <div className="capitalize flex gap-3 items-center justify-center">
+          <span
+            className={cn("size-4 rounded-full block", {
+              "animate-ping":
+                _product_setting.processOrder[order.data.order.status].value <
+                5,
+            })}
+            style={{
+              backgroundColor:
+                _product_setting.processOrder[order.data.order.status].color,
+            }}
+          />
+          <span>
+            {_product_setting.processOrder[order.data.order.status].label}
+          </span>
         </div>
 
         <OrderDetail data={order.data} />

@@ -31,11 +31,7 @@ export default function OrdersPageView() {
     ],
     initSubmit: true,
   });
-  const {
-    data: orders,
-    isPending,
-    isLoading,
-  } = useGetAllOrder({
+  const { data: orders } = useGetAllOrder({
     filters: filterValues,
   });
 
@@ -64,25 +60,27 @@ export default function OrdersPageView() {
   return (
     <>
       <MainContainer title={"Orders"}>
-        <FilterStatus
-          filterValues={filterValues}
-          updateFilter={updateFilter}
-          removeFilter={removeFilter}
-          countOrder={orders?.data.length}
-        />
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {orders?.data.map((order) => (
-            <OrderItemCard
-              key={order.tracking_order}
-              order={order}
-              onSelected={(orderId) => {
-                setOrderIdView(orderId);
-              }}
-              onConfirm={(orderId) => {
-                handleUpdateStatus(orderId, OrderStatus.CONFIRMED);
-              }}
-            />
-          ))}
+        <div className="relative">
+          <FilterStatus
+            filterValues={filterValues}
+            updateFilter={updateFilter}
+            removeFilter={removeFilter}
+            countOrder={orders?.data.length}
+          />
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[70vh] overflow-y-scroll ">
+            {orders?.data.map((order) => (
+              <OrderItemCard
+                key={order.tracking_order}
+                order={order}
+                onSelected={(orderId) => {
+                  setOrderIdView(orderId);
+                }}
+                onConfirm={(orderId) => {
+                  handleUpdateStatus(orderId, OrderStatus.CONFIRMED);
+                }}
+              />
+            ))}
+          </div>
         </div>
       </MainContainer>
 

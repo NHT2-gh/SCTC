@@ -105,7 +105,7 @@ export default function DrinksSearchBox({
             setSearchDrink(null);
           }}
         >
-          Thêm {selectedDrinks.length} đồ uống
+          Xác nhận
         </Button>
       )}
     </div>

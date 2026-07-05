@@ -1,7 +1,11 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/input";
 import { DeliveryMethod } from "@/types/checkout";
-import { OrderDetail as OrderDetailType } from "@/types/order";
+import {
+  OrderDetail as OrderDetailType,
+  OrderType,
+  OrderTypeMap,
+} from "@/types/order";
 import { formatCurrency, formatDateTime } from "@/utils/format-data";
 
 export default function OrderDetail({ data }: { data: OrderDetailType }) {
@@ -9,16 +13,23 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
 
   return (
     <div className="space-y-2">
-      <div className="flex justify-between">
-        <p className="text-lg font-bold">No: {data.order.tracking_order}</p>
-        {data.order.table_id && (
-          <b className="px-2 py-1 rounded-lg bg-muted">
-            Bàn {data.order.table_id}
-          </b>
-        )}
+      <div className="flex justify-center items-center gap-2 bg-neutral-500/40 text-neutral-950 w-[80%] mx-auto py-2 px-4">
+        <span className="text-md">
+          {data.order.notes?.includes("/dinein/tb")
+            ? OrderTypeMap.dine_in
+            : OrderTypeMap[data.order.order_type]}
+        </span>
+        {data.order.table_id ? (
+          <span>(Bàn {data.order.table_id})</span>
+        ) : data.order.notes?.includes("/dinein/tb") ? (
+          <span>({data.order.notes?.split("/")?.at(-1)})</span>
+        ) : null}
       </div>
-      <div className="w-full border border-dashed p-4 space-y-4 border-red-700 rounded-lg">
+      <div className="w-full p-4 space-y-4">
         <ul className="space-y-2 text-wrap [&>li]:flex [&>li>p]:w-[50%] [&>li]:items-center">
+          <li>
+            <p>No:</p> <b>{data.order.tracking_order} </b>
+          </li>
           <li>
             <p>Khách hàng: </p> <span>{data.order.customer_name}</span>
           </li>

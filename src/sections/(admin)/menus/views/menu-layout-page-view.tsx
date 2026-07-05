@@ -6,8 +6,8 @@ import { APP_ROUTES } from "@/config/app-routes";
 import { mapErrorToMessage } from "@/lib/error/app-error";
 import {
   useGetMenuLayouts,
-  useInitLayoutMenu,
   useUpdateLayoutItem,
+  useUpdateLayoutMenu,
 } from "@/hooks/queries/use-menu";
 import { MainContainer } from "@/components/common/page-layout";
 import {
@@ -28,7 +28,7 @@ interface MenuLayoutPageViewProps {
 export default function MenuLayoutPageView({
   menuId,
 }: MenuLayoutPageViewProps) {
-  const initLayout = useInitLayoutMenu();
+  const updateLayoutMenu = useUpdateLayoutMenu();
   const updateLayoutItem = useUpdateLayoutItem();
   const { data: layoutMenuItems } = useGetMenuLayouts(menuId);
   const [itemSelected, setItemSelected] = useState<MenuLayoutItem | null>(null);
@@ -49,10 +49,10 @@ export default function MenuLayoutPageView({
 
   const handleInitLayout = async () => {
     try {
-      const result = await initLayout.mutateAsync(menuId);
+      const result = await updateLayoutMenu.mutateAsync(menuId);
       if (result.success)
         showToast.success({
-          title: "Thành công khởi tạo layout",
+          title: "Thành công cập nhật layout",
           description: result.message,
         });
       else
@@ -100,8 +100,9 @@ export default function MenuLayoutPageView({
           onClick={() => {
             handleInitLayout();
           }}
+          disabled={updateLayoutMenu.isPending}
         >
-          Khởi tạo layout cho menu
+          Update Menu Layout
         </Button>
       </div>
       <FormProvider {...editLayoutItemForm}>

@@ -1,6 +1,10 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { useAddMenuItems, useGetMenuDetail } from "@/hooks/queries/use-menu";
+import {
+  useAddMenuItems,
+  useDeleteMenuItems,
+  useGetMenuDetail,
+} from "@/hooks/queries/use-menu";
 import { MainContainer } from "@/components/common/page-layout";
 import { ProductCard, DrinksSearchBox } from "../components";
 import { diffBasicArray } from "@/utils/diff-array";
@@ -18,6 +22,7 @@ interface MenuDetailProps {
 export default function MenuDetailPageView({ id }: MenuDetailProps) {
   const { data: menuItems, isLoading } = useGetMenuDetail(id);
   const addMenuItems = useAddMenuItems();
+  const deleteMenuItems = useDeleteMenuItems();
   const handleAddItems = useCallback(async (ids: string[]) => {
     const originalArray =
       menuItems?.data && menuItems?.data?.length > 0
@@ -29,21 +34,42 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
     if (originalArray) {
       const { added, removed } = diffBasicArray<string>(originalArray, ids);
 
-      console.log("added", added);
-      try {
-        const result = await addMenuItems.mutateAsync({
-          menuId: id,
-          ids: added,
-        });
+      if (added && added.length > 0) {
+        try {
+          const resultAdd = await addMenuItems.mutateAsync({
+            menuId: id,
+            ids: added,
+          });
 
-        if (result.success) {
-          showToast.success({ title: "Thành công cập nhật menu" });
+          if (resultAdd.success) {
+            showToast.success({ title: "Thành công cập nhật menu" });
+          }
+        } catch (error) {
+          showToast.error({
+            title: "Thất bại",
+            description: mapErrorToMessage(error),
+          });
         }
-      } catch (error) {
-        showToast.error({
-          title: "Thất bại",
-          description: mapErrorToMessage(error),
-        });
+      }
+
+      if (removed && removed.length > 0) {
+        try {
+          const resultDelete = await deleteMenuItems.mutateAsync({
+            productIds: removed,
+            menuId: id,
+          });
+          if (!resultDelete.success) {
+            showToast.error({
+              title: "Thất bại",
+              description: mapErrorToMessage(resultDelete.message),
+            });
+          }
+        } catch (error) {
+          showToast.error({
+            title: "Thất bại",
+            description: mapErrorToMessage(error),
+          });
+        }
       }
     }
   }, []);

@@ -40,6 +40,20 @@ export function useAddMenuItems() {
   });
 }
 
+export function useDeleteMenuItems() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: mutationKeys.menuItems.delete,
+    mutationFn: (payload: { productIds: string[]; menuId: string }) =>
+      menuService.removeMenuItem(payload.productIds, payload.menuId),
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.menu.detail(payload.menuId),
+      });
+    },
+  });
+}
+
 export function useGetMenuLayouts(menuId: string, isPublic?: boolean) {
   return useQuery({
     queryKey: queryKeys.menu.layout(menuId, isPublic),
@@ -47,11 +61,11 @@ export function useGetMenuLayouts(menuId: string, isPublic?: boolean) {
   });
 }
 
-export function useInitLayoutMenu() {
+export function useUpdateLayoutMenu() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: mutationKeys.menuItems.initLayout,
-    mutationFn: (menuId: string) => menuService.initMenuLayout(menuId),
+    mutationKey: mutationKeys.menuItems.updateLayout,
+    mutationFn: (menuId: string) => menuService.updateMenuLayout(menuId),
     onSuccess: (_, menuId) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.menu.layout(menuId),
@@ -83,6 +97,7 @@ export function useGetFixedOptions() {
 }
 
 export function useUpsertProductOption() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: mutationKeys.menuItems.updateOptions,
     mutationFn: (
@@ -91,6 +106,16 @@ export function useUpsertProductOption() {
         "menuItemId" | "id" | "limit" | "option_id"
       >[],
     ) => menuService.upsertProductOptions(payload),
+
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.menu.detail(variables[0].menuItemId!),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: mutationKeys.menuItems.updateLayout,
+      });
+    },
   });
 }
 
@@ -103,6 +128,10 @@ export function useDeleteMenuItemOption() {
     onSuccess: (_, payload) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.menu.detail(payload.menuItemId),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: mutationKeys.menuItems.updateLayout,
       });
     },
   });

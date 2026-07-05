@@ -17,7 +17,7 @@ export const useOrderStore = create<OrderStore>()(
       updateOrderStatus: (orderId, status) =>
         set((state) => ({
           orders: state.orders.map((order) =>
-            order.id === orderId
+            order.order_id === orderId
               ? {
                   ...order,
                   status,
@@ -28,7 +28,7 @@ export const useOrderStore = create<OrderStore>()(
 
       removeOrder: (orderId) =>
         set((state) => ({
-          orders: state.orders.filter((order) => order.id !== orderId),
+          orders: state.orders.filter((order) => order.order_id !== orderId),
         })),
 
       clearOrders: () =>

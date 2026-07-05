@@ -11,11 +11,11 @@ export const mutationKeys = {
 
   menuItems: {
     add: ["menu-items", "add"],
-    initLayout: ["menu-items", "init-layout"],
     updateLayout: ["menu-item", "update-layout"],
     updateOptions: ["menu-item", "update-options"],
     addOption: ["menu-item", "add-option"],
     deleteOption: ["menu-item", "delete-option"],
+    delete: ["menu-item", "delete"],
   },
 
   order: {

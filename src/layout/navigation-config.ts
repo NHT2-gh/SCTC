@@ -69,7 +69,7 @@ const NavItems: NavItem[] = [
       },
       {
         name: "Add Order",
-        path: APP_ROUTES.ADMIN.ORDER.ADD(),
+        path: APP_ROUTES.GUEST.ROOT,
       },
     ],
     role: ["admin"],

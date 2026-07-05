@@ -123,7 +123,7 @@ class MenuService {
     };
   }
 
-  async initMenuLayout(menuId: string): Promise<MutationResult> {
+  async updateMenuLayout(menuId: string): Promise<MutationResult> {
     const query = supabase.rpc("init_menu_layout", { p_menu_id: menuId });
     const { statusText, error } = await query;
 
@@ -166,6 +166,7 @@ class MenuService {
         selling_price: data.selling_price,
         description: data.description,
         image_url: data.image_url,
+        is_active: data.is_active,
       })
       .eq("id", data.id);
 
@@ -258,6 +259,22 @@ class MenuService {
 
     const { error } = await query;
 
+    if (error) handlePostgresError(error);
+    return {
+      success: true,
+    };
+  }
+
+  async removeMenuItem(
+    productIds: string[],
+    menuId: string,
+  ): Promise<MutationResult> {
+    const query = supabase
+      .from(this.menuItemsTable)
+      .delete()
+      .in("product_id", productIds)
+      .eq("menu_id", menuId);
+    const { error } = await query;
     if (error) handlePostgresError(error);
     return {
       success: true,

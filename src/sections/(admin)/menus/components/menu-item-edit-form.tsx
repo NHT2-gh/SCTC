@@ -65,6 +65,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
         description: data.info.products.description,
         selling_price: data.info.products.selling_price,
         image_url: data.info.products.image_url,
+        is_active: data.info.products.is_active,
       },
       options: [...data.options.custom].map((option) => {
         return {
@@ -240,6 +241,15 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
           form={editForm}
           className="col-span-2"
           field={{ name: "info.description", type: "textarea", label: "Mô tả" }}
+        />
+
+        <FormField
+          form={editForm}
+          field={{
+            name: "info.is_active",
+            type: "switch",
+            label: "Publish",
+          }}
         />
       </Form>
 

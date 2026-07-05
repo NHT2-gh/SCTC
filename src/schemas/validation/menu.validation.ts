@@ -17,6 +17,7 @@ export const productInfoValidation = z.object({
   selling_price: z.number(),
   description: z.string().nullable().optional(),
   image_url: z.array(z.string()).nullable().optional(),
+  is_active: z.boolean(),
 });
 
 export const productOptionValidation = z.object({

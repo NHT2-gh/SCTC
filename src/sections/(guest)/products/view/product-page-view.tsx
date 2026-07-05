@@ -151,7 +151,7 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
   }, [filterValues, options, product.info.products.selling_price, quantity]);
 
   return (
-    <section className="bg-[#8D1111] [&_hr]:border-[#E2DDCD] relative">
+    <section className="bg-[#8D1111] [&_hr]:border-[#E2DDCD] relative flex flex-col h-dvh">
       <NavigationBar backHref={APP_ROUTES.GUEST.ROOT} />
       <div className="product-image mb-10 flex justify-center">
         <Image
@@ -165,12 +165,12 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
               : "/images/product-images/matcha-latte.png"
           }
           alt={info.products.name}
-          className="mx-auto"
+          className="mx-auto object-contain"
         />
       </div>
 
-      <div className="rounded-tl-[1.875rem] rounded-tr-[1.875rem] bg-[#FFFAEA]">
-        <div className="space-y-3 p-5">
+      <div className="rounded-tl-[1.875rem] grow flex flex-col rounded-tr-[1.875rem] bg-[#FFFAEA]">
+        <div className="space-y-3 p-5 grow">
           <div className="">
             <div className="flex justify-between">
               <h1

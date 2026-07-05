@@ -19,7 +19,7 @@ export default function FilterStatus({
 }: FilterStatusProps) {
   const [_, setStatus] = useUrlState("status");
   return (
-    <div className="flex gap-3 items-center overflow-x-scroll scrollbar-hidden">
+    <div className="z-10 py-3 bg-white flex gap-3 items-center overflow-x-scroll scrollbar-hidden">
       <button
         onClick={() => removeFilter("status")}
         className={cn("bg-neutral-100 rounded-xl py-2 px-4 capitalize", {

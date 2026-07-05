@@ -28,6 +28,11 @@ export enum OrderType {
   take_away = "take_away",
 }
 
+export const OrderTypeMap: Record<OrderType, string> = {
+  [OrderType.dine_in]: "Tại chỗ",
+  [OrderType.take_away]: "Mang đi",
+};
+
 export interface Order {
   id: string;
   customer_name: string;
@@ -39,6 +44,7 @@ export interface Order {
   order_items_count: number;
   delivery_method: keyof typeof DeliveryMethod;
   tracking_order: string;
+  order_type: OrderType;
   created_at: string;
   updated_at: string;
   table_id?: number | null;

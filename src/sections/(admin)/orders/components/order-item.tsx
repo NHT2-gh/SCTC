@@ -21,7 +21,9 @@ export default function OrderItemCard({
     <article
       onClick={() => onSelected(order.tracking_order)}
       className={cn("border rounded-lg p-4 cursor-pointer", {
-        "border-brand-500 ": order.tables?.id,
+        "border-brand-500 ":
+          order.tables?.id ||
+          (order.notes?.includes("/dinein/tb") && !order.tables?.id),
       })}
     >
       <div className="flex justify-between">
