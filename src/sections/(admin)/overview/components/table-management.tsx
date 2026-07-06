@@ -32,7 +32,6 @@ export default function TableManagement() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  console.log(process.env.NEXT_PUBLIC_DOMAIN_URL);
   return (
     <section>
       <TableTitle title="Table Management" />
@@ -67,7 +66,7 @@ export default function TableManagement() {
           <QRCode
             size={200}
             style={{ height: "auto", maxWidth: "200", width: "100%" }}
-            value={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/${APP_ROUTES.GUEST.TABLE.DETAIL(tableSelected)}`}
+            value={`${window.location.origin}/${APP_ROUTES.GUEST.TABLE.DETAIL(tableSelected)}`}
             viewBox={`0 0 200 200`}
           />
         </Modal>
