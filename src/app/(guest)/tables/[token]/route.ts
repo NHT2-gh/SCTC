@@ -28,9 +28,9 @@ export async function GET(
   }
 
   const session = await createTableSession(table.id);
-
+  const origin = new URL(req.url).origin;
   const response = NextResponse.redirect(
-    new URL(window.location.origin + APP_ROUTES.GUEST.ROOT),
+    new URL(origin + APP_ROUTES.GUEST.ROOT),
   );
 
   response.cookies.set(TABLE_COOKIE, session, {

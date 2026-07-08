@@ -4,6 +4,8 @@ import { CheckCircle, CheckIcon, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/format-data";
+import Link from "next/link";
+import { APP_ROUTES } from "@/config/app-routes";
 
 export default function CurrentOrders() {
   const { activeOrders } = useOrderHistory();
@@ -32,22 +34,25 @@ export default function CurrentOrders() {
         />
       </button>
       {activeOrders.length > 0 && (
-        <div className={cn("mt-2 space-y-2", { hidden: !view })}>
+        <button className={cn("mt-2 w-full space-y-2", { hidden: !view })}>
           {activeOrders.map((order) => (
-            <div
+            <Link
               key={order.order_id}
-              className="flex items-center justify-between bg-brand-100/50 rounded-2xl p-2"
+              className="block"
+              href={APP_ROUTES.GUEST.ORDER.VIEW(order.tracking_order)}
             >
-              <p className="text-base">
-                No: <span>{order.tracking_order}</span>
-              </p>
-              <p>SL: {order.order_items_count}</p>
-              <p>{formatCurrency(order.subtotal)}</p>
+              <div className="flex items-center justify-between bg-amber-100 rounded-2xl p-2">
+                <p className="text-base">
+                  No: <span>{order.tracking_order}</span>
+                </p>
+                <p>SL: {order.order_items_count}</p>
+                <p>{formatCurrency(order.subtotal)}</p>
 
-              {order.status === "completed" && <CheckCircle color="green" />}
-            </div>
+                {order.status === "completed" && <CheckCircle color="green" />}
+              </div>
+            </Link>
           ))}
-        </div>
+        </button>
       )}
     </div>
   );

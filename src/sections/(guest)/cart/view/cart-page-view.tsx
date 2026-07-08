@@ -12,23 +12,24 @@ import { useModal } from "@/hooks/useModal";
 import { delagothic, itim } from "@/lib/fonts";
 import { formatCurrency } from "@/utils/format-data";
 import { cn } from "@/lib/utils";
-import { updateOrderInCache } from "@/supabase/helper/update-order";
 
 export default function CartPageView() {
   const [itemEditting, setItemEditting] = useState<CartItem | null>(null);
-  const [idItemEditing, setIdItemEditting] = useUrlState("edit");
+  const [idItemEditing, setIdItemEditting] = useUrlState("edit", "");
   const { items, cartSummary, count, clearCart } = useCart();
   const editBlock = useModal();
   const router = useRouter();
 
   useEffect(() => {
-    const itemEditting = items.find((item) => item.id == idItemEditing);
+    const itemEditting = items.find(
+      (item) => String(item.id) === String(idItemEditing),
+    );
 
     if (itemEditting) {
       editBlock.openModal();
       setItemEditting(itemEditting);
-    }
-  }, [idItemEditing]);
+    } else editBlock.closeModal();
+  }, [idItemEditing, itemEditting, items]);
 
   return (
     <section className="flex relative flex-col h-[100vh]">
@@ -63,9 +64,9 @@ export default function CartPageView() {
         </button>
       </div>
 
-      {editBlock.isOpen && (
+      {editBlock.isOpen && itemEditting && (
         <EditProductInfo
-          cartItem={itemEditting!}
+          cartItem={itemEditting}
           onClose={() => {
             editBlock.closeModal();
             setIdItemEditting(undefined);

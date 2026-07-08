@@ -15,8 +15,7 @@ import { useUrlState } from "@/hooks/use-url-state";
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
-  const [status, setStatus] = useUrlState("status");
-  const [orderIdView, setOrderIdView] = useUrlState("view_order");
+  const [orderIdView, setOrderIdView] = useUrlState("view_order", "");
   const updateOrderStatus = useUpdateOrderStatus();
   const { filterValues, updateFilter, removeFilter } = useFilter({
     filterConfigs: [

@@ -34,11 +34,13 @@ export default function CheckoutInfoForm() {
     name: "delivery_method",
     control: checkoutForm.control,
   });
+
   const {
     handleSubmit,
     setValue,
     formState: { isLoading },
   } = checkoutForm;
+
   const onSubmit = async (data: CheckoutFormValidationType) => {
     updateCheckout({
       customer: data.customer,

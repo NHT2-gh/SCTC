@@ -39,28 +39,28 @@ export default function CartItem({ item }: { item: CartItem }) {
       <div className="w-full flex justify-between items-center text-xs gap-3">
         <div
           onClick={() => setEditCartItem(item.id)}
-          className="text-xs text-left cursor-pointer space-y-1.5 grow"
+          className="text-xs text-left cursor-pointer space-y-1 grow"
         >
-          <h2>{item.menu_item.products.name}</h2>
+          <h2 className="text-base">{item.menu_item.products.name}</h2>
 
           {item.selected_options && item.selected_options.length > 0 && (
             <p className="overflow-hidden space-x-0.5 text-nowrap max-w-[10.5625rem] text-ellipsis">
-              {item.selected_options.map((option) => (
-                <span
-                  className="inline-flex text-[#6E6E6E] gap-0.5 after:content-[','] last:after:hidden"
-                  key={option.id}
-                >
-                  {option.component_name}
-                </span>
-              ))}
+              {item.selected_options
+                .filter((option) => option.component_name !== "Bình thường")
+                .map((option) => (
+                  <span
+                    className="inline-flex text-[#6E6E6E] gap-0.5 after:content-[','] last:after:hidden"
+                    key={option.id}
+                  >
+                    {option.component_name}
+                  </span>
+                ))}
             </p>
           )}
-
+          {item.line_note && <span className=" italic">{item.line_note}</span>}
           <p className="text-[#B60F14] text-base">
             {formatCurrency(itemPrice)}
           </p>
-
-          {item.line_note && <span className=" italic">{item.line_note}</span>}
         </div>
 
         <CustomNumberInput

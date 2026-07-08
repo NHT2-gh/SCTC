@@ -20,7 +20,6 @@ export default function MenuLayoutPreview({
   const dataEditing = useWatch({ control: editForm.control });
   const [mode, setMode] = useState<"preview" | "editing">("preview");
 
-  console.log(dataEditing.page);
   return (
     <div className="flex-2 p-10 max-w-full rounded-xl items-center overflow-auto border-2 border-brand-200 space-y-10">
       <Switch

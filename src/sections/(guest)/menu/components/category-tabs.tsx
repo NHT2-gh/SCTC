@@ -37,11 +37,13 @@ const _category_list = [
 ];
 
 export default function CategoryTabs({
+  value,
   onSelected,
 }: {
+  value: number;
   onSelected: (page: number) => void;
 }) {
-  const [itemActive, setItemActive] = useState<number>(1);
+  const [itemActive, setItemActive] = useState<number>(value);
   return (
     <section
       className={cn(

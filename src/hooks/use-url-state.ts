@@ -84,23 +84,22 @@ function deserializeValue(str: string, hint?: string): unknown {
  * @param defaultValue - Default value when parameter is not present
  * @returns [value, setValue] tuple similar to useState
  */
-export function useUrlState(key: string, defaultValue: string = "") {
+export function useUrlState<T>(key: string, defaultValue?: T) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const value = searchParams.get(key) || defaultValue;
   const setValue = useCallback(
-    (newValue: string | undefined) => {
+    (newValue: T | undefined) => {
       const params = new URLSearchParams(searchParams.toString());
 
       if (newValue === defaultValue || !newValue) {
         params.delete(key);
       } else {
-        params.set(key, newValue);
+        params.set(key, String(newValue));
       }
 
       const newUrl = params.toString() ? `?${params.toString()}` : "";
-      console.log(newUrl);
       const finalUrl = `${window.location.pathname}${newUrl}`;
       router.push(finalUrl, { scroll: false });
     },

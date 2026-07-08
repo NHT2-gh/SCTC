@@ -30,9 +30,9 @@ export default function MenuItemCard({
             : "/images/product-images/matcha-latte.png"
         }
         alt={item.name}
-        width={79}
-        height={107}
-        className="object-contain rounded-xl aspect-[79/107] w-[79px] h-[107px]"
+        width={100}
+        height={100}
+        className="object-contain rounded-xl aspect-[1/1] w-[100px]"
       />
       <div className="space-y-2">
         <h5
@@ -43,7 +43,7 @@ export default function MenuItemCard({
         >
           {item.name}
         </h5>
-        <p className={cn("text-[0.875rem] line-clamp-2 text-xs text-black")}>
+        <p className={cn("line-clamp-2 text-sm text-black")}>
           {item.description ||
             "Sử dụng cà phê mix Arabica và Robusta với tỉ lệ 3/7 và sữa đặc"}
         </p>
