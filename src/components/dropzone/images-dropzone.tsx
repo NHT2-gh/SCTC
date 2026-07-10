@@ -8,6 +8,7 @@ import { ComponentCard } from "../common/component-card";
 import { deleteImage } from "@/supabase/storage/storageClinets";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
+import { v4 } from "uuid";
 
 interface DropzoneComponentProps {
   images: ImageItem[] | [];
@@ -37,11 +38,13 @@ export default function ImagesDropzone({
 }: DropzoneComponentProps) {
   const onDrop = (acceptedFiles: File[]) => {
     const newImages = acceptedFiles.map((file) => ({
-      id: crypto.randomUUID(), // unique id
+      id: v4(), // unique id
       previewUrl: URL.createObjectURL(file),
       file: file,
       status: "idle" as UploadStatus,
     }));
+
+    console.log(newImages);
 
     onChange([...(images || []), ...newImages]);
   };

@@ -125,6 +125,15 @@ export default function AddProductPageView() {
           className="col-span-2"
           field={{ name: "description", type: "textarea", label: "Mô tả" }}
         />
+
+        <FormField
+          form={addForm}
+          field={{
+            name: "is_active",
+            type: "switch",
+            label: "Publish",
+          }}
+        />
       </Form>
 
       <ImagesDropzone

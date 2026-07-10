@@ -31,7 +31,7 @@ export default function MenuLayoutPreview({
 
       <div
         className={cn(
-          " border-2 rounded-xl relative w-[375px] mx-auto overflow-hidden p-4 h-[812px]",
+          " border-2 rounded-xl relative w-[375px] mx-auto overflow-hidden p-4 h-[812px] overflow-y-scroll",
         )}
       >
         <div className="relative">

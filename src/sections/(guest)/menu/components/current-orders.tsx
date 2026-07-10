@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useOrderHistory } from "@/hooks/use-order";
 import { CheckCircle, CheckIcon, ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -10,11 +10,10 @@ import { APP_ROUTES } from "@/config/app-routes";
 export default function CurrentOrders() {
   const { activeOrders } = useOrderHistory();
   const [view, setView] = useState(false);
-  useEffect(() => {
-    if (activeOrders && activeOrders.length === 0) {
-      return;
-    }
-  }, [activeOrders]);
+
+  if (activeOrders && activeOrders.length === 0) {
+    return;
+  }
   return (
     <div
       slot="bottom"
