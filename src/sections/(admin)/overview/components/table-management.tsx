@@ -71,6 +71,19 @@ export default function TableManagement() {
           />
         </Modal>
       )}
+
+      <QRCode
+        size={200}
+        style={{
+          height: "auto",
+          maxWidth: "200",
+          width: "100%",
+          margin: "auto",
+          marginTop: "30px",
+        }}
+        value={`${window.location.origin}`}
+        viewBox={`0 0 200 200`}
+      />
     </section>
   );
 }

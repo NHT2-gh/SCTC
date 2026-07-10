@@ -18,7 +18,6 @@ export const metadata: Metadata = {
     template: "%s | SCTC",
     default: "Sáng Cà Tối Cồn",
   },
-  description: "SCTC Admin Dashboard",
 };
 
 export default function RootLayout({
