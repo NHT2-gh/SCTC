@@ -8,11 +8,11 @@ import { formatCurrency } from "@/utils/format-data";
 import { useGetAllProduct } from "@/hooks/queries/use-product";
 
 interface DrinksSearchBoxProps {
-  onAdd: (drinkIds: string[]) => void;
+  onChange: (drinkIds: string[]) => void;
   itemsIds?: string[];
 }
 export default function DrinksSearchBox({
-  onAdd,
+  onChange,
   itemsIds,
 }: DrinksSearchBoxProps) {
   const [searchDrink, setSearchDrink] = useState<string | null>(null);
@@ -100,7 +100,7 @@ export default function DrinksSearchBox({
           size="sm"
           disabled={selectedDrinks.length === 0}
           onClick={() => {
-            onAdd(selectedDrinks);
+            onChange(selectedDrinks);
             setSelectedDrinks([]);
             setSearchDrink(null);
           }}

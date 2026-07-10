@@ -20,7 +20,7 @@ export default async function Bill({
   return (
     <article
       style={{ backgroundImage: `url(/images/backgrounds/${backgroundUrl})` }}
-      className="bill-box max-w-[87%] mx-auto h-fit text-sm opacity-[0.97] px-3.5 py-8 border-brand-500 space-y-4 [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2]"
+      className="bill-box text-black max-w-[87%] mx-auto h-fit text-sm opacity-[0.97] px-3.5 py-8 border-brand-500 space-y-4 [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2]"
     >
       <div className="w-full flex items-center justify-between text-center">
         <Image

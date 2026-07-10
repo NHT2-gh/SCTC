@@ -34,6 +34,8 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
     if (originalArray) {
       const { added, removed } = diffBasicArray<string>(originalArray, ids);
 
+      console.log(added, removed);
+
       if (added && added.length > 0) {
         try {
           const resultAdd = await addMenuItems.mutateAsync({
@@ -89,7 +91,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
             itemsIds={menuItems?.data.map((item) => {
               return item.products.id;
             })}
-            onAdd={(ids) => handleAddItems(ids)}
+            onChange={(ids) => handleAddItems(ids)}
           />
         )}
         <Link href={APP_ROUTES.ADMIN.MENUS.LAYOUTS(id)}>

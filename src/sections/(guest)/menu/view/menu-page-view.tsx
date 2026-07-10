@@ -10,6 +10,7 @@ import CategoryTabs from "../components/category-tabs";
 import CurrentOrders from "../components/current-orders";
 import { useRouter } from "next/navigation";
 import { useUrlState } from "@/hooks/use-url-state";
+import Link from "next/link";
 
 interface MenuPageViewProps {
   menuLayout: MenuLayoutItem[];
@@ -74,17 +75,18 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
                   height: item.h,
                 }}
               >
-                <MenuItemCard
-                  item={item.menu_items.products}
-                  onClick={() =>
-                    router.push(
-                      APP_ROUTES.GUEST.PRODUCT.VIEW_DETAIL(item.menu_items.id),
-                    )
-                  }
-                  className={cn("bg-transparent", {
-                    "flex-row-reverse text-right": item.x > 1,
-                  })}
-                />
+                <Link
+                  href={APP_ROUTES.GUEST.PRODUCT.VIEW_DETAIL(
+                    item.menu_items.id,
+                  )}
+                >
+                  <MenuItemCard
+                    item={item.menu_items.products}
+                    className={cn("bg-transparent", {
+                      "flex-row-reverse text-right": item.x > 1,
+                    })}
+                  />
+                </Link>
               </div>
             ))}
         </div>

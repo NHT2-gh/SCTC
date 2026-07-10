@@ -46,9 +46,9 @@ export default function NavigationBar({
 
       {title && <h1 className={delagothic.className}>{title}</h1>}
 
-      <button className="bg-[#FFFFFF1A] size-9 aspect-square flex justify-center items-center rounded-lg">
+      {/* <button className="bg-[#FFFFFF1A] size-9 aspect-square flex justify-center items-center rounded-lg">
         <EllipsisVertical size={20} />
-      </button>
+      </button> */}
     </nav>
   );
 }

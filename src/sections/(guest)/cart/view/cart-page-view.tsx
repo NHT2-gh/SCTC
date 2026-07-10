@@ -12,6 +12,7 @@ import { useModal } from "@/hooks/useModal";
 import { delagothic, itim } from "@/lib/fonts";
 import { formatCurrency } from "@/utils/format-data";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function CartPageView() {
   const [itemEditting, setItemEditting] = useState<CartItem | null>(null);
@@ -45,23 +46,22 @@ export default function CartPageView() {
       />
 
       <div className="w-full sticky bottom-[0] p-1.5 after:absolute after:inset-0 after:z-[-1] after:bg-[linear-gradient(90deg,rgba(255,250,234,0)_0%,rgba(255,250,234,0.3)_25.96%)] after:backdrop-blur-[20px] after:blur-[1px]">
-        <button
-          disabled={count === 0}
-          className={cn(
-            "w-full bg-[#8D1111] py-4 px-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed",
-            delagothic.className,
-          )}
-          onClick={() => {
-            router.push(APP_ROUTES.GUEST.CHECKOUT.VIEW);
-          }}
-        >
-          <span className=" text-sm text-white ">
-            {count === 0 ? "Chưa có gì để chốt bà ơi !!!" : "Chốt đơn"}
-            <span className={itim.className}>
-              {count === 0 ? "" : " -" + formatCurrency(cartSummary.subtotal)}
+        <Link href={APP_ROUTES.GUEST.CHECKOUT.VIEW}>
+          <button
+            disabled={count === 0}
+            className={cn(
+              "w-full bg-[#8D1111] py-4 px-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed",
+              delagothic.className,
+            )}
+          >
+            <span className=" text-sm text-white ">
+              {count === 0 ? "Chưa có gì để chốt bà ơi !!!" : "Chốt đơn"}
+              <span className={itim.className}>
+                {count === 0 ? "" : " -" + formatCurrency(cartSummary.subtotal)}
+              </span>
             </span>
-          </span>
-        </button>
+          </button>
+        </Link>
       </div>
 
       {editBlock.isOpen && itemEditting && (

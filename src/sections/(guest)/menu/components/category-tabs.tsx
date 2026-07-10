@@ -28,11 +28,26 @@ const _category_list = [
     pageNumber: 4,
     icon: <IcCoffeCup fillColor="#C59E00" />,
   },
+
+  {
+    lable: "Cacao",
+    color: "#8D1111",
+    pageNumber: 6,
+    icon: <IcCoffeCup fillColor="#732C12" />,
+  },
+
   {
     lable: "Cồn",
     color: "#8D1111",
     pageNumber: 5,
     icon: <IcRuouIcon fillColor="#8D1111" />,
+  },
+
+  {
+    lable: "Thức ăn",
+    color: "#8D1111",
+    pageNumber: 7,
+    icon: <IcCoffeCup fillColor="#732C12" />,
   },
 ];
 
@@ -57,7 +72,7 @@ export default function CategoryTabs({
             onSelected(item.pageNumber);
             setItemActive(item.pageNumber);
           }}
-          key={item.color}
+          key={item.pageNumber}
           style={{
             color: item.pageNumber === itemActive ? item.color : undefined,
 

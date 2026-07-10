@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FormField } from "@/components/form";
 import { checkoutFormSchema } from "@/schemas/form-schemas/checkout-form-schema";
 import { CheckoutFormValidationType } from "@/schemas/validation/checkout.validation";
@@ -22,6 +22,7 @@ export default function CheckoutInfoForm() {
   const router = useRouter();
   const { addOrder } = useOrderHistory();
   const { items, clearCart } = useCart();
+  const [isLoading, setIsLoading] = useState(false);
   const { checkoutInfo, updateCheckout } = useCheckout();
   const checkoutForm = useFormRenderer<CheckoutFormValidationType>(
     checkoutFormSchema,
@@ -38,10 +39,12 @@ export default function CheckoutInfoForm() {
   const {
     handleSubmit,
     setValue,
-    formState: { isLoading },
+    formState: { isLoading: formIsLoading },
   } = checkoutForm;
 
   const onSubmit = async (data: CheckoutFormValidationType) => {
+    setIsLoading(true);
+
     updateCheckout({
       customer: data.customer,
       delivery_method: data.delivery_method as keyof typeof DeliveryMethod,
@@ -77,11 +80,15 @@ export default function CheckoutInfoForm() {
         });
         clearCart();
         router.push(APP_ROUTES.GUEST.ORDER.VIEW(result.tracking_order));
+        setIsLoading(false);
       } else {
         throw new Error("Đặt hàng thất bại");
       }
     } catch (error) {
       showToast.error({ title: "Đặt hàng thất bại" });
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,7 +122,7 @@ export default function CheckoutInfoForm() {
       </Form>
 
       <button
-        disabled={isLoading}
+        disabled={isLoading || formIsLoading}
         onClick={handleSubmit(onSubmit)}
         type="submit"
         className={cn(
@@ -123,7 +130,9 @@ export default function CheckoutInfoForm() {
           delagothic.className,
         )}
       >
-        {isLoading ? "Đừng có nhấn nữa đang ấy" : "Chính thức chốt đơn"}
+        {isLoading || formIsLoading
+          ? "Đừng có nhấn nữa đang ấy"
+          : "Chính thức chốt đơn"}
       </button>
     </div>
   );
