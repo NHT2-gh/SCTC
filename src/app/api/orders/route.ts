@@ -6,11 +6,21 @@ export async function POST(req: Request) {
   const body = await req.json();
   const currentTable = await getCurrentTable();
 
-  const { cartItems, checkoutInfo } = body as CreateOrderDTO;
+  const {
+    cartItems,
+    checkoutInfo,
+    table_id: tableIdFromBody,
+  } = body as CreateOrderDTO;
 
   const { data: newOrder, error } = await adminSupabase.rpc("create_order_v2", {
-    p_table_id: currentTable?.tableId ?? null,
-    p_order_type: currentTable?.tableId ? "dine_in" : "take_away",
+    p_table_id: currentTable?.tableId
+      ? currentTable?.tableId
+      : (tableIdFromBody ?? null),
+    p_order_type: currentTable?.tableId
+      ? "dine_in"
+      : currentTable?.tableId || tableIdFromBody
+        ? "dine_in"
+        : "take_away",
     p_checkout: checkoutInfo,
     p_cart: cartItems,
   });

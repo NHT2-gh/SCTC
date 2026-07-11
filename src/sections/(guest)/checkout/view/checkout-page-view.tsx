@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
+import { useCart } from "@/hooks/use-cart";
+import { APP_ROUTES } from "@/config/app-routes";
 import { CheckoutInfoForm } from "../components";
 import { CartItemsList } from "../../cart/components";
-import { useCart } from "@/hooks/use-cart";
 import { NavigationBar } from "@/components/common/navigation-bar";
-import { APP_ROUTES } from "@/config/app-routes";
 
 export default function CheckoutPageView() {
-  const { items, count } = useCart();
+  const { items } = useCart();
   return (
     <section className="p-4 h-full space-y-5">
       <NavigationBar

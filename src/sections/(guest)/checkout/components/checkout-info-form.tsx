@@ -61,6 +61,9 @@ export default function CheckoutInfoForm() {
         body: JSON.stringify({
           cartItems: items,
           checkoutInfo: data,
+          table_id: data.note
+            ? Number(data.note.match(/\d+$/)?.[0])
+            : undefined,
         }),
       });
 

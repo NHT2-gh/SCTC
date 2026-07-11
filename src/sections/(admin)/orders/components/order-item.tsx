@@ -11,22 +11,26 @@ interface OrderItemCardProp {
   order: Order;
   onSelected: (orderId: string) => void;
   onConfirm: (orderId: string) => void;
+  onCancel: (orderId: string) => void;
 }
 export default function OrderItemCard({
   order,
   onSelected,
   onConfirm,
+  onCancel,
 }: OrderItemCardProp) {
   return (
     <article
-      onClick={() => onSelected(order.tracking_order)}
-      className={cn("border rounded-lg p-4 cursor-pointer", {
+      className={cn("border rounded-lg p-4", {
         "border-brand-500 ":
           order.tables?.id ||
           (order.notes?.includes("/dinein/tb") && !order.tables?.id),
       })}
     >
-      <div className="flex justify-between">
+      <div
+        className="flex justify-between cursor-pointer"
+        onClick={() => onSelected(order.tracking_order)}
+      >
         <p>No: {order.tracking_order}</p>
         <div className="capitalize flex gap-3 items-center">
           <span
@@ -66,13 +70,23 @@ export default function OrderItemCard({
       </p>
 
       {order.status === OrderStatus.PENDING && (
-        <Button
-          size="sm"
-          className="mt-4"
-          onClick={() => onConfirm(order.tracking_order)}
-        >
-          Confirm order
-        </Button>
+        <div className="flex items-center justify-between">
+          <Button
+            size="sm"
+            variant={"outline"}
+            className="mt-4"
+            onClick={() => onCancel(order.tracking_order)}
+          >
+            Cancel order
+          </Button>
+          <Button
+            size="sm"
+            className="mt-4"
+            onClick={() => onConfirm(order.tracking_order)}
+          >
+            Confirm order
+          </Button>
+        </div>
       )}
     </article>
   );

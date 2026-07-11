@@ -145,6 +145,7 @@ export default function AddProductPageView() {
 
       <Button
         type="submit"
+        disabled={images.some((item) => item.status === "idle") || isUploading}
         onClick={handleSubmit(onSubmit, (err) => {
           console.log("VALIDATION ERROR", err);
         })}

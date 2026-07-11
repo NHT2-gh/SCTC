@@ -45,9 +45,16 @@ const _category_list = [
   },
 
   {
-    lable: "Thức ăn",
+    lable: "Lai rai",
     color: "#8D1111",
     pageNumber: 7,
+    icon: <Utensils strokeWidth={3} className="w-5 h-5 text-[#8D1111]" />,
+  },
+
+  {
+    lable: "Bánh",
+    color: "#8D1111",
+    pageNumber: 8,
     icon: <Utensils strokeWidth={3} className="w-5 h-5 text-[#8D1111]" />,
   },
 ];

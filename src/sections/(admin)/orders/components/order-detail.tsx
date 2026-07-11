@@ -1,12 +1,8 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/input";
 import { DeliveryMethod } from "@/types/checkout";
-import {
-  OrderDetail as OrderDetailType,
-  OrderType,
-  OrderTypeMap,
-} from "@/types/order";
 import { formatCurrency, formatDateTime } from "@/utils/format-data";
+import { OrderDetail as OrderDetailType, OrderTypeMap } from "@/types/order";
 
 export default function OrderDetail({ data }: { data: OrderDetailType }) {
   const [itemsDone, setItemsDone] = React.useState<string[]>([]);

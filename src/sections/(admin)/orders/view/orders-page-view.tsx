@@ -12,12 +12,16 @@ import { useModal } from "@/hooks/useModal";
 import { FilterStatus, ModalViewOrder } from "../components";
 import { useFilter } from "@/hooks/use-filter";
 import { useUrlState } from "@/hooks/use-url-state";
+import { FormField } from "@/components/form";
+import { useGetTable } from "@/hooks/queries/use-overview";
+import { Button } from "@/components/ui/button";
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
+  const { data: tables } = useGetTable();
   const [orderIdView, setOrderIdView] = useUrlState("view_order", "");
   const updateOrderStatus = useUpdateOrderStatus();
-  const { filterValues, updateFilter, removeFilter } = useFilter({
+  const { filterValues, updateFilter, removeFilter, clearFilters } = useFilter({
     filterConfigs: [
       {
         type: "checkbox",
@@ -30,7 +34,7 @@ export default function OrdersPageView() {
     ],
     initSubmit: true,
   });
-  const { data: orders } = useGetAllOrder({
+  const { data: orders, refetch: refetchOrders } = useGetAllOrder({
     filters: filterValues,
   });
 
@@ -50,6 +54,7 @@ export default function OrdersPageView() {
 
       if (result.success) {
         showToast.success({ title: "Order updated successfully" });
+        refetchOrders();
       }
     } catch (error) {
       showToast.error({ title: "Error updating order" });
@@ -59,13 +64,39 @@ export default function OrdersPageView() {
   return (
     <>
       <MainContainer title={"Orders"}>
-        <div className="relative">
+        <div className="relative space-y-2">
           <FilterStatus
             filterValues={filterValues}
             updateFilter={updateFilter}
             removeFilter={removeFilter}
             countOrder={orders?.data.length}
           />
+
+          {tables?.data && (
+            <div className="flex items-center justify-between">
+              <FormField
+                className="w-full md:w-fit"
+                field={{
+                  type: "select",
+                  name: "tableId",
+                  handleOnChange: (value: string) => {
+                    updateFilter("table_id", Number(value));
+                  },
+                  options: tables?.data.map((table) => {
+                    return {
+                      label: table.name,
+                      value: Number(table.id),
+                    };
+                  }),
+                }}
+              />
+
+              <Button onClick={() => clearFilters()} className="w-fit">
+                Clear
+              </Button>
+            </div>
+          )}
+
           <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[70vh] overflow-y-scroll ">
             {orders?.data.map((order) => (
               <OrderItemCard
@@ -76,6 +107,9 @@ export default function OrdersPageView() {
                 }}
                 onConfirm={(orderId) => {
                   handleUpdateStatus(orderId, OrderStatus.CONFIRMED);
+                }}
+                onCancel={(orderId) => {
+                  handleUpdateStatus(orderId, OrderStatus.CANCELLED);
                 }}
               />
             ))}

@@ -178,7 +178,7 @@ export default function ImagesDropzone({
         }}
         disabled={
           !images ||
-          images?.filter((item) => item.status === "idle").length === 0 ||
+          images.some((item) => item.status === "idle") ||
           isUploading
         }
         className="absolute top-1 md:top-2 right-3 p-2"
