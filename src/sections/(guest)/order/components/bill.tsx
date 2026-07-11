@@ -52,6 +52,9 @@ export default async function Bill({
           <p>Hình thức nhận hàng: </p>{" "}
           <span>{DeliveryMethod[data.order.delivery_method]}</span>
         </li>
+        <li>
+          <p>Thời gian nhận hàng: </p> <span>{data.order.pick_up_time}</span>
+        </li>
       </ul>
       <hr />
 
