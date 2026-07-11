@@ -1,7 +1,11 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/input";
 import { DeliveryMethod } from "@/types/checkout";
-import { formatCurrency, formatDateTime } from "@/utils/format-data";
+import {
+  formatCurrency,
+  formatDateTime,
+  formatDateTimev2,
+} from "@/utils/format-data";
 import { OrderDetail as OrderDetailType, OrderTypeMap } from "@/types/order";
 
 export default function OrderDetail({ data }: { data: OrderDetailType }) {
@@ -42,6 +46,14 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
             <p>Hình thức: </p>{" "}
             <span>{DeliveryMethod[data.order.delivery_method]}</span>
           </li>
+          {data.order.pick_up_time && (
+            <li>
+              <p>Thời gian nhận hàng: </p>{" "}
+              <span>
+                {formatDateTimev2(data.order.pick_up_time, { withTime: true })}
+              </span>
+            </li>
+          )}
         </ul>
         <hr />
 

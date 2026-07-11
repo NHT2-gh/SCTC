@@ -4,7 +4,11 @@ import { useUpdateOrderStatus } from "@/hooks/queries/use-order";
 import { cn } from "@/lib/utils";
 import { DeliveryMethod } from "@/types/checkout";
 import { Order, OrderItem, OrderStatus } from "@/types/order";
-import { formatCurrency, formatDateTime } from "@/utils/format-data";
+import {
+  formatCurrency,
+  formatDateTime,
+  formatDateTimev2,
+} from "@/utils/format-data";
 import React from "react";
 
 interface OrderItemCardProp {
@@ -66,7 +70,7 @@ export default function OrderItemCard({
       </p>
 
       <p className="text-sm text-muted-foreground mt-2">
-        Pickup time: {formatDateTime(order.pick_up_time, { withTime: true })}
+        Pickup time: {formatDateTimev2(order.pick_up_time, { withTime: true })}
       </p>
 
       {order.status === OrderStatus.PENDING && (

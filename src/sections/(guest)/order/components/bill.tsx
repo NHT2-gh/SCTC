@@ -2,7 +2,11 @@ import React from "react";
 import Image from "next/image";
 import { MapTextStatusOrder, OrderDetail, OrderStatus } from "@/types/order";
 import { DeliveryMethod } from "@/types/checkout";
-import { formatCurrency, formatDateTime } from "@/utils/format-data";
+import {
+  formatCurrency,
+  formatDateTime,
+  formatDateTimev2,
+} from "@/utils/format-data";
 import { CheckCircle } from "lucide-react";
 import { getCurrentTable } from "@/lib/table/get-current-table";
 
@@ -53,7 +57,10 @@ export default async function Bill({
           <span>{DeliveryMethod[data.order.delivery_method]}</span>
         </li>
         <li>
-          <p>Thời gian nhận hàng: </p> <span>{data.order.pick_up_time}</span>
+          <p>Thời gian nhận hàng: </p>{" "}
+          <span>
+            {formatDateTimev2(data.order.pick_up_time, { withTime: true })}
+          </span>
         </li>
       </ul>
       <hr />
