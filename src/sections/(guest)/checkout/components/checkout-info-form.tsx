@@ -46,6 +46,8 @@ export default function CheckoutInfoForm() {
   const onSubmit = async (data: CheckoutFormValidationType) => {
     setIsLoading(true);
 
+    console.log(data);
+
     updateCheckout({
       customer: data.customer,
       delivery_method: data.delivery_method as keyof typeof DeliveryMethod,

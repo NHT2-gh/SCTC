@@ -53,6 +53,8 @@ export default function CurrentOrders() {
           ))}
         </button>
       )}
+
+      {/* <button onClick={() => clearOrders()}>Clear</button> */}
     </div>
   );
 }
