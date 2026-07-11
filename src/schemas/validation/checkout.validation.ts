@@ -20,7 +20,7 @@ export const checkoutValidation = z.object({
 
 export const checkoutFormValidation = checkoutValidation.superRefine(
   (data, ctx) => {
-    if (data.delivery_method === "pre-order" && !data.pickup_at) {
+    if (data.delivery_method === "pre_order" && !data.pickup_at) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Vui lòng chọn thời gian nhận hàng",
