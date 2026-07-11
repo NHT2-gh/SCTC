@@ -10,7 +10,7 @@ export const revalidate = 0;
 export default async function HomePage() {
   noStore();
   const { data } = await serverActionGetMenuLayoutPublic();
-  console.log(data?.[0]);
+
   return (
     <Suspense fallback={<LoadingPageView />}>
       <MenuPageView menuLayout={data || []} />

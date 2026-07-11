@@ -34,7 +34,7 @@ export default function MenuItemCard({
         height={100}
         className="object-contain rounded-xl aspect-[1/1] w-[100px]"
       />
-      <div className="space-y-2">
+      <div className="space-y-2 grow">
         <h5
           className={cn(
             "font-medium leading-tight line-clamp-1 text-[1.25rem] text-[#8D1111]",

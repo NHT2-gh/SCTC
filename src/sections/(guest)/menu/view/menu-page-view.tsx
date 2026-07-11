@@ -11,6 +11,7 @@ import CurrentOrders from "../components/current-orders";
 import { useRouter } from "next/navigation";
 import { useUrlState } from "@/hooks/use-url-state";
 import Link from "next/link";
+import LoadingPageView from "@/components/common/loading/loading-page-view";
 
 interface MenuPageViewProps {
   menuLayout: MenuLayoutItem[];
@@ -18,7 +19,6 @@ interface MenuPageViewProps {
 
 export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
   const [page, setPage] = useUrlState<number>("page", 1);
-  const router = useRouter();
 
   const max_y = useMemo(() => {
     const itemMax = menuLayout
@@ -56,29 +56,28 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
           {menuLayout
             .filter((item) => Number(item.page) === Number(page))
             .map((item) => (
-              <div
+              <Link
                 key={item.id}
-                className={cn(
-                  "overflow-hidden z-1 rounded-xl flex flex-col items-center hover:opacity-80",
-                  {
-                    "pointer-events-none opacity-30":
-                      !item.menu_items.products.is_active,
-                  },
-                )}
-                style={{
-                  cursor: "pointer",
-                  position: "absolute",
-                  top: item.y,
-                  left: item.x,
-                  minWidth: item.w,
-                  right: item.x,
-                  height: item.h,
-                }}
+                className="cursor-pointer block w-full"
+                href={APP_ROUTES.GUEST.PRODUCT.VIEW_DETAIL(item.menu_items.id)}
               >
-                <Link
-                  href={APP_ROUTES.GUEST.PRODUCT.VIEW_DETAIL(
-                    item.menu_items.id,
+                <div
+                  className={cn(
+                    "w-full overflow-hidden z-1 rounded-xl flex flex-col items-center hover:opacity-80",
+                    {
+                      "pointer-events-none opacity-30":
+                        !item.menu_items.products.is_active,
+                    },
                   )}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    top: item.y,
+                    left: item.x,
+                    minWidth: item.w,
+                    right: item.x,
+                    height: item.h,
+                  }}
                 >
                   <MenuItemCard
                     item={item.menu_items.products}
@@ -86,8 +85,8 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
                       "flex-row-reverse text-right": item.x > 1,
                     })}
                   />
-                </Link>
-              </div>
+                </div>
+              </Link>
             ))}
         </div>
       </div>

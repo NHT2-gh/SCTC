@@ -24,6 +24,7 @@ export default function CheckoutInfoForm() {
   const { items, clearCart } = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const { checkoutInfo, updateCheckout } = useCheckout();
+
   const checkoutForm = useFormRenderer<CheckoutFormValidationType>(
     checkoutFormSchema,
     {
@@ -126,7 +127,7 @@ export default function CheckoutInfoForm() {
         onClick={handleSubmit(onSubmit)}
         type="submit"
         className={cn(
-          "flex-3 bg-[#8D1111] text-white py-4 px-2 rounded-full",
+          "flex-3 bg-[#8D1111] text-white py-4 px-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed",
           delagothic.className,
         )}
       >
