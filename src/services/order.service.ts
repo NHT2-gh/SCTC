@@ -91,8 +91,8 @@ class OrderService {
       });
     }
 
-    const { data: orders, error } = await query.order("updated_at", {
-      ascending: true,
+    const { data: orders, error } = await query.order("created_at", {
+      ascending: false,
     });
 
     console.log(orders);

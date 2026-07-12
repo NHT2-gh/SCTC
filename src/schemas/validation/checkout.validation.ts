@@ -6,7 +6,8 @@ export const CustomerInfoValidation = z.object({
   phone_number: z
     .string()
     .min(1, "Vui lòng nhập số điện thoại")
-    .regex(/^[0-9]{10}$/, "Số điện thoại không hợp lệ"),
+    .regex(/^[0-9]{10}$/, "Số điện thoại không hợp lệ")
+    .optional(),
 });
 
 export const checkoutValidation = z.object({

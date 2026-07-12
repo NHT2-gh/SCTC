@@ -51,26 +51,36 @@ export default function OrderItemCard({
         </div>
       </div>
 
-      {order.tables?.name && (
-        <p className="text-sm text-muted-foreground mt-2">
-          <span className="capitalize">{order.tables?.name}</span>
-        </p>
-      )}
-
-      <p className="text-sm text-muted-foreground mt-2">
-        Total items:
-        <span className="capitalize">{order.order_items_count}</span>
-      </p>
-      <p className="text-sm text-muted-foreground mt-2">
-        Total price: {formatCurrency(order.subtotal)}
-      </p>
+      <ul className="space-y-2">
+        {order.tables?.name && (
+          <li className="text-sm text-muted-foreground mt-2">
+            <span className="capitalize">{order.tables?.name}</span>
+          </li>
+        )}
+        <li>
+          <p>Tên khách hàng:</p> <span>{order.customer_name}</span>
+        </li>
+        {order.notes && <li>{order.notes}</li>}
+        <li className="flex justify-between">
+          <p className="text-sm text-muted-foreground mt-2">
+            Total items:
+            <span className="capitalize">{order.order_items_count}</span>
+          </p>
+          <p className="text-sm text-muted-foreground mt-2">
+            Total price: {formatCurrency(order.subtotal)}
+          </p>
+        </li>
+      </ul>
 
       <p className="text-sm text-muted-foreground mt-2">
         Delivery method: {DeliveryMethod[order.delivery_method]}
       </p>
 
       <p className="text-sm text-muted-foreground mt-2">
-        Pickup time: {formatDateTimev2(order.pick_up_time, { withTime: true })}
+        Pickup time:{" "}
+        {order.delivery_method === "pre_order"
+          ? formatDateTimev2(order.pick_up_time, { withTime: true })
+          : formatDateTime(order.created_at, { withTime: true })}
       </p>
 
       {order.status === OrderStatus.PENDING && (
