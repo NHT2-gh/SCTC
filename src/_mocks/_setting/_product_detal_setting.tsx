@@ -28,8 +28,8 @@ export const _product_setting = {
       color: "#f9c74f",
       value: 3,
     },
-    [OrderStatus.DELIVERING]: {
-      label: "Delivering",
+    [OrderStatus.DONE]: {
+      label: "Done",
       color: "#43aa8b",
       value: 4,
     },

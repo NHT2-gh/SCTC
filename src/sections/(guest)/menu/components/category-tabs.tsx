@@ -1,7 +1,7 @@
 import { IcCoffeCup, IcRuouIcon } from "@/assets/svgs";
 import { delagothic } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import { Utensils } from "lucide-react";
+import { Dessert, Utensils } from "lucide-react";
 import React, { useState } from "react";
 
 const _category_list = [
@@ -55,7 +55,7 @@ const _category_list = [
     lable: "Bánh",
     color: "#8D1111",
     pageNumber: 8,
-    icon: <Utensils strokeWidth={3} className="w-5 h-5 text-[#8D1111]" />,
+    icon: <Dessert strokeWidth={3} className="w-5 h-5 text-[#8D1111]" />,
   },
 ];
 

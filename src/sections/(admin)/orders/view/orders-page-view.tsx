@@ -19,8 +19,8 @@ import { Button } from "@/components/ui/button";
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
   const { data: tables } = useGetTable();
-  const [orderIdView, setOrderIdView] = useUrlState("view_order", "");
   const updateOrderStatus = useUpdateOrderStatus();
+  const [orderIdView, setOrderIdView] = useUrlState("view_order", "");
   const { filterValues, updateFilter, removeFilter, clearFilters } = useFilter({
     filterConfigs: [
       {
@@ -54,7 +54,6 @@ export default function OrdersPageView() {
 
       if (result.success) {
         showToast.success({ title: "Order updated successfully" });
-        refetchOrders();
       }
     } catch (error) {
       showToast.error({ title: "Error updating order" });
@@ -73,12 +72,13 @@ export default function OrdersPageView() {
           />
 
           {tables?.data && (
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
               <FormField
-                className="w-full md:w-fit"
+                className="w-full md:w-[18.75rem]"
                 field={{
                   type: "select",
                   name: "tableId",
+                  placeholder: "Select table",
                   handleOnChange: (value: string) => {
                     updateFilter("table_id", Number(value));
                   },
@@ -91,13 +91,17 @@ export default function OrdersPageView() {
                 }}
               />
 
+              <Button variant="outline" onClick={() => refetchOrders()}>
+                Refetch
+              </Button>
+
               <Button onClick={() => clearFilters()} className="w-fit">
                 Clear
               </Button>
             </div>
           )}
 
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[70vh] overflow-y-scroll ">
+          <div className="w-full py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[65vh] overflow-y-scroll ">
             {orders?.data.map((order) => (
               <OrderItemCard
                 key={order.tracking_order}

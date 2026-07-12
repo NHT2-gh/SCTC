@@ -7,8 +7,8 @@ export enum OrderStatus {
   PENDING = "pending",
   CONFIRMED = "confirmed",
   PREPARING = "preparing",
-  DELIVERING = "delivering",
   READY = "ready",
+  DONE = "done",
   COMPLETED = "completed",
   CANCELLED = "cancelled",
 }
@@ -17,8 +17,8 @@ export const MapTextStatusOrder: Record<OrderStatus, string> = {
   [OrderStatus.PENDING]: "Chờ xác nhận",
   [OrderStatus.CONFIRMED]: "Đã xác nhận",
   [OrderStatus.PREPARING]: "Đang chuẩn bị",
-  [OrderStatus.DELIVERING]: "Đang giao hàng",
   [OrderStatus.READY]: "Sẵn sàng",
+  [OrderStatus.DONE]: "Đã xong",
   [OrderStatus.COMPLETED]: "Đã hoàn thành",
   [OrderStatus.CANCELLED]: "Đã hủy",
 };

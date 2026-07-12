@@ -25,66 +25,58 @@ export default function OrderItemCard({
 }: OrderItemCardProp) {
   return (
     <article
-      className={cn("border rounded-lg p-4", {
+      className={cn("border flex flex-col rounded-lg p-4", {
         "border-brand-500 ":
           order.tables?.id ||
           (order.notes?.includes("/dinein/tb") && !order.tables?.id),
       })}
     >
-      <div
-        className="flex justify-between cursor-pointer"
+      <ul
+        className="cursor-pointer text-sm text-muted-foreground grow"
         onClick={() => onSelected(order.tracking_order)}
       >
-        <p>No: {order.tracking_order}</p>
-        <div className="capitalize flex gap-3 items-center">
-          <span
-            className={cn("size-4 rounded-full block", {
-              "animate-ping":
-                _product_setting.processOrder[order.status].value < 5,
-            })}
-            style={{
-              backgroundColor:
-                _product_setting.processOrder[order.status].color,
-            }}
-          />
-          <span>{_product_setting.processOrder[order.status].label}</span>
-        </div>
-      </div>
-
-      <ul className="space-y-2">
+        <li className="text-base font-bold capitalize flex gap-3 justify-between items-center">
+          <span>No: {order.tracking_order}</span>
+          <div className="flex items-center gap-3">
+            <span
+              className={cn("size-4 rounded-full block", {
+                "animate-ping":
+                  _product_setting.processOrder[order.status].value < 5,
+              })}
+              style={{
+                backgroundColor:
+                  _product_setting.processOrder[order.status].color,
+              }}
+            />
+            <span>{_product_setting.processOrder[order.status].label}</span>
+          </div>
+        </li>
         {order.tables?.name && (
-          <li className="text-sm text-muted-foreground mt-2">
+          <li>
             <span className="capitalize">{order.tables?.name}</span>
           </li>
         )}
-        <li>
-          <p>Tên khách hàng:</p> <span>{order.customer_name}</span>
+        <li className="flex items-center gap-2">
+          <p>Customer Name:</p> <span>{order.customer_name}</span>
         </li>
-        {order.notes && <li>{order.notes}</li>}
-        <li className="flex justify-between">
-          <p className="text-sm text-muted-foreground mt-2">
-            Total items:
-            <span className="capitalize">{order.order_items_count}</span>
-          </p>
-          <p className="text-sm text-muted-foreground mt-2">
-            Total price: {formatCurrency(order.subtotal)}
-          </p>
+        {order.notes && <li>Note: {order.notes}</li>}
+        <li> Delivery method: {DeliveryMethod[order.delivery_method]}</li>
+        <li>
+          Pickup time:
+          {order.delivery_method === "pre_order"
+            ? formatDateTimev2(order.pick_up_time, { withTime: true })
+            : formatDateTime(order.created_at, { withTime: true })}
         </li>
       </ul>
 
-      <p className="text-sm text-muted-foreground mt-2">
-        Delivery method: {DeliveryMethod[order.delivery_method]}
-      </p>
-
-      <p className="text-sm text-muted-foreground mt-2">
-        Pickup time:{" "}
-        {order.delivery_method === "pre_order"
-          ? formatDateTimev2(order.pick_up_time, { withTime: true })
-          : formatDateTime(order.created_at, { withTime: true })}
-      </p>
+      <div className="flex gap-1 justify-end font-semibold text-brand-500 text-base">
+        {formatCurrency(order.subtotal)} {" ("}
+        <span className="capitalize">{order.order_items_count || 0}</span>
+        {" items )"}
+      </div>
 
       {order.status === OrderStatus.PENDING && (
-        <div className="flex items-center justify-between">
+        <div>
           <Button
             size="sm"
             variant={"outline"}

@@ -11,7 +11,7 @@ export enum OptionType {
   extra = "Extra",
   upgrade = "Upgrade",
   replace = "Replace",
-  ice = "Lượng đá",
+  ice = "Đá",
   sweet = "Độ ngọt",
 }
 

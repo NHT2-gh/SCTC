@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/format-data";
 import Link from "next/link";
 import { APP_ROUTES } from "@/config/app-routes";
+import { OrderStatus } from "@/types/order";
 
 export default function CurrentOrders() {
   const { activeOrders } = useOrderHistory();
@@ -44,10 +45,15 @@ export default function CurrentOrders() {
                 <p className="text-base">
                   No: <span>{order.tracking_order}</span>
                 </p>
-                <p>SL: {order.order_items_count}</p>
-                <p>{formatCurrency(order.subtotal)}</p>
 
-                {order.status === "completed" && <CheckCircle color="green" />}
+                <p>
+                  {formatCurrency(order.subtotal)} {" ("}
+                  {order.order_items_count} {" items)"}
+                </p>
+
+                {order.status === OrderStatus.DONE && (
+                  <CheckCircle color="green" />
+                )}
               </div>
             </Link>
           ))}
