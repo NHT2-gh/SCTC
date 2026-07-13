@@ -25,9 +25,7 @@ export default function MenuItemCard({
       <Image
         unoptimized
         src={
-          item.image_url
-            ? item.image_url[0]
-            : "/images/product-images/matcha-latte.png"
+          item.image_url ? item.image_url[0] : "/images/logo/logo-text-1.webp"
         }
         alt={item.name}
         width={100}

@@ -162,7 +162,7 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
           src={
             info.products.image_url
               ? info.products.image_url[0]
-              : "/images/product-images/matcha-latte.png"
+              : "/images/logo/logo-text-1.webp"
           }
           alt={info.products.name}
           className="mx-auto object-contain"

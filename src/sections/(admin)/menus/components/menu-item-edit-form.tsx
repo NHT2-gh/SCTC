@@ -272,15 +272,16 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
             <TableHeader
               columns={[
                 {
-                  title: "Tên Option",
+                  title: "Name",
                   key: "name",
                 },
+                { title: "Description", key: "desc" },
                 {
-                  title: "Giá",
+                  title: "Price",
                   key: "price",
                 },
                 {
-                  title: "Số lượng tối đa",
+                  title: "Limit",
                   key: "limit",
                 },
               ]}
@@ -301,6 +302,8 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
               {currentOptions.map((option, index) => (
                 <TableRow key={option.id}>
                   <TableCell>{option.option_name}</TableCell>
+                  <TableCell>{option.description}</TableCell>
+
                   <TableCell>{formatCurrency(option.price)}</TableCell>
                   <TableCell>
                     <InputNumber

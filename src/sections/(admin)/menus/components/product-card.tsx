@@ -19,9 +19,7 @@ export default function ProductCard({ item, className }: DrinkCardProps) {
     >
       <Image
         src={
-          item.image_url
-            ? item.image_url[0]
-            : "https://i.pinimg.com/webp/1200x/f3/bc/e4/f3bce49049ddbe09de3377999ddb0951.webp"
+          item.image_url ? item.image_url[0] : "/images/logo/logo-text-1.webp"
         }
         alt="Drink"
         width={40}
@@ -31,8 +29,7 @@ export default function ProductCard({ item, className }: DrinkCardProps) {
       <div className="space-y-2">
         <h5 className="font-medium leading-tight line-clamp-2">{item.name}</h5>
         <p className="text-xs text-gray-600 line-clamp-2">
-          {item.description ||
-            "Sử dụng cà phê mix Arabica và Robusta với tỉ lệ 3/7 và sữa đặc"}
+          {item.description || "Chưa có mô tả"}
         </p>
 
         <p className="text-sm">{formatCurrency(item.selling_price)} </p>

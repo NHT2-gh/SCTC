@@ -120,37 +120,38 @@ export default function OrdersPageView() {
             ))}
           </div>
         </div>
-        {orders?.data && filterValues["status"] === OrderStatus.DONE && (
-          <div className="p-2 bg-white absolute bottom-4 right-10 border border-brand-500 border-dashed rounded-lg">
-            <h3 className="font-bold">
-              Total Amount:
-              <span className="ml-2 text-brand-500">
-                {formatCurrency(
-                  orders?.data.reduce(
-                    (acc, order) => acc + order.subtotal,
-                    0,
-                  ) || 0,
-                )}
-              </span>
-            </h3>
+        {(orders?.data && filterValues["status"] === OrderStatus.DONE) ||
+          (OrderStatus.COMPLETED && (
+            <div className="p-2 bg-white absolute bottom-4 right-10 border border-brand-500 border-dashed rounded-lg">
+              <h3 className="font-bold">
+                Total Amount:
+                <span className="ml-2 text-brand-500">
+                  {formatCurrency(
+                    orders?.data.reduce(
+                      (acc, order) => acc + order.subtotal,
+                      0,
+                    ) || 0,
+                  )}
+                </span>
+              </h3>
 
-            {orders?.data && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  handleUpdateStatus(
-                    orders.data.map((oder) => oder.tracking_order) || [],
-                    OrderStatus.COMPLETED,
-                  )
-                }
-                className="w-full mt-2 bg-lime-200"
-              >
-                Đã thanh toán
-              </Button>
-            )}
-          </div>
-        )}
+              {orders?.data && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    handleUpdateStatus(
+                      orders.data.map((oder) => oder.tracking_order) || [],
+                      OrderStatus.COMPLETED,
+                    )
+                  }
+                  className="w-full mt-2 bg-lime-200"
+                >
+                  Đã thanh toán
+                </Button>
+              )}
+            </div>
+          ))}
       </MainContainer>
 
       {modalViewOrder.isOpen && orderIdView && (

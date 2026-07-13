@@ -12,6 +12,7 @@ import {
   CreateOrderDTO,
   Order,
   OrderDetail,
+  OrderStatus,
   UpdateOrderDTO,
 } from "@/types/order";
 
@@ -87,13 +88,21 @@ class OrderService {
       arrayParamFilters.map(([key, value]) => {
         if (value) {
           query.eq(key, value as string);
+          if (key === "status") {
+            if (value === OrderStatus.COMPLETED) {
+              query.order("updated_at", {
+                ascending: false,
+              });
+            }
+          }
+          query.order("created_at", {
+            ascending: true,
+          });
         }
       });
     }
 
-    const { data: orders, error } = await query.order("created_at", {
-      ascending: false,
-    });
+    const { data: orders, error } = await query;
 
     if (error) handlePostgresError(error);
 
