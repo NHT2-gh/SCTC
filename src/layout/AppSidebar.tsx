@@ -266,7 +266,7 @@ export default function AppSidebar<
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`py-8 flex ${
+        className={`pb-8 pt-20 lg:py-8 flex ${
           !isExpanded && !isHovered ? "xl:justify-center" : "justify-start"
         }`}
       >

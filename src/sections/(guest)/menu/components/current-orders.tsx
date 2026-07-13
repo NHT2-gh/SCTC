@@ -7,6 +7,7 @@ import { formatCurrency } from "@/utils/format-data";
 import Link from "next/link";
 import { APP_ROUTES } from "@/config/app-routes";
 import { OrderStatus } from "@/types/order";
+import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 
 export default function CurrentOrders() {
   const { activeOrders } = useOrderHistory();
@@ -38,10 +39,17 @@ export default function CurrentOrders() {
           {activeOrders.map((order) => (
             <Link
               key={order.order_id}
-              className="block"
+              className={cn("block")}
               href={APP_ROUTES.GUEST.ORDER.VIEW(order.tracking_order)}
             >
-              <div className="flex items-center justify-between bg-amber-100 rounded-2xl p-2">
+              <div
+                className={cn(
+                  "flex items-center justify-between bg-amber-50 rounded-2xl p-2",
+                  {
+                    "line-through": order.status === OrderStatus.CANCELLED,
+                  },
+                )}
+              >
                 <p className="text-base">
                   No: <span>{order.tracking_order}</span>
                 </p>
@@ -51,9 +59,13 @@ export default function CurrentOrders() {
                   {order.order_items_count} {" items)"}
                 </p>
 
-                {order.status === OrderStatus.DONE && (
-                  <CheckCircle color="green" />
-                )}
+                <span
+                  className={cn("size-4 rounded-full block mr-2")}
+                  style={{
+                    backgroundColor:
+                      _product_setting.processOrder[order.status].color,
+                  }}
+                />
               </div>
             </Link>
           ))}

@@ -17,9 +17,9 @@ export const MapTextStatusOrder: Record<OrderStatus, string> = {
   [OrderStatus.PENDING]: "Chờ xác nhận",
   [OrderStatus.CONFIRMED]: "Đã xác nhận",
   [OrderStatus.PREPARING]: "Đang chuẩn bị",
-  [OrderStatus.READY]: "Sẵn sàng",
+  [OrderStatus.READY]: "Đã sẵn sàng giao món",
   [OrderStatus.DONE]: "Đã xong",
-  [OrderStatus.COMPLETED]: "Đã hoàn thành",
+  [OrderStatus.COMPLETED]: "Đã hoàn tất",
   [OrderStatus.CANCELLED]: "Đã hủy",
 };
 
@@ -95,7 +95,7 @@ export interface OrderItemCard {
 }
 
 export interface UpdateOrderDTO {
-  trackingCode: string;
+  trackingCodes: string[];
   status: OrderStatus;
 }
 

@@ -49,9 +49,9 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
           {data.order.pick_up_time && (
             <li>
               <p>Thời gian nhận hàng: </p>{" "}
-              <span>
-                {formatDateTimev2(data.order.pick_up_time, { withTime: true })}
-              </span>
+              {data.order.delivery_method === "pre_order"
+                ? formatDateTimev2(data.order.pick_up_time, { withTime: true })
+                : formatDateTime(data.order.created_at, { withTime: true })}
             </li>
           )}
         </ul>

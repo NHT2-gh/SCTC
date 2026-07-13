@@ -5,7 +5,7 @@ import {
   useUpdateOrderStatus,
 } from "@/hooks/queries/use-order";
 import { OrderStatus } from "@/types/order";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import OrderItemCard from "../components/order-item";
 import { showToast } from "@/lib/toast";
 import { useModal } from "@/hooks/useModal";
@@ -15,6 +15,7 @@ import { useUrlState } from "@/hooks/use-url-state";
 import { FormField } from "@/components/form";
 import { useGetTable } from "@/hooks/queries/use-overview";
 import { Button } from "@/components/ui/button";
+import { formatCurrency } from "@/utils/format-data";
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
@@ -40,15 +41,15 @@ export default function OrdersPageView() {
 
   useEffect(() => {
     if (orderIdView) modalViewOrder.openModal();
-  }, [orderIdView]);
+  }, [orderIdView, setOrderIdView]);
 
   const handleUpdateStatus = async (
-    tracking_order: string,
+    tracking_orders: string[],
     status: OrderStatus,
   ) => {
     try {
       const result = await updateOrderStatus.mutateAsync({
-        trackingCode: tracking_order,
+        trackingCodes: tracking_orders,
         status: status,
       });
 
@@ -101,7 +102,7 @@ export default function OrdersPageView() {
             </div>
           )}
 
-          <div className="w-full py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[65vh] overflow-y-scroll ">
+          <div className="w-full py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:max-h-[65vh] max-h-[60vh] overflow-y-scroll ">
             {orders?.data.map((order) => (
               <OrderItemCard
                 key={order.tracking_order}
@@ -110,15 +111,46 @@ export default function OrdersPageView() {
                   setOrderIdView(orderId);
                 }}
                 onConfirm={(orderId) => {
-                  handleUpdateStatus(orderId, OrderStatus.CONFIRMED);
+                  handleUpdateStatus([orderId], OrderStatus.CONFIRMED);
                 }}
                 onCancel={(orderId) => {
-                  handleUpdateStatus(orderId, OrderStatus.CANCELLED);
+                  handleUpdateStatus([orderId], OrderStatus.CANCELLED);
                 }}
               />
             ))}
           </div>
         </div>
+        {orders?.data && filterValues["status"] === OrderStatus.DONE && (
+          <div className="p-2 bg-white absolute bottom-4 right-10 border border-brand-500 border-dashed rounded-lg">
+            <h3 className="font-bold">
+              Total Amount:
+              <span className="ml-2 text-brand-500">
+                {formatCurrency(
+                  orders?.data.reduce(
+                    (acc, order) => acc + order.subtotal,
+                    0,
+                  ) || 0,
+                )}
+              </span>
+            </h3>
+
+            {orders?.data && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  handleUpdateStatus(
+                    orders.data.map((oder) => oder.tracking_order) || [],
+                    OrderStatus.COMPLETED,
+                  )
+                }
+                className="w-full mt-2 bg-lime-200"
+              >
+                Đã thanh toán
+              </Button>
+            )}
+          </div>
+        )}
       </MainContainer>
 
       {modalViewOrder.isOpen && orderIdView && (
@@ -129,7 +161,9 @@ export default function OrdersPageView() {
             setOrderIdView(undefined);
           }}
           trackingCode={orderIdView}
-          onUpdateStatus={handleUpdateStatus}
+          onUpdateStatus={(trackingCode, status) =>
+            handleUpdateStatus([trackingCode], status)
+          }
         />
       )}
     </>

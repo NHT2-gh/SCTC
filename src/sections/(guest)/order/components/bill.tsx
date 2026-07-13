@@ -24,7 +24,7 @@ export default async function Bill({
   return (
     <article
       style={{ backgroundImage: `url(/images/backgrounds/${backgroundUrl})` }}
-      className="bill-box text-black max-w-[87%] mx-auto h-fit text-sm opacity-[0.97] px-3.5 py-8 border-brand-500 space-y-4 [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2]"
+      className="bill-box relative text-black max-w-[87%] mx-auto h-fit text-sm opacity-[0.97] px-3.5 py-8 border-brand-500 space-y-4 [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2]"
     >
       <div className="w-full flex items-center justify-between text-center">
         <Image
@@ -119,9 +119,15 @@ export default async function Bill({
           <CheckCircle className="stroke-2 text-green-700" />
         )}
         <span className="capitalize">
-          {MapTextStatusOrder[data.order.status]}
+          Trạng thái đơn hàng: {MapTextStatusOrder[data.order.status]}
         </span>
       </div>
+
+      {/* <div className="absolute top-1/2 -translate-y-1/2 right-0 w-full flex items-center justify-center bg-brand-500/40 px-10 py-5 rotate-[-20deg]">
+        <span className="capitalize">
+          {MapTextStatusOrder[data.order.status]}
+        </span>
+      </div> */}
     </article>
   );
 }

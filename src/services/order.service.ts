@@ -104,14 +104,19 @@ class OrderService {
   }
 
   async updateOrderStatus(data: UpdateOrderDTO): Promise<MutationResult> {
+    if (!data.trackingCodes)
+      return {
+        success: false,
+        message: ErrorCode.INVALID_INPUT,
+      };
+
     const query = supabase
       .from(this.baseTable)
       .update({
         status: data.status,
       })
-      .eq("tracking_order", data.trackingCode)
-      .select()
-      .single();
+      .in("tracking_order", data.trackingCodes)
+      .select();
 
     const { data: updatedOrder, error } = await query;
 

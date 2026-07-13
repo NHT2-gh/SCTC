@@ -6,11 +6,7 @@ export function useOrderHistory() {
   const historyOrders = useOrderStore((state) => state.orders);
   const activeOrders = useMemo(
     () =>
-      historyOrders.filter(
-        (order) =>
-          order.status !== OrderStatus.COMPLETED &&
-          order.status !== OrderStatus.CANCELLED,
-      ),
+      historyOrders.filter((order) => order.status !== OrderStatus.COMPLETED),
     [historyOrders],
   );
   const addOrder = useOrderStore((state) => state.addOrder);

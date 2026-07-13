@@ -77,7 +77,7 @@ export function useUpdateOrderStatus() {
 
     onSuccess(_, variables) {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.order.detail(variables.trackingCode),
+        queryKey: queryKeys.order.detail(variables.trackingCodes[0]),
       });
       queryClient.invalidateQueries({
         queryKey: queryKeys.order.getAll({

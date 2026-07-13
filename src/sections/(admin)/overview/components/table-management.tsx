@@ -6,7 +6,8 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { APP_ROUTES } from "@/config/app-routes";
 import { useGetTable } from "@/hooks/queries/use-overview";
 import { useModal } from "@/hooks/useModal";
-import { ScanQrCode } from "lucide-react";
+import { ScanQrCode, SquareArrowOutUpRightIcon } from "lucide-react";
+import Link from "next/link";
 import React, { useState } from "react";
 import QRCode from "react-qr-code";
 
@@ -42,7 +43,7 @@ export default function TableManagement() {
             <TableRow key={table.id}>
               <TableCell>{table.name}</TableCell>
               <TableCell>{table.is_active ? "Active" : "Inactive"}</TableCell>
-              <TableCell>
+              <TableCell className="flex items-center gap-10">
                 <button
                   onClick={() => {
                     modalViewQRCode.openModal();
@@ -51,6 +52,17 @@ export default function TableManagement() {
                 >
                   <ScanQrCode />
                 </button>
+                <Link
+                  target="_blank"
+                  href={`${window.location.origin}/${APP_ROUTES.GUEST.TABLE.DETAIL(table.qr_token)}`}
+                >
+                  <button>
+                    <SquareArrowOutUpRightIcon
+                      className="text-blue-500"
+                      strokeWidth={2}
+                    />
+                  </button>
+                </Link>
               </TableCell>
             </TableRow>
           ))}
@@ -72,18 +84,21 @@ export default function TableManagement() {
         </Modal>
       )}
 
-      <QRCode
-        size={200}
-        style={{
-          height: "auto",
-          maxWidth: "200",
-          width: "100%",
-          margin: "auto",
-          marginTop: "30px",
-        }}
-        value={`${window.location.origin}`}
-        viewBox={`0 0 200 200`}
-      />
+      <div className="mx-auto space-y-5 p-3 border w-fit rounded-2xl mt-10">
+        <p>QR Code for takeaway order</p>
+        <QRCode
+          size={200}
+          style={{
+            height: "auto",
+            maxWidth: "200",
+            width: "100%",
+
+            marginTop: "30px",
+          }}
+          value={`${window.location.origin}`}
+          viewBox={`0 0 200 200`}
+        />
+      </div>
     </section>
   );
 }

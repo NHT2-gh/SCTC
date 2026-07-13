@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useUpdateOrderStatus } from "@/hooks/queries/use-order";
 import { cn } from "@/lib/utils";
 import { DeliveryMethod } from "@/types/checkout";
-import { Order, OrderItem, OrderStatus } from "@/types/order";
+import { Order, OrderStatus } from "@/types/order";
 import {
   formatCurrency,
   formatDateTime,
@@ -26,9 +26,7 @@ export default function OrderItemCard({
   return (
     <article
       className={cn("border flex flex-col rounded-lg p-4", {
-        "border-brand-500 ":
-          order.tables?.id ||
-          (order.notes?.includes("/dinein/tb") && !order.tables?.id),
+        "border-brand-500 ": order.tables?.id,
       })}
     >
       <ul

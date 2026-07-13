@@ -41,7 +41,7 @@ export default function FilterStatus({
           )}
         >
           {filterValues["status"] === value && (
-            <span className="rounded-full w-5 h-5 flex items-center justify-center bg-white  text-brand-500">
+            <span className="rounded-full w-7 h-7 flex items-center justify-center bg-white  text-brand-500 text-sm">
               {countOrder}
             </span>
           )}
