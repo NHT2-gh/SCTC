@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { showToast } from "@/lib/toast";
 import { subscribeOrders } from "@/supabase/realtime/order.sub";
 import { Order } from "@/types/order";
+import { APP_ROUTES } from "@/config/app-routes";
 
 export function playNotificationSound() {
   const notificationAudio = new Audio("/audio/noti-sound.m4a");
@@ -15,34 +16,17 @@ export function playNotificationSound() {
   });
 }
 export async function showOrderNotification(order: Order) {
-  if (typeof window === "undefined") return;
-
-  if (!("Notification" in window)) {
-    console.warn("Browser không hỗ trợ Notification API");
-    return;
-  }
-
-  await Notification.requestPermission();
-
-  console.log(Notification.permission);
-
   if (Notification.permission !== "granted") {
-    console.warn("Chưa được cấp quyền notification");
     return;
   }
 
-  const notification = new Notification("🛎️ Đơn hàng mới", {
+  const registration = await navigator.serviceWorker.ready;
+
+  await registration.showNotification("🛎️ Đơn hàng mới", {
     body: `${order.tracking_order} - ${order.customer_name}`,
     icon: "/icons/logo-192.png",
-    tag: order.id, // tránh duplicate notification
-    requireInteraction: true, // giữ notification cho tới khi user đóng (Chrome hỗ trợ)
+    tag: order.id,
   });
-
-  notification.onclick = () => {
-    window.focus();
-    window.location.href = `/admin/orders`;
-    notification.close();
-  };
 }
 
 export default function OrderRealtimeListener() {
@@ -66,6 +50,17 @@ export default function OrderRealtimeListener() {
     });
 
     return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    console.log(Notification.permission);
+
+    if (Notification.permission !== "granted") {
+      showToast.info({
+        title: "Bật thông báo",
+        description: "Nhấn nút để nhận thông báo đơn hàng.",
+      });
+    }
   }, []);
 
   return null;

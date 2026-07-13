@@ -37,8 +37,10 @@ export function subscribeOrders({
       },
     )
 
-    .subscribe();
-
+    .subscribe((status, err) => {
+      console.log("Realtime status:", status);
+      console.log("Realtime error:", err);
+    });
   return () => {
     supabase.removeChannel(channel);
   };

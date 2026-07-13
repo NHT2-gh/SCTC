@@ -1,9 +1,9 @@
-import { OrderDetail } from "@/types/order";
 import React from "react";
-import { Bill } from "../components";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
+import { Bill } from "../components";
+import { OrderDetail } from "@/types/order";
+import { ArrowLeftIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { APP_ROUTES } from "@/config/app-routes";
 import { _mock_bill_style } from "@/_mocks/_bill/_data_random_bill_style";
 

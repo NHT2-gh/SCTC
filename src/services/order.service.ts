@@ -95,8 +95,6 @@ class OrderService {
       ascending: false,
     });
 
-    console.log(orders);
-
     if (error) handlePostgresError(error);
 
     return {

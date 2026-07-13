@@ -7,9 +7,8 @@ import AppSidebar from "@/layout/AppSidebar";
 import { useSidebar } from "@/context/SidebarContext";
 import { NavigationConfig } from "@/layout/navigation-config";
 import { OrderRealtimeListener } from "@/sections/(admin)/orders/components";
-import { useOrderRealtime } from "@/hooks/queries/use-order";
-import { AudioProvider } from "@/sections/(admin)/orders/components/audio-init";
 import AuthProvider from "@/context/AuthContext";
+import { AudioProvider } from "@/sections/(admin)/orders/components/audio-init";
 
 export default function AdminLayout({
   children,
@@ -23,7 +22,6 @@ export default function AdminLayout({
     : isExpanded || isHovered
       ? "xl:ml-[290px]"
       : "xl:ml-[90px]";
-  useOrderRealtime();
   return (
     <AuthProvider>
       <div className="min-h-screen xl:flex">

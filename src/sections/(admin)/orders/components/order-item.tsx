@@ -76,7 +76,7 @@ export default function OrderItemCard({
       </div>
 
       {order.status === OrderStatus.PENDING && (
-        <div>
+        <div className="flex justify-between">
           <Button
             size="sm"
             variant={"outline"}

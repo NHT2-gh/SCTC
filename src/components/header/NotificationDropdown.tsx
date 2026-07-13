@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Dropdown, DropdownItem } from "../ui/dropdown";
+import { Button } from "../ui/button";
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +21,33 @@ export default function NotificationDropdown() {
     toggleDropdown();
     setNotifying(false);
   };
+
+  async function requestNotificationPermission() {
+    if (typeof Notification === "undefined") {
+      console.log("Notification API không tồn tại");
+      return false;
+    }
+
+    if (Notification.permission === "granted") {
+      new Notification("Đã bật thông báo", {
+        body: "Thông báo đã được bật",
+      });
+      return true;
+    }
+
+    const permission = await Notification.requestPermission();
+
+    if (permission === "granted") {
+      new Notification("Đã bật thông báo", {
+        body: "Thông báo đã được bật",
+      });
+
+      return true;
+    }
+
+    return false;
+  }
+
   return (
     <div className="relative">
       <button
@@ -123,6 +151,10 @@ export default function NotificationDropdown() {
         >
           View All Notifications
         </Link>
+
+        <Button className="mt-5" onClick={requestNotificationPermission}>
+          Bật thông báo
+        </Button>
       </Dropdown>
     </div>
   );
