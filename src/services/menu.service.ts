@@ -21,6 +21,7 @@ import {
 import { SelectedOption } from "@/types/cart";
 import { FixedOptionAdapter, OptionsAdapter } from "@/adapters/options.adapter";
 import { AddProductOptionValidation } from "@/schemas/validation/product-option.validation";
+import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 
 class MenuService {
   private baseTable: string;
@@ -368,7 +369,7 @@ class MenuService {
     const query = supabase
       .from("menu_items_options")
       .select(`*`)
-      .in("option_type", ["ice", "sweet"]);
+      .in("option_type", _product_setting.fixedOptionType.all);
 
     const { data: fixedOptions, error } = await query;
 

@@ -3,12 +3,18 @@ import { z } from "zod";
 
 export const CustomerInfoValidation = z.object({
   name: z.string().min(1, "Vui lòng nhập tên"),
-  phone_number: z
-    .string()
-    .min(1, "Vui lòng nhập số điện thoại")
-    .regex(/^[0-9]{10}$/, "Số điện thoại không hợp lệ")
-    .optional()
-    .nullable(),
+  phone_number: z.preprocess(
+    (value) => {
+      if (typeof value !== "string") return value;
+
+      const trimmed = value.trim();
+      return trimmed === "" ? undefined : trimmed;
+    },
+    z
+      .string()
+      .regex(/^[0-9]{10}$/, "Số điện thoại không hợp lệ")
+      .optional(),
+  ),
 });
 
 export const checkoutValidation = z.object({
@@ -27,6 +33,11 @@ export const checkoutFormValidation = checkoutValidation.superRefine(
         code: z.ZodIssueCode.custom,
         message: "Vui lòng chọn thời gian nhận hàng",
         path: ["pickup_at"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Vui lòng nhập số điện thoại",
+        path: ["customer.phone_number"],
       });
     }
   },

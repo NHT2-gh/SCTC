@@ -5,7 +5,7 @@ export enum DeliveryMethod {
 
 export interface CustomerInfo {
   name: string;
-  phone_number?: string | null;
+  phone_number?: string;
 }
 
 export interface CheckoutState {

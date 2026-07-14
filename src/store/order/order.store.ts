@@ -39,9 +39,12 @@ export const useOrderStore = create<OrderStore>()(
     {
       name: STORAGE_KEYS.ORDERS,
       partialize: (state) => ({
-        orders: state.orders.filter(
-          (order) => order.status !== OrderStatus.COMPLETED,
-        ),
+        orders: state.orders.filter((order) => {
+          const isToday =
+            new Date(order.pick_up_time).getDate() === new Date().getDate();
+
+          return isToday;
+        }),
       }),
     },
   ),

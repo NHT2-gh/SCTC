@@ -5,7 +5,11 @@ export const _product_setting = {
     min: 1,
     max: 10,
   },
-  fixedOptionType: ["sweet", "ice"],
+  fixedOptionType: {
+    all: ["sweet", "ice", "alcoholic"],
+    take_away: ["sweet", "ice"],
+    dine_in: ["alcoholic"],
+  },
 
   processOrder: {
     [OrderStatus.PENDING]: {

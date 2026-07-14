@@ -1,13 +1,12 @@
 import React from "react";
 import { useOrderHistory } from "@/hooks/use-order";
-import { CheckCircle, CheckIcon, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/format-data";
 import Link from "next/link";
 import { APP_ROUTES } from "@/config/app-routes";
 import { OrderStatus } from "@/types/order";
-import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 
 export default function CurrentOrders() {
   const { activeOrders } = useOrderHistory();
@@ -58,14 +57,6 @@ export default function CurrentOrders() {
                   {formatCurrency(order.subtotal)} {" ("}
                   {order.order_items_count} {" items)"}
                 </p>
-
-                <span
-                  className={cn("size-4 rounded-full block mr-2")}
-                  style={{
-                    backgroundColor:
-                      _product_setting.processOrder[order.status].color,
-                  }}
-                />
               </div>
             </Link>
           ))}

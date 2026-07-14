@@ -7,4 +7,5 @@ export interface ProductDetail {
     custom: SelectedOption[];
     fixed: SelectedOption[];
   };
+  is_allow_order: boolean;
 }

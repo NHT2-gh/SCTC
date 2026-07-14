@@ -13,6 +13,7 @@ export enum OptionType {
   replace = "Replace",
   ice = "Đá",
   sweet = "Độ ngọt",
+  alcoholic = "Độ cồn",
 }
 
 export type MenuType = keyof typeof MenuEnumType;
@@ -33,6 +34,8 @@ export interface Product {
   selling_price: number;
   image_url: string[];
   is_active: boolean;
+  is_only_allow_dinein: boolean;
+  is_alcoholic_beverages: boolean;
 }
 
 export interface MenuItem {

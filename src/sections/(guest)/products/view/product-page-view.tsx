@@ -19,6 +19,7 @@ import FloatingCartButton from "@/components/cart/floaing-cart-button";
 import { FilterBoxRender } from "@/components/filter/filter-box-render";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { FilterItemConfig } from "@/components/filter/filter-box-render/type";
+import { Button } from "@/components/ui/button";
 
 interface ProductPageViewProps {
   product: ProductDetail;
@@ -26,8 +27,8 @@ interface ProductPageViewProps {
 
 export default function ProductPageView({ product }: ProductPageViewProps) {
   const { info, options } = product;
-  const [lineNote, setLineNote] = useState<string>("");
   const { add } = useCart();
+  const [lineNote, setLineNote] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [productOptionSchame, setProductOptionSchame] = useState<
     FilterItemConfig[]
@@ -110,7 +111,7 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
 
       const normalOptions = options.fixed.reduce(
         (acc, option) => {
-          _product_setting.fixedOptionType.map((type) => {
+          fixedOpt.map((type) => {
             if (
               option.option_type === type &&
               option.component_name === "Bình thường"
@@ -150,6 +151,10 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
     );
   }, [filterValues, options, product.info.products.selling_price, quantity]);
 
+  const fixedOpt = info.products.is_only_allow_dinein
+    ? _product_setting.fixedOptionType.dine_in
+    : _product_setting.fixedOptionType.take_away;
+
   return (
     <section className="bg-[#8D1111] [&_hr]:border-[#E2DDCD] relative flex flex-col h-dvh">
       <NavigationBar backHref={APP_ROUTES.GUEST.ROOT} />
@@ -187,13 +192,13 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
             </div>
 
             {info.products.description && (
-              <span className={cn("text-black text-sm")}>
+              <p className={cn("text-black text-sm")}>
                 {info.products.description}
-              </span>
+              </p>
             )}
           </div>
 
-          {_product_setting.fixedOptionType.map((type) => (
+          {fixedOpt.map((type) => (
             <div key={type} className={cn("space-y-4")}>
               <div className="space-y-2">
                 <Label className={cn("text-black", delagothic.className)}>
@@ -269,20 +274,31 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
             value={quantity}
             setValue={(value) => setQuantity(value)}
           />
-          <button
+          <Button
             className={cn(
               "flex-3 bg-[#8D1111] py-4 px-2 rounded-full",
               delagothic.className,
             )}
             onClick={() => applyFilters()}
+            disabled={!product.is_allow_order}
           >
-            <span className=" text-sm text-white ">
-              Bỏ túi
-              <span className={itim.className}>
-                {" -"} {formatCurrency(totalPrice)}
+            {info.products.is_only_allow_dinein ? (
+              <span className=" text-sm text-white ">
+                Sản phẩm chỉ phục vụ khi dùng tại quán
               </span>
-            </span>
-          </button>
+            ) : info.products.is_active ? (
+              <span className=" text-sm text-white ">
+                Bỏ túi
+                <span className={itim.className}>
+                  {" -"} {formatCurrency(totalPrice)}
+                </span>
+              </span>
+            ) : (
+              <span className=" text-sm text-white ">
+                Hiện tại sản phẩm này không phục vụ
+              </span>
+            )}
+          </Button>
         </div>
       </div>
 

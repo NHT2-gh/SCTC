@@ -112,4 +112,5 @@ export interface AddOrderResponen {
   status: OrderStatus;
   order_items_count: number;
   tracking_order: string;
+  pick_up_time: string;
 }

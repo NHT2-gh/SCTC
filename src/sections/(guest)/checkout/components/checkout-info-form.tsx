@@ -81,6 +81,7 @@ export default function CheckoutInfoForm() {
           status: result.status,
           order_items_count: result.order_items_count,
           tracking_order: result.tracking_order,
+          pick_up_time: result.pick_up_time,
         });
         clearCart();
         router.push(APP_ROUTES.GUEST.ORDER.VIEW(result.tracking_order));

@@ -86,18 +86,20 @@ export default function TableManagement() {
 
       <div className="mx-auto space-y-5 p-3 border w-fit rounded-2xl mt-10">
         <p>QR Code for takeaway order</p>
-        <QRCode
-          size={200}
-          style={{
-            height: "auto",
-            maxWidth: "200",
-            width: "100%",
+        <Link target="_blank" href={window.location.origin}>
+          <QRCode
+            size={200}
+            style={{
+              height: "auto",
+              maxWidth: "200",
+              width: "100%",
 
-            marginTop: "30px",
-          }}
-          value={`${window.location.origin}`}
-          viewBox={`0 0 200 200`}
-        />
+              marginTop: "30px",
+            }}
+            value={`${window.location.origin}`}
+            viewBox={`0 0 200 200`}
+          />
+        </Link>
       </div>
     </section>
   );

@@ -1,17 +1,16 @@
 "use client";
 import React, { useMemo, useState } from "react";
+
+import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { MenuLayoutItem } from "@/types/menu";
-import { MenuItemCard } from "@/components/menu";
 import { APP_ROUTES } from "@/config/app-routes";
-import FloatingCartButton from "@/components/cart/floaing-cart-button";
-import Image from "next/image";
+import { MenuItemCard } from "@/components/menu";
+import { useUrlState } from "@/hooks/use-url-state";
 import CategoryTabs from "../components/category-tabs";
 import CurrentOrders from "../components/current-orders";
-import { useRouter } from "next/navigation";
-import { useUrlState } from "@/hooks/use-url-state";
-import Link from "next/link";
-import LoadingPageView from "@/components/common/loading/loading-page-view";
+import FloatingCartButton from "@/components/cart/floaing-cart-button";
 
 interface MenuPageViewProps {
   menuLayout: MenuLayoutItem[];
@@ -56,28 +55,30 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
           {menuLayout
             .filter((item) => Number(item.page) === Number(page))
             .map((item) => (
-              <Link
+              <div
                 key={item.id}
-                className="cursor-pointer block w-full"
-                href={APP_ROUTES.GUEST.PRODUCT.VIEW_DETAIL(item.menu_items.id)}
+                className={cn(
+                  "w-full overflow-hidden z-1 rounded-xl flex flex-col items-center hover:opacity-80",
+                  {
+                    "pointer-events-none opacity-30":
+                      !item.menu_items.products.is_active,
+                  },
+                )}
+                style={{
+                  cursor: "pointer",
+                  position: "absolute",
+                  top: item.y,
+                  left: item.x,
+                  minWidth: item.w,
+                  right: item.x,
+                  height: item.h,
+                }}
               >
-                <div
-                  className={cn(
-                    "w-full overflow-hidden z-1 rounded-xl flex flex-col items-center hover:opacity-80",
-                    {
-                      "pointer-events-none opacity-30":
-                        !item.menu_items.products.is_active,
-                    },
+                <Link
+                  className="w-fit"
+                  href={APP_ROUTES.GUEST.PRODUCT.VIEW_DETAIL(
+                    item.menu_items.id,
                   )}
-                  style={{
-                    cursor: "pointer",
-                    position: "absolute",
-                    top: item.y,
-                    left: item.x,
-                    minWidth: item.w,
-                    right: item.x,
-                    height: item.h,
-                  }}
                 >
                   <MenuItemCard
                     item={item.menu_items.products}
@@ -85,8 +86,8 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
                       "flex-row-reverse text-right": item.x > 1,
                     })}
                   />
-                </div>
-              </Link>
+                </Link>
+              </div>
             ))}
         </div>
       </div>

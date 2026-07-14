@@ -2,24 +2,16 @@ import React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Product } from "@/types/menu";
-import { useRouter } from "next/navigation";
 import { delagothic } from "@/lib/fonts";
-import { APP_ROUTES } from "@/config/app-routes";
 
 interface DrinkCardProps {
   item: Product;
   className?: string;
-  onClick?: () => void;
 }
 
-export default function MenuItemCard({
-  item,
-  className,
-  onClick,
-}: DrinkCardProps) {
+export default function MenuItemCard({ item, className }: DrinkCardProps) {
   return (
     <article
-      onClick={() => onClick && onClick()}
       className={cn("flex gap-4 w-full items-center bg-orange-50", className)}
     >
       <Image
@@ -42,8 +34,7 @@ export default function MenuItemCard({
           {item.name}
         </h5>
         <p className={cn("line-clamp-2 text-sm text-black")}>
-          {item.description ||
-            "Sử dụng cà phê mix Arabica và Robusta với tỉ lệ 3/7 và sữa đặc"}
+          {item.description || "Chưa có mô tả"}
         </p>
       </div>
       <p className={cn("text-xs text-[#8D1111]", delagothic.className)}>

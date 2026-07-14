@@ -15,6 +15,7 @@ export const checkoutFormSchema: FormSchema = {
       label: "Số điện thoại",
       placeholder: "Nhập số điện thoại",
       type: "text",
+      required: false,
     },
     {
       name: "note",

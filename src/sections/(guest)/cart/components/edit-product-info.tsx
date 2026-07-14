@@ -160,7 +160,9 @@ export default function EditProductInfo({
       optionPrice.reduce((total, option) => total + (option?.price ?? 0), 0)
     );
   }, [filterValues, productOptions?.data.custom, product.selling_price]);
-
+  const fixedOpt = cartItem.menu_item.products.is_only_allow_dinein
+    ? _product_setting.fixedOptionType.dine_in
+    : _product_setting.fixedOptionType.take_away;
   return (
     <>
       <div onClick={onClose} className="fixed h-[100vh] w-screen bg-black/10" />
@@ -189,7 +191,7 @@ export default function EditProductInfo({
             </span>
           </div>
 
-          {_product_setting.fixedOptionType.map((type) => (
+          {fixedOpt.map((type) => (
             <div key={type} className={cn("space-y-4")}>
               <div className="space-y-2">
                 <Label className={cn("text-black", delagothic.className)}>
