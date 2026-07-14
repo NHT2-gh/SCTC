@@ -3,10 +3,12 @@ import { cn } from "@/lib/utils";
 import { iconMap } from "@/utils/iconMap";
 import React from "react";
 
+export type AlertType = "success" | "info" | "warning" | "danger";
+
 interface ModalAlertProps {
   isOpen: boolean;
   onClose: () => void;
-  type: "success" | "info" | "warning" | "danger";
+  type: AlertType;
   title: string;
   description: string;
   onConfirm: () => void;
@@ -14,10 +16,18 @@ interface ModalAlertProps {
   onCancel?: () => void;
   cancelText?: string;
 }
+
+const typeConfig: Record<AlertType, string> = {
+  info: "bg-blue-500 hover:bg-blue-600",
+  warning: "bg-warning-500 hover:bg-warning-600",
+  danger: "bg-error-500 hover:bg-error-600",
+  success: "bg-success-500 hover:bg-success-600",
+};
+
 export default function ModalAlert({
   isOpen,
   onClose,
-  type = "info",
+  type,
   title,
   description,
   confirmText,
@@ -30,7 +40,7 @@ export default function ModalAlert({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="max-w-[600px] p-5 lg:p-10"
+      className="max-w-[600px] !max-h-fit !min-h-fit p-5 lg:p-10"
     >
       <div className="text-center">
         <Icon />
@@ -45,12 +55,7 @@ export default function ModalAlert({
             onClick={onConfirm}
             className={cn(
               "flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg shadow-theme-xs sm:w-auto",
-              {
-                "bg-error-500 hover:bg-error-600": type === "danger",
-                "bg-warning-500 hover:bg-warning-600": type === "warning",
-                "bg-info-500 hover:bg-info-600": type === "info",
-                "bg-success-500 hover:bg-success-600": type === "success",
-              },
+              typeConfig[type],
             )}
           >
             {confirmText}
@@ -62,12 +67,7 @@ export default function ModalAlert({
               onClick={onCancel}
               className={cn(
                 "flex justify-center w-full px-4 py-3 text-sm font-medium text-white rounded-lg shadow-theme-xs sm:w-auto",
-                {
-                  "bg-error-500 hover:bg-error-600": type === "danger",
-                  "bg-warning-500 hover:bg-warning-600": type === "warning",
-                  "bg-info-500 hover:bg-info-600": type === "info",
-                  "bg-success-500 hover:bg-success-600": type === "success",
-                },
+                typeConfig[type],
               )}
             >
               {cancelText}

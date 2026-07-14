@@ -9,7 +9,7 @@ import { NavigationBar } from "@/components/common/navigation-bar";
 export default function CheckoutPageView() {
   const { items } = useCart();
   return (
-    <section className="p-4 h-full space-y-5">
+    <section className="p-4 h-fit min-h-[100dvh] flex flex-col gap-5">
       <NavigationBar
         backHref={APP_ROUTES.GUEST.CART.VIEW}
         title="Checkout"
@@ -17,7 +17,7 @@ export default function CheckoutPageView() {
       />
       <CartItemsList
         items={items}
-        className="max-h-[30vh] gap-4 overflow-y-scroll p-0"
+        className="max-h-[30vh] gap-4 overflow-y-scroll p-0 grow-0"
       />
       <hr />
       <CheckoutInfoForm />

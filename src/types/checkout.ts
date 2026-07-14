@@ -1,7 +1,12 @@
 export enum DeliveryMethod {
-  pickup_now = "Lấy hàng ngay",
-  pre_order = "Đặt trước",
+  pickup_now = "pickup_now",
+  pre_order = "pre_order",
 }
+
+export const DeliveryMethodMapText: Record<DeliveryMethod, string> = {
+  [DeliveryMethod.pickup_now]: "Lấy hàng ngay",
+  [DeliveryMethod.pre_order]: "Đặt trước",
+};
 
 export interface CustomerInfo {
   name: string;

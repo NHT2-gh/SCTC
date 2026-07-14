@@ -14,7 +14,9 @@ export default function GuestLayout({
         {/* Header */}
         {/* <AppHeader /> */}
         {/* Page Content */}
-        <main className={`max-w-[31.25rem] mx-auto ${itim.className}`}>
+        <main
+          className={`max-w-[31.25rem] mx-auto h-fit min-h-[100dvh] ${itim.className}`}
+        >
           {children}
         </main>
       </div>

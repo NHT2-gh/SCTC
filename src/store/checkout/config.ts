@@ -2,7 +2,7 @@ import { CustomerInfo, DeliveryMethod } from "@/types/checkout";
 
 export interface CheckoutInfo {
   customer: CustomerInfo;
-  delivery_method: keyof typeof DeliveryMethod | string;
+  delivery_method: DeliveryMethod;
   pickup_at?: string;
   note?: string;
 }

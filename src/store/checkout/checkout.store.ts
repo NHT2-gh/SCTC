@@ -2,13 +2,14 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { STORAGE_KEYS } from "../storage_keys";
 import { CheckoutInfo, CheckoutState, CheckoutStore } from "./config";
+import { DeliveryMethod } from "@/types/checkout";
 
 const createInitialCheckout = (): CheckoutInfo => ({
   customer: {
     name: "",
     phone_number: "",
   },
-  delivery_method: "pickup_now",
+  delivery_method: DeliveryMethod.pickup_now,
   pickup_at: undefined,
   note: "",
 });

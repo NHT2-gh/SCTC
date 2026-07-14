@@ -19,9 +19,7 @@ export const CustomerInfoValidation = z.object({
 
 export const checkoutValidation = z.object({
   customer: CustomerInfoValidation,
-  delivery_method: z.enum(
-    Object.entries(DeliveryMethod).map(([key, _]) => key),
-  ),
+  delivery_method: z.enum(DeliveryMethod),
   pickup_at: z.string().optional(),
   note: z.string().max(100, "Số lượng kí tự không vượt quá 100").optional(),
 });

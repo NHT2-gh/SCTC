@@ -5,7 +5,7 @@ import { checkoutFormSchema } from "@/schemas/form-schemas/checkout-form-schema"
 import { CheckoutFormValidationType } from "@/schemas/validation/checkout.validation";
 import { showToast } from "@/lib/toast";
 import { SingleFilterButtonGroup } from "@/components/filter/single-toggle";
-import { DeliveryMethod } from "@/types/checkout";
+import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 import { useFormRenderer } from "@/components/form/FormRenderer";
 import Form from "@/components/form/Form";
 import { useWatch } from "react-hook-form";
@@ -17,6 +17,9 @@ import { delagothic } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { useOrderHistory } from "@/hooks/use-order";
 import { AddOrderResponen } from "@/types/order";
+import ModalAlert from "@/components/modal/alerts/modal-alert";
+import { useModal } from "@/hooks/useModal";
+import { Button } from "@/components/ui/button";
 
 export default function CheckoutInfoForm() {
   const router = useRouter();
@@ -24,12 +27,13 @@ export default function CheckoutInfoForm() {
   const { items, clearCart } = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const { checkoutInfo, updateCheckout } = useCheckout();
+  const modalAlert = useModal();
 
   const checkoutForm = useFormRenderer<CheckoutFormValidationType>(
     checkoutFormSchema,
     {
       customer: checkoutInfo.customer,
-      delivery_method: checkoutInfo.delivery_method || "pickup_now",
+      delivery_method: checkoutInfo.delivery_method,
     },
   );
   const deliveryMethodValue = useWatch({
@@ -48,7 +52,7 @@ export default function CheckoutInfoForm() {
 
     updateCheckout({
       customer: data.customer,
-      delivery_method: data.delivery_method as keyof typeof DeliveryMethod,
+      delivery_method: data.delivery_method as DeliveryMethod,
       note: data.note!,
     });
 
@@ -102,43 +106,65 @@ export default function CheckoutInfoForm() {
   }, [checkoutInfo]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grow flex flex-col gap-4">
       <h2>Thông tin nhận hàng</h2>
       <SingleFilterButtonGroup
         items={Object.entries(DeliveryMethod).map(([key, value]) => ({
           value: key,
-          label: value,
+          label: DeliveryMethodMapText[value],
         }))}
         onChange={(value) =>
           checkoutForm.setValue("delivery_method", value as DeliveryMethod)
         }
         className=" p-1"
       />
-      <Form
-        onSubmit={handleSubmit(onSubmit)}
-        className="h-full !grid-cols-2 gap-2"
-      >
-        {checkoutFormSchema.fields.map((field) =>
-          field.name == "pickup_at" &&
-          deliveryMethodValue == "pickup_now" ? null : (
-            <FormField key={field.name} field={field} form={checkoutForm} />
-          ),
-        )}
-      </Form>
+      <div className="grow">
+        <Form
+          onSubmit={handleSubmit(onSubmit)}
+          className="h-full !grid-cols-2 gap-2"
+        >
+          {checkoutFormSchema.fields.map((field) =>
+            field.name == "pickup_at" &&
+            deliveryMethodValue == "pickup_now" ? null : (
+              <FormField key={field.name} field={field} form={checkoutForm} />
+            ),
+          )}
+        </Form>
+      </div>
 
-      <button
+      <Button
         disabled={isLoading || formIsLoading}
-        onClick={handleSubmit(onSubmit)}
+        onClick={() => {
+          if (deliveryMethodValue == DeliveryMethod.pre_order) {
+            modalAlert.openModal();
+          } else {
+            handleSubmit(onSubmit)();
+          }
+        }}
         type="submit"
         className={cn(
-          "flex-3 bg-[#8D1111] text-white py-4 px-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed",
+          "flex-3  text-white py-4 px-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed",
           delagothic.className,
         )}
       >
         {isLoading || formIsLoading
           ? "Đừng có nhấn nữa đang ấy"
           : "Chính thức chốt đơn"}
-      </button>
+      </Button>
+
+      {modalAlert.isOpen && (
+        <ModalAlert
+          isOpen={modalAlert.isOpen}
+          onClose={() => modalAlert.closeModal()}
+          type={"info"}
+          title={"Lưu ý"}
+          description={
+            "Đối với những đơn hàng đặt trước, cục dàng vui lòng chờ quán gọi điện xác nhận đơn nha, nên cục dàng nhờ nghe máy nha."
+          }
+          onConfirm={handleSubmit(onSubmit)}
+          confirmText={"Để cục dàng nghe máy"}
+        />
+      )}
     </div>
   );
 }

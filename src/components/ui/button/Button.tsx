@@ -29,7 +29,7 @@ const Button: React.FC<ButtonProps> = ({
   // Variant Classes
   const variantClasses = {
     primary:
-      "bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300",
+      "bg-[#8D1111] text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300",
     outline:
       "bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/3 dark:hover:text-gray-300",
     neutral:
@@ -45,7 +45,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       className={cn(
-        `inline-flex text-theme-sm shrink-0 h-fit items-center justify-center font-medium gap-2 rounded-lg transition`,
+        `inline-flex max-h-fit text-theme-sm shrink-0 h-fit items-center justify-center font-medium gap-2 rounded-lg transition`,
         variantClasses[variant],
         sizeClasses[size],
         { "cursor-not-allowed opacity-50": disabled || loading },

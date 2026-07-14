@@ -42,7 +42,7 @@ export interface Order {
   status: OrderStatus;
   pick_up_time: string;
   order_items_count: number;
-  delivery_method: keyof typeof DeliveryMethod;
+  delivery_method: DeliveryMethod;
   tracking_order: string;
   order_type: OrderType;
   created_at: string;

@@ -75,7 +75,7 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
                 }}
               >
                 <Link
-                  className="w-fit"
+                  className="block w-full"
                   href={APP_ROUTES.GUEST.PRODUCT.VIEW_DETAIL(
                     item.menu_items.id,
                   )}

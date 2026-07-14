@@ -12,7 +12,7 @@ export async function createTableSession(tableId: number) {
       alg: "HS256",
     })
     .setIssuedAt()
-    .setExpirationTime("12h")
+    .setExpirationTime("5h")
     .sign(secret);
 }
 
