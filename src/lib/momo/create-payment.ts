@@ -91,7 +91,7 @@ export async function createPayment(
   if (payment_menthod === PaymentMethod.QR) {
     try {
       const result = await createQuickQR({
-        base_url: process.env.QR_VIET_BASE_URL!,
+        base_url: process.env.NEXT_PUBLIC_QR_VIET_BASE_URL!,
         amount: totalAmount,
         addInfo: `SCTCQR${orderId}`,
       });
