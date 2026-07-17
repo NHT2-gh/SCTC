@@ -15,8 +15,8 @@ export enum OrderStatus {
 
 export enum PaymentMethod {
   MOMO = "momo",
-  ZALO = "zalo",
-  MB = "mb",
+  QR = "qr",
+  CASH = "cash",
 }
 
 export enum PaymentType {

@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { trackingCodes, paymentType, tableId } = body;
+    const { trackingCodes, paymentType, tableId, paymentMethod } = body;
 
     if (!trackingCodes) {
       return NextResponse.json(
@@ -20,9 +20,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const payment = await createPayment(trackingCodes, paymentType, tableId);
+    const payment = await createPayment(
+      trackingCodes,
+      paymentType,
+      paymentMethod,
+      tableId,
+    );
 
-    console.log(payment);
     return NextResponse.json({
       success: true,
       data: payment,

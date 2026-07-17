@@ -4,7 +4,9 @@ import { momoConfig } from "./config";
 import { createSignature } from "./signature";
 import { v4 } from "uuid";
 import { MOMO_REQUEST_TYPE } from "./constants";
-import { PaymentType } from "@/types/order";
+import { PaymentMethod, PaymentType } from "@/types/order";
+import { QrVietQuickLinkResponse } from "../paymentQR/type";
+import { createQuickQR } from "../paymentQR/create-quick-qr";
 
 // src/lib/payment/momo/build-create-payment-payload.ts
 
@@ -22,8 +24,6 @@ export function buildCreatePaymentPayload({
   amount,
   orderInfo,
   extraData = "",
-  table_id,
-  payment_type,
 }: BuildCreatePaymentPayloadParams) {
   const requestId = v4();
 
@@ -31,7 +31,7 @@ export function buildCreatePaymentPayload({
     partnerCode: momoConfig.partnerCode,
     requestId,
     amount,
-    orderId,
+    orderId: `SCTC_MOMO_${orderId}`,
     orderInfo: orderInfo ?? `Ủng hộ cho Sáng Cà Tối Cồn 1 tí nha (#${orderId})`,
     redirectUrl: momoConfig.redirectUrl,
     ipnUrl: momoConfig.ipnUrl,
@@ -66,6 +66,7 @@ export function buildCreatePaymentPayload({
 export async function createPayment(
   tracking_codes: string[],
   payment_type: PaymentType,
+  payment_menthod: PaymentMethod,
   table_id: string,
 ) {
   const orders = await orderService.getAllOrder({
@@ -76,19 +77,45 @@ export async function createPayment(
     throw new Error(orders?.message || "Order not found");
   }
 
-  const payload = buildCreatePaymentPayload({
-    orderId: `MOMO-${payment_type === PaymentType.INDIVIDUAL ? `IND_${tracking_codes[0]}` : `GRP_${table_id}_${Date.now().toString()}`}`,
-    amount: orders.data.reduce((acc, order) => acc + order.subtotal, 0),
-    payment_type,
-    table_id,
-  });
+  const totalAmount = orders?.data.reduce(
+    (acc, order) => acc + order.subtotal,
+    0,
+  );
 
-  try {
-    const result = await createCollectionLink(payload);
+  const orderId = `${payment_type === PaymentType.INDIVIDUAL ? `IND${orders.data[0].tracking_order}` : `GRP${table_id}${Date.now().toString()}`}`;
 
-    return result;
-  } catch (error) {
-    console.log(error);
-    throw error;
+  if (payment_menthod === PaymentMethod.CASH) {
+    return;
+  }
+
+  if (payment_menthod === PaymentMethod.QR) {
+    try {
+      const result = await createQuickQR({
+        base_url: process.env.QR_VIET_BASE_URL!,
+        amount: totalAmount,
+        addInfo: `SCTCQR${orderId}`,
+      });
+
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  if (payment_menthod === PaymentMethod.MOMO) {
+    const payload = buildCreatePaymentPayload({
+      orderId: orderId,
+      amount: totalAmount,
+      payment_type,
+      table_id,
+    });
+
+    try {
+      const result = await createCollectionLink(payload);
+
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 }
