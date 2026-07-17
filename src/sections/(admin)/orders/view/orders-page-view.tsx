@@ -8,7 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import { useModal } from "@/hooks/useModal";
-import { OrderStatus, PaymentType } from "@/types/order";
+import { OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
 import { FormField } from "@/components/form";
 import { useFilter } from "@/hooks/use-filter";
 import { Button } from "@/components/ui/button";
@@ -91,13 +91,14 @@ export default function OrdersPageView() {
               ? PaymentType.INDIVIDUAL
               : PaymentType.GROUP,
           tableId: filterValues["table_id"],
+          paymentMethod: PaymentMethod.QR,
         }),
       });
 
       const data = await result.json();
 
-      if (data.success && data.data?.payUrl) {
-        window.location.href = data.data.payUrl;
+      if (data.success && data.data.qrUrl) {
+        window.open(data.data.qrUrl, "_blank");
       } else {
         showToast.error({
           title: data.message || "Tạo liên kết thanh toán thất bại",
@@ -216,7 +217,8 @@ export default function OrdersPageView() {
               size="sm"
               variant="outline"
               onClick={() =>
-                handleUpdateStatus(orderIdsSelected, OrderStatus.COMPLETED)
+                // handleUpdateStatus(orderIdsSelected, OrderStatus.COMPLETED)
+                handlePayment()
               }
               className="w-full mt-2 bg-lime-200"
             >
