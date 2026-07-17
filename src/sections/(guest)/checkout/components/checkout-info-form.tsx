@@ -33,7 +33,8 @@ export default function CheckoutInfoForm() {
     checkoutFormSchema,
     {
       customer: checkoutInfo.customer,
-      delivery_method: checkoutInfo.delivery_method,
+      delivery_method:
+        checkoutInfo.delivery_method || DeliveryMethod.pickup_now,
     },
   );
   const deliveryMethodValue = useWatch({

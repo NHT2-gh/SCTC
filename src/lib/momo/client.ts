@@ -31,6 +31,8 @@ export async function createCollectionLink(
     body: JSON.stringify(request),
   });
 
+  console.log(request, JSON.stringify(await response.json()));
+
   if (!response.ok) {
     throw new Error("Failed to call MoMo");
   }

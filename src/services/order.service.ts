@@ -87,7 +87,11 @@ class OrderService {
       const arrayParamFilters = Object.entries(params?.filters);
       arrayParamFilters.map(([key, value]) => {
         if (value) {
-          query.eq(key, value as string);
+          if (Array.isArray(value)) {
+            query.in(key, value as string[]);
+          } else {
+            query.eq(key, value as string);
+          }
           if (key === "status") {
             if (value === OrderStatus.COMPLETED) {
               query.order("updated_at", {

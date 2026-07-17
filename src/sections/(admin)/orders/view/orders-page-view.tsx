@@ -8,7 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import { useModal } from "@/hooks/useModal";
-import { OrderStatus } from "@/types/order";
+import { OrderStatus, PaymentType } from "@/types/order";
 import { FormField } from "@/components/form";
 import { useFilter } from "@/hooks/use-filter";
 import { Button } from "@/components/ui/button";
@@ -73,10 +73,40 @@ export default function OrdersPageView() {
   };
 
   const handlePayment = async () => {
-    const result = await fetch("/api/payment/momo/create");
-    const data = await result.json();
+    if (orderIdsSelected.length === 0) {
+      showToast.error({ title: "Vui lòng chọn đơn hàng cần thanh toán" });
+      return;
+    }
 
-    console.log(data);
+    try {
+      const result = await fetch("/api/payment/momo/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trackingCodes: orderIdsSelected,
+          paymentType:
+            orderIdsSelected.length === 1
+              ? PaymentType.INDIVIDUAL
+              : PaymentType.GROUP,
+          tableId: filterValues["table_id"],
+        }),
+      });
+
+      const data = await result.json();
+
+      if (data.success && data.data?.payUrl) {
+        window.location.href = data.data.payUrl;
+      } else {
+        showToast.error({
+          title: data.message || "Tạo liên kết thanh toán thất bại",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      showToast.error({ title: "Lỗi kết nối đến máy chủ" });
+    }
   };
 
   return (
@@ -185,7 +215,9 @@ export default function OrdersPageView() {
             <Button
               size="sm"
               variant="outline"
-              onClick={handlePayment}
+              onClick={() =>
+                handleUpdateStatus(orderIdsSelected, OrderStatus.COMPLETED)
+              }
               className="w-full mt-2 bg-lime-200"
             >
               Thanh toán

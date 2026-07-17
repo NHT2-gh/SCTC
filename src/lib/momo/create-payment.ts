@@ -4,6 +4,7 @@ import { momoConfig } from "./config";
 import { createSignature } from "./signature";
 import { v4 } from "uuid";
 import { MOMO_REQUEST_TYPE } from "./constants";
+import { PaymentType } from "@/types/order";
 
 // src/lib/payment/momo/build-create-payment-payload.ts
 
@@ -12,6 +13,8 @@ interface BuildCreatePaymentPayloadParams {
   amount: number;
   orderInfo?: string;
   extraData?: string;
+  payment_type: PaymentType;
+  table_id: string;
 }
 
 export function buildCreatePaymentPayload({
@@ -19,15 +22,17 @@ export function buildCreatePaymentPayload({
   amount,
   orderInfo,
   extraData = "",
+  table_id,
+  payment_type,
 }: BuildCreatePaymentPayloadParams) {
-  const requestId = crypto.randomUUID();
+  const requestId = v4();
 
   const payload = {
     partnerCode: momoConfig.partnerCode,
     requestId,
     amount,
     orderId,
-    orderInfo: orderInfo ?? `SCTC - Đơn hàng #${orderId}`,
+    orderInfo: orderInfo ?? `Ủng hộ cho Sáng Cà Tối Cồn 1 tí nha (#${orderId})`,
     redirectUrl: momoConfig.redirectUrl,
     ipnUrl: momoConfig.ipnUrl,
     lang: "vi" as const,
@@ -58,16 +63,24 @@ export function buildCreatePaymentPayload({
   };
 }
 
-export async function createPayment(tracking_code: string) {
-  const order = await orderService.getOrderDetail(tracking_code);
+export async function createPayment(
+  tracking_codes: string[],
+  payment_type: PaymentType,
+  table_id: string,
+) {
+  const orders = await orderService.getAllOrder({
+    filters: { id: tracking_codes },
+  });
 
-  if (!order) {
-    throw new Error("Order not found");
+  if (!orders || !orders.success || !orders.data) {
+    throw new Error(orders?.message || "Order not found");
   }
 
   const payload = buildCreatePaymentPayload({
-    orderId: order.data.order.tracking_order,
-    amount: order.data.order.subtotal,
+    orderId: `MOMO-${payment_type === PaymentType.INDIVIDUAL ? `IND_${tracking_codes[0]}` : `GRP_${table_id}_${Date.now().toString()}`}`,
+    amount: orders.data.reduce((acc, order) => acc + order.subtotal, 0),
+    payment_type,
+    table_id,
   });
 
   try {

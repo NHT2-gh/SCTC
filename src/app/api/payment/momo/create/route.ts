@@ -1,11 +1,14 @@
+import { mapErrorToMessage } from "@/lib/error/app-error";
 import { createPayment } from "@/lib/momo/create-payment";
+import { PaymentType } from "@/types/order";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const { trackingCodes, paymentType, tableId } = body;
 
-    if (!body.trackingCode) {
+    if (!trackingCodes) {
       return NextResponse.json(
         {
           success: false,
@@ -17,15 +20,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const payment = await createPayment(body.trackingCode);
+    const payment = await createPayment(trackingCodes, paymentType, tableId);
 
+    console.log(payment);
     return NextResponse.json({
       success: true,
       data: payment,
     });
   } catch (error) {
-    console.error("[MoMo Create Payment]", error);
-
     return NextResponse.json(
       {
         success: false,

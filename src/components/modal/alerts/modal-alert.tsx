@@ -40,7 +40,7 @@ export default function ModalAlert({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="max-w-[600px] !max-h-fit !min-h-fit p-5 lg:p-10"
+      className="max-w-[600px] bg-white rounded-xl !max-h-fit !min-h-fit p-5 lg:p-10"
     >
       <div className="text-center">
         <Icon />
