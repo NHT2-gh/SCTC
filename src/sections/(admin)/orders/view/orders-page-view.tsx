@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-
+import Image from "next/image";
 import {
   useGetAllOrder,
   useUpdateOrderStatus,
@@ -18,6 +18,7 @@ import OrderItemCard from "../components/order-item";
 import { useGetTable } from "@/hooks/queries/use-overview";
 import { FilterStatus, ModalViewOrder } from "../components";
 import { MainContainer } from "@/components/common/page-layout";
+import Link from "next/link";
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
@@ -37,6 +38,7 @@ export default function OrdersPageView() {
     ],
     initSubmit: true,
   });
+  const [qrUrl, setQrUrl] = React.useState<string | null>(null);
   const { data: orders, refetch: refetchOrders } = useGetAllOrder({
     filters: filterValues,
   });
@@ -98,7 +100,8 @@ export default function OrdersPageView() {
       const data = await result.json();
 
       if (data.success && data.data.qrUrl) {
-        window.open(data.data.qrUrl, "_blank");
+        // window.open(data.data.qrUrl, "_blank");
+        setQrUrl(data.data.qrUrl);
       } else {
         showToast.error({
           title: data.message || "Tạo liên kết thanh toán thất bại",
@@ -141,7 +144,13 @@ export default function OrdersPageView() {
                 }}
               />
 
-              <Button variant="outline" onClick={() => refetchOrders()}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  refetchOrders();
+                  setQrUrl(null);
+                }}
+              >
                 Refetch
               </Button>
 
@@ -192,7 +201,7 @@ export default function OrdersPageView() {
           </div>
         </div>
         {orders?.data && filterValues["status"] === OrderStatus.DONE && (
-          <div className="p-2 bg-white absolute bottom-4 right-10 border border-brand-500 border-dashed rounded-lg">
+          <div className="p-2 bg-white absolute bottom-4 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
             {orderIdsSelected.length > 0 && (
               <h3 className="font-bold">
                 Selected: {orderIdsSelected.length} orders
@@ -224,6 +233,14 @@ export default function OrdersPageView() {
             >
               Thanh toán
             </Button>
+
+            {qrUrl && (
+              <div className="mt-2 w-fit mx-auto rounded-lg overflow-hidden">
+                <Link href={qrUrl} target="_blank">
+                  <Image src={qrUrl} alt="QR Code" width={200} height={200} />
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </MainContainer>

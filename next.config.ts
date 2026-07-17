@@ -11,7 +11,11 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    domains: ["oepbunibrnmvqudbwmvz.supabase.co", "i.pinimg.com"],
+    domains: [
+      "oepbunibrnmvqudbwmvz.supabase.co",
+      "i.pinimg.com",
+      "api.vietqr.io",
+    ],
   },
 
   allowedDevOrigins: [
