@@ -56,7 +56,7 @@ export default function Modal({
   return (
     <div
       slot="modal"
-      className="fixed left-0 right-0 top-[3.75rem] bottom-0 md:inset-0 bg-white md:bg-[unset] flex items-center justify-center  modal z-99999 lg:pl-[4rem] dark:bg-gray-900"
+      className="fixed left-0 right-0 top-[3.75rem] bottom-0 md:inset-0 md:bg-[unset] flex items-center justify-center  modal z-99999 lg:pl-[4rem] dark:bg-gray-900"
     >
       <div
         className="hidden md:block absolute inset-0 bg-gray-400/50 backdrop-blur-[32px]"

@@ -14,24 +14,27 @@ import React from "react";
 interface OrderItemCardProp {
   order: Order;
   onSelected: (orderId: string) => void;
+  onViewed: (orderId: string) => void;
   onConfirm: (orderId: string) => void;
   onCancel: (orderId: string) => void;
 }
 export default function OrderItemCard({
   order,
   onSelected,
+  onViewed,
   onConfirm,
   onCancel,
 }: OrderItemCardProp) {
   return (
     <article
-      className={cn("border flex flex-col rounded-lg p-4", {
+      className={cn("border flex flex-col rounded-lg p-4 h-full", {
         "border-brand-500 ": order.tables?.id,
       })}
     >
       <ul
         className="cursor-pointer text-sm text-muted-foreground grow"
-        onClick={() => onSelected(order.tracking_order)}
+        onClick={() => onSelected(order.id)}
+        onDoubleClick={() => onViewed(order.tracking_order)}
       >
         <li className="text-base font-bold capitalize flex gap-3 justify-between items-center">
           <span>No: {order.tracking_order}</span>

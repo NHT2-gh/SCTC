@@ -40,14 +40,16 @@ export default function ModalAlert({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="max-w-[600px] !max-h-fit !min-h-fit p-5 lg:p-10"
+      className="max-w-[600px] bg-white rounded-xl !max-h-fit !min-h-fit p-5 lg:p-10"
     >
       <div className="text-center">
         <Icon />
         <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90 sm:text-title-sm">
           {title}
         </h4>
-        <p className="mb-6 text-gray-500 dark:text-gray-400">{description}</p>
+        <p className="mb-6 whitespace-pre-wrap text-gray-500 dark:text-gray-400">
+          {description}
+        </p>
 
         <div className="flex items-center justify-center w-full gap-3 mt-7">
           <button

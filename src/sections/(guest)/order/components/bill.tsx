@@ -91,6 +91,9 @@ export default async function Bill({
                   ))}
               </ul>
             )}
+            {item.order_item.line_note && (
+              <p className="italic">{item.order_item.line_note}</p>
+            )}
           </li>
         ))}
       </ul>

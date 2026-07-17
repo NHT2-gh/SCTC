@@ -13,6 +13,17 @@ export enum OrderStatus {
   CANCELLED = "cancelled",
 }
 
+export enum PaymentMethod {
+  MOMO = "momo",
+  ZALO = "zalo",
+  MB = "mb",
+}
+
+export enum PaymentType {
+  GROUP = "group",
+  INDIVIDUAL = "individual",
+}
+
 export const MapTextStatusOrder: Record<OrderStatus, string> = {
   [OrderStatus.PENDING]: "Chờ xác nhận",
   [OrderStatus.CONFIRMED]: "Đã xác nhận",

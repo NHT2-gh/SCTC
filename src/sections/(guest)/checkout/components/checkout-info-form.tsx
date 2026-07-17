@@ -33,7 +33,8 @@ export default function CheckoutInfoForm() {
     checkoutFormSchema,
     {
       customer: checkoutInfo.customer,
-      delivery_method: checkoutInfo.delivery_method,
+      delivery_method:
+        checkoutInfo.delivery_method || DeliveryMethod.pickup_now,
     },
   );
   const deliveryMethodValue = useWatch({
@@ -159,7 +160,7 @@ export default function CheckoutInfoForm() {
           type={"info"}
           title={"Lưu ý"}
           description={
-            "Đối với những đơn hàng đặt trước, cục dàng vui lòng chờ quán gọi điện xác nhận đơn nha, nên cục dàng nhờ nghe máy nha."
+            "Đối với những đơn hàng đặt trước, cục dàng vui lòng chờ quán gọi điện xác nhận đơn nha, nên cục dàng nhờ nghe máy nha.\nCục dàng nhớ thanh toán trước cho quán trước khi tới nhận hàng nha."
           }
           onConfirm={handleSubmit(onSubmit)}
           confirmText={"Để cục dàng nghe máy"}

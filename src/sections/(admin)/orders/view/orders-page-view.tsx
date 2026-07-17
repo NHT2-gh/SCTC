@@ -1,21 +1,23 @@
 "use client";
-import { MainContainer } from "@/components/common/page-layout";
+import React, { useEffect } from "react";
+
 import {
   useGetAllOrder,
   useUpdateOrderStatus,
 } from "@/hooks/queries/use-order";
-import { OrderStatus } from "@/types/order";
-import React, { useEffect } from "react";
-import OrderItemCard from "../components/order-item";
+import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import { useModal } from "@/hooks/useModal";
-import { FilterStatus, ModalViewOrder } from "../components";
-import { useFilter } from "@/hooks/use-filter";
-import { useUrlState } from "@/hooks/use-url-state";
+import { OrderStatus, PaymentType } from "@/types/order";
 import { FormField } from "@/components/form";
-import { useGetTable } from "@/hooks/queries/use-overview";
+import { useFilter } from "@/hooks/use-filter";
 import { Button } from "@/components/ui/button";
+import { useUrlState } from "@/hooks/use-url-state";
 import { formatCurrency } from "@/utils/format-data";
+import OrderItemCard from "../components/order-item";
+import { useGetTable } from "@/hooks/queries/use-overview";
+import { FilterStatus, ModalViewOrder } from "../components";
+import { MainContainer } from "@/components/common/page-layout";
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
@@ -38,6 +40,15 @@ export default function OrdersPageView() {
   const { data: orders, refetch: refetchOrders } = useGetAllOrder({
     filters: filterValues,
   });
+  const [orderIdsSelected, setIdsOrderSelected] = React.useState<string[]>([]);
+
+  useEffect(() => {
+    setIdsOrderSelected(
+      filterValues["status"] === OrderStatus.DONE && filterValues["table_id"]
+        ? orders?.data.map((oder) => oder.id) || []
+        : [],
+    );
+  }, [filterValues["status"]]);
 
   useEffect(() => {
     if (orderIdView) modalViewOrder.openModal();
@@ -58,6 +69,43 @@ export default function OrdersPageView() {
       }
     } catch (error) {
       showToast.error({ title: "Error updating order" });
+    }
+  };
+
+  const handlePayment = async () => {
+    if (orderIdsSelected.length === 0) {
+      showToast.error({ title: "Vui lòng chọn đơn hàng cần thanh toán" });
+      return;
+    }
+
+    try {
+      const result = await fetch("/api/payment/momo/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trackingCodes: orderIdsSelected,
+          paymentType:
+            orderIdsSelected.length === 1
+              ? PaymentType.INDIVIDUAL
+              : PaymentType.GROUP,
+          tableId: filterValues["table_id"],
+        }),
+      });
+
+      const data = await result.json();
+
+      if (data.success && data.data?.payUrl) {
+        window.location.href = data.data.payUrl;
+      } else {
+        showToast.error({
+          title: data.message || "Tạo liên kết thanh toán thất bại",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      showToast.error({ title: "Lỗi kết nối đến máy chủ" });
     }
   };
 
@@ -96,7 +144,13 @@ export default function OrdersPageView() {
                 Refetch
               </Button>
 
-              <Button onClick={() => clearFilters()} className="w-fit">
+              <Button
+                onClick={() => {
+                  clearFilters();
+                  setIdsOrderSelected([]);
+                }}
+                className="w-fit"
+              >
                 Clear
               </Button>
             </div>
@@ -104,54 +158,72 @@ export default function OrdersPageView() {
 
           <div className="w-full py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:max-h-[65vh] max-h-[60vh] overflow-y-scroll ">
             {orders?.data.map((order) => (
-              <OrderItemCard
-                key={order.tracking_order}
-                order={order}
-                onSelected={(orderId) => {
-                  setOrderIdView(orderId);
-                }}
-                onConfirm={(orderId) => {
-                  handleUpdateStatus([orderId], OrderStatus.CONFIRMED);
-                }}
-                onCancel={(orderId) => {
-                  handleUpdateStatus([orderId], OrderStatus.CANCELLED);
-                }}
-              />
+              <div
+                key={order.id}
+                className={cn(
+                  "bg-white",
+                  orderIdsSelected.includes(order.id) &&
+                    "rounded-lg bg-green-50",
+                )}
+              >
+                <OrderItemCard
+                  order={order}
+                  onSelected={(orderId) => {
+                    setIdsOrderSelected((prev) => {
+                      if (prev.includes(orderId)) {
+                        return prev.filter((id) => id !== orderId);
+                      }
+                      return [...prev, orderId];
+                    });
+                  }}
+                  onViewed={(orderId) => {
+                    setOrderIdView(orderId);
+                  }}
+                  onConfirm={(orderId) => {
+                    handleUpdateStatus([orderId], OrderStatus.CONFIRMED);
+                  }}
+                  onCancel={(orderId) => {
+                    handleUpdateStatus([orderId], OrderStatus.CANCELLED);
+                  }}
+                />
+              </div>
             ))}
           </div>
         </div>
-        {(orders?.data && filterValues["status"] === OrderStatus.DONE) ||
-          (OrderStatus.COMPLETED && (
-            <div className="p-2 bg-white absolute bottom-4 right-10 border border-brand-500 border-dashed rounded-lg">
+        {orders?.data && filterValues["status"] === OrderStatus.DONE && (
+          <div className="p-2 bg-white absolute bottom-4 right-10 border border-brand-500 border-dashed rounded-lg">
+            {orderIdsSelected.length > 0 && (
               <h3 className="font-bold">
-                Total Amount:
-                <span className="ml-2 text-brand-500">
-                  {formatCurrency(
-                    orders?.data.reduce(
-                      (acc, order) => acc + order.subtotal,
-                      0,
-                    ) || 0,
-                  )}
-                </span>
+                Selected: {orderIdsSelected.length} orders
               </h3>
+            )}
 
-              {orders?.data && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() =>
-                    handleUpdateStatus(
-                      orders.data.map((oder) => oder.tracking_order) || [],
-                      OrderStatus.COMPLETED,
-                    )
-                  }
-                  className="w-full mt-2 bg-lime-200"
-                >
-                  Đã thanh toán
-                </Button>
-              )}
-            </div>
-          ))}
+            <h3 className="font-bold">
+              Total Amount:
+              <span className="ml-2 text-brand-500">
+                {formatCurrency(
+                  orderIdsSelected.reduce((acc, orderId) => {
+                    const orderData = orders?.data.find(
+                      (order) => order.id === orderId,
+                    );
+                    return acc + (orderData?.subtotal || 0);
+                  }, 0),
+                )}
+              </span>
+            </h3>
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                handleUpdateStatus(orderIdsSelected, OrderStatus.COMPLETED)
+              }
+              className="w-full mt-2 bg-lime-200"
+            >
+              Thanh toán
+            </Button>
+          </div>
+        )}
       </MainContainer>
 
       {modalViewOrder.isOpen && orderIdView && (
