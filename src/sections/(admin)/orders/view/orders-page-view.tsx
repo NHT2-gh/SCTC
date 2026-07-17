@@ -79,7 +79,7 @@ export default function OrdersPageView() {
     }
 
     try {
-      const result = await fetch("/api/payment/momo/create", {
+      const result = await fetch("/api/payment/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
