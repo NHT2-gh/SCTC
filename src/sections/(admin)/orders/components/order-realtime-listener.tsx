@@ -24,8 +24,8 @@ export async function showOrderNotification(order: Order) {
 
   await registration.showNotification("🛎️ Đơn hàng mới", {
     body: `${order.tracking_order} - ${order.customer_name}`,
-    icon: "/icons/logo-192.png",
-    tag: order.id,
+    icon: "/images/logos/logo-sctc-v1.webp",
+    tag: order.tracking_order,
   });
 }
 

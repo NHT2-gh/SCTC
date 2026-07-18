@@ -82,6 +82,11 @@ class OrderService {
       )
       `,
     );
+    if (!params?.filters?.["status"]) {
+      query.order("created_at", {
+        ascending: false,
+      });
+    }
 
     if (params?.filters) {
       const arrayParamFilters = Object.entries(params?.filters);
@@ -99,9 +104,6 @@ class OrderService {
               });
             }
           }
-          query.order("created_at", {
-            ascending: true,
-          });
         }
       });
     }
@@ -117,7 +119,7 @@ class OrderService {
   }
 
   async updateOrderStatus(data: UpdateOrderDTO): Promise<MutationResult> {
-    if (!data.trackingCodes)
+    if (!data.ids)
       return {
         success: false,
         message: ErrorCode.INVALID_INPUT,
@@ -128,7 +130,7 @@ class OrderService {
       .update({
         status: data.status,
       })
-      .in("tracking_order", data.trackingCodes)
+      .in("id", data.ids)
       .select();
 
     const { data: updatedOrder, error } = await query;

@@ -21,7 +21,10 @@ export default function FilterStatus({
   return (
     <div className="z-10 py-3 bg-white flex gap-3 items-center overflow-x-scroll scrollbar-hidden">
       <button
-        onClick={() => removeFilter("status")}
+        onClick={() => {
+          removeFilter("status");
+          setStatus(undefined);
+        }}
         className={cn("bg-neutral-100 rounded-xl py-2 px-4 capitalize", {
           "bg-brand-300 text-white": !filterValues["status"],
         })}

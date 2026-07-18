@@ -24,7 +24,7 @@ export default function OrdersPageView() {
   const modalViewOrder = useModal();
   const { data: tables } = useGetTable();
   const updateOrderStatus = useUpdateOrderStatus();
-  const [orderIdView, setOrderIdView] = useUrlState("view_order", "");
+  const [orderView, setOrderView] = useUrlState("view_order", "");
   const { filterValues, updateFilter, removeFilter, clearFilters } = useFilter({
     filterConfigs: [
       {
@@ -53,20 +53,19 @@ export default function OrdersPageView() {
   }, [filterValues["status"]]);
 
   useEffect(() => {
-    if (orderIdView) modalViewOrder.openModal();
-  }, [orderIdView, setOrderIdView]);
+    if (orderView) modalViewOrder.openModal();
+  }, [orderView, orderView]);
 
-  const handleUpdateStatus = async (
-    tracking_orders: string[],
-    status: OrderStatus,
-  ) => {
+  const handleUpdateStatus = async (ids: string[], status: OrderStatus) => {
     try {
       const result = await updateOrderStatus.mutateAsync({
-        trackingCodes: tracking_orders,
+        ids: ids,
         status: status,
       });
 
       if (result.success) {
+        refetchOrders();
+
         showToast.success({ title: "Order updated successfully" });
       }
     } catch (error) {
@@ -100,7 +99,6 @@ export default function OrdersPageView() {
       const data = await result.json();
 
       if (data.success && data.data.qrUrl) {
-        // window.open(data.data.qrUrl, "_blank");
         setQrUrl(data.data.qrUrl);
       } else {
         showToast.error({
@@ -166,7 +164,7 @@ export default function OrdersPageView() {
             </div>
           )}
 
-          <div className="w-full py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:max-h-[65vh] max-h-[60vh] overflow-y-scroll ">
+          <div className="w-full py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:max-h-[65vh] max-h-[70vh] overflow-y-scroll">
             {orders?.data.map((order) => (
               <div
                 key={order.id}
@@ -186,8 +184,8 @@ export default function OrdersPageView() {
                       return [...prev, orderId];
                     });
                   }}
-                  onViewed={(orderId) => {
-                    setOrderIdView(orderId);
+                  onViewed={(trackingCode) => {
+                    setOrderView(trackingCode);
                   }}
                   onConfirm={(orderId) => {
                     handleUpdateStatus([orderId], OrderStatus.CONFIRMED);
@@ -239,23 +237,31 @@ export default function OrdersPageView() {
                 <Link href={qrUrl} target="_blank">
                   <Image src={qrUrl} alt="QR Code" width={200} height={200} />
                 </Link>
+                <button
+                  className="w-full mt-2 bg-lime-200 rounded-lg px-2 py-1"
+                  onClick={() => {
+                    handleUpdateStatus(orderIdsSelected, OrderStatus.COMPLETED);
+                    setQrUrl(null);
+                  }}
+                >
+                  Đã nhận tiền.
+                </button>
               </div>
             )}
           </div>
         )}
       </MainContainer>
 
-      {modalViewOrder.isOpen && orderIdView && (
+      {modalViewOrder.isOpen && orderView && (
         <ModalViewOrder
+          className="bg-white"
           isOpen={modalViewOrder.isOpen}
           onClose={() => {
             modalViewOrder.closeModal();
-            setOrderIdView(undefined);
+            setOrderView(undefined);
           }}
-          trackingCode={orderIdView}
-          onUpdateStatus={(trackingCode, status) =>
-            handleUpdateStatus([trackingCode], status)
-          }
+          trackingCode={orderView}
+          onUpdateStatus={(id, status) => handleUpdateStatus(id, status)}
         />
       )}
     </>

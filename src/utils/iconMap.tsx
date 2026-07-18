@@ -30,6 +30,13 @@ export const iconMap = {
   "modal-alert-info": IcModalAlertInfoIcon,
   "modal-alert-warning": IcModalAlertWarningIcon,
   "modal-alert-danger": IcModalAlertDangerIcon,
+
+  instagram: PackageIcon,
+  threads: PackageIcon,
+  tiktok: PackageIcon,
+  phone: PackageIcon,
+  mail: PackageIcon,
+  mapPin: PackageIcon,
 } as const;
 
 export type IconKey = keyof typeof iconMap;

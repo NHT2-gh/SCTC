@@ -1,3 +1,5 @@
+import { IconKey } from "@/utils/iconMap";
+
 export const _contact_info = {
   hotline: "0845002405",
   email: ["nht2.0105@gmail.com"],
@@ -5,8 +7,19 @@ export const _contact_info = {
   mapUrl: "https://maps.app.goo.gl/bK49JYBE9JpC9vzMA",
 };
 
-export const _social_links = {
-  instagram: "https://www.instagram.com/sangcatoicon/",
-  threads:
-    "https://www.threads.com/@sangcatoicon?xmt=AQG0qU-Tap5S82f5bUnb035oe29bT8N-2VuTccqyePTBGUE",
-};
+export const _social_links: {
+  name: string;
+  link: string;
+  icon: IconKey;
+}[] = [
+  {
+    name: "Instagram",
+    link: "https://www.instagram.com/sangcatoicon/",
+    icon: "instagram",
+  },
+  {
+    name: "Threads",
+    link: "https://www.threads.com/@sangcatoicon?xmt=AQG0qU-Tap5S82f5bUnb035oe29bT8N-2VuTccqyePTBGUE",
+    icon: "threads",
+  },
+];

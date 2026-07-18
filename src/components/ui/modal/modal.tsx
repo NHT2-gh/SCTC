@@ -59,14 +59,14 @@ export default function Modal({
       className="fixed left-0 right-0 top-[3.75rem] bottom-0 md:inset-0 md:bg-[unset] flex items-center justify-center  modal z-99999 lg:pl-[4rem] dark:bg-gray-900"
     >
       <div
-        className="hidden md:block absolute inset-0 bg-gray-400/50 backdrop-blur-[32px]"
+        className="absolute inset-0 bg-white pointer-events-none md:pointer-events-auto md:bg-gray-400/50 backdrop-blur-[32px]"
         onClick={onClose}
       ></div>
 
       {showCloseButton && (
         <button
           onClick={onClose}
-          className="fixed right-3 top-20 md:absolute md:top-[12vh] md:right-[7.5vw] lg:top-[12vh] lg:right-[5vw] z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:right-6 sm:top-6 sm:h-11 sm:w-11"
+          className="fixed right-3 top-24 md:absolute md:top-[12vh] md:right-[7.5vw] lg:top-[12vh] lg:right-[5vw] z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:right-6 sm:top-6 sm:h-11 sm:w-11"
         >
           <svg
             width="24"
@@ -88,7 +88,7 @@ export default function Modal({
       <div
         ref={modalRef}
         className={cn(
-          "w-screen relative max-h-[90vh] pt-[5rem] scrollbar-hidden md:pt-0 md:w-[90vw] md:min-h-[80vh] md:max-h-[80vh] overflow-y-auto text-gray-700 dark:text-gray-200 md:rounded-3xl md:bg-white md:dark:bg-gray-900 md:p-8",
+          "w-screen relative max-h-[90vh] bg-white pt-[5rem] scrollbar-hidden md:pt-0 md:w-[90vw] md:min-h-[80vh] md:max-h-[80vh] overflow-y-auto text-gray-700 dark:text-gray-200 md:rounded-3xl md:bg-white md:dark:bg-gray-900 md:p-8",
           className,
         )}
         onClick={(e) => e.stopPropagation()}

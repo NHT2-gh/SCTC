@@ -48,7 +48,7 @@ export default function UserDropdown() {
           <AvatarText name="Admin" className="w-full h-full" />
         </span>
 
-        <span className="block mr-1 font-medium text-theme-sm">Chúng mình</span>
+        <span className="block mr-1 font-medium text-theme-sm">Admin</span>
 
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${

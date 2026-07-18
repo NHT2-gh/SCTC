@@ -14,7 +14,7 @@ import React from "react";
 interface OrderItemCardProp {
   order: Order;
   onSelected: (orderId: string) => void;
-  onViewed: (orderId: string) => void;
+  onViewed: (trackingCode: string) => void;
   onConfirm: (orderId: string) => void;
   onCancel: (orderId: string) => void;
 }
@@ -33,7 +33,9 @@ export default function OrderItemCard({
     >
       <ul
         className="cursor-pointer text-sm text-muted-foreground grow"
-        onClick={() => onSelected(order.id)}
+        onClick={() => {
+          onSelected(order.id);
+        }}
         onDoubleClick={() => onViewed(order.tracking_order)}
       >
         <li className="text-base font-bold capitalize flex gap-3 justify-between items-center">
@@ -89,7 +91,7 @@ export default function OrderItemCard({
           <Button
             size="sm"
             className="mt-4"
-            onClick={() => onConfirm(order.tracking_order)}
+            onClick={() => onConfirm(order.id)}
           >
             Confirm order
           </Button>

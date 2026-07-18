@@ -106,7 +106,7 @@ export interface OrderItemCard {
 }
 
 export interface UpdateOrderDTO {
-  trackingCodes: string[];
+  ids: string[];
   status: OrderStatus;
 }
 
