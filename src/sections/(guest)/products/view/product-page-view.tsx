@@ -280,7 +280,6 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
               delagothic.className,
             )}
             onClick={() => applyFilters()}
-            disabled={!product.is_allow_order}
           >
             {info.products.is_active ? (
               <span className=" text-sm text-white ">
