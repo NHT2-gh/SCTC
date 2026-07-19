@@ -282,11 +282,7 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
             onClick={() => applyFilters()}
             disabled={!product.is_allow_order}
           >
-            {info.products.is_only_allow_dinein ? (
-              <span className=" text-sm text-white ">
-                Sản phẩm chỉ phục vụ khi dùng tại quán
-              </span>
-            ) : info.products.is_active ? (
+            {info.products.is_active ? (
               <span className=" text-sm text-white ">
                 Bỏ túi
                 <span className={itim.className}>

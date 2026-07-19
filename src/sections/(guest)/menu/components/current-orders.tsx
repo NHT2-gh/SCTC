@@ -9,7 +9,7 @@ import { APP_ROUTES } from "@/config/app-routes";
 import { OrderStatus } from "@/types/order";
 
 export default function CurrentOrders() {
-  const { activeOrders } = useOrderHistory();
+  const { activeOrders, clearOrders } = useOrderHistory();
   const [view, setView] = useState(false);
 
   if (activeOrders && activeOrders.length === 0) {
@@ -63,7 +63,7 @@ export default function CurrentOrders() {
         </button>
       )}
 
-      {/* <button onClick={() => clearOrders()}>Clear</button> */}
+      <button onClick={() => clearOrders()}>Clear</button>
     </div>
   );
 }
