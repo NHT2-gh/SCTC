@@ -63,7 +63,7 @@ export default function CurrentOrders() {
         </button>
       )}
 
-      <button onClick={() => clearOrders()}>Clear</button>
+      <button onClick={() => clearOrders()}></button>
     </div>
   );
 }

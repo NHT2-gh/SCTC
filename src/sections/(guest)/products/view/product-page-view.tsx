@@ -26,7 +26,7 @@ interface ProductPageViewProps {
 }
 
 export default function ProductPageView({ product }: ProductPageViewProps) {
-  const { info, options } = product;
+  const { info, options, isAllowOrder } = product;
   const { add } = useCart();
   const [lineNote, setLineNote] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
@@ -280,13 +280,18 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
               delagothic.className,
             )}
             onClick={() => applyFilters()}
+            disabled={!isAllowOrder}
           >
-            {info.products.is_active ? (
+            {isAllowOrder ? (
               <span className=" text-sm text-white ">
                 Bỏ túi
                 <span className={itim.className}>
                   {" -"} {formatCurrency(totalPrice)}
                 </span>
+              </span>
+            ) : !isAllowOrder && product.info.products.is_only_allow_dinein ? (
+              <span className=" text-sm text-white ">
+                Hiện tại sản phẩm này chỉ phục vụ tại chỗ
               </span>
             ) : (
               <span className=" text-sm text-white ">

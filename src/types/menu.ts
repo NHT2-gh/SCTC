@@ -16,6 +16,15 @@ export enum OptionType {
   alcoholic = "Độ cồn",
 }
 
+export enum ProductType {
+  food = "food",
+  coffee = "coffee",
+  cocktail = "cocktail",
+  matcha = "matcha",
+  hojicha = "hojicha",
+  tea = "tea",
+}
+
 export type MenuType = keyof typeof MenuEnumType;
 
 export interface Menu {
@@ -35,7 +44,7 @@ export interface Product {
   image_url: string[];
   is_active: boolean;
   is_only_allow_dinein: boolean;
-  is_alcoholic_beverages: boolean;
+  product_type: ProductType;
 }
 
 export interface MenuItem {

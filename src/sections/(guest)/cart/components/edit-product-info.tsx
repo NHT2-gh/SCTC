@@ -197,7 +197,7 @@ export default function EditProductInfo({
                 <Label className={cn("text-black", delagothic.className)}>
                   {OptionType[type as keyof typeof OptionType]}
                 </Label>
-                <div className="flex gap-2.5">
+                <div className="flex flex-wrap gap-2.5">
                   {productOptions?.data.fixed
                     ?.filter((item) => item.option_type === type)
                     .map((option) => (

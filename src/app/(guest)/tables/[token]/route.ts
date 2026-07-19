@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-
+import { APP_ROUTES } from "@/config/app-routes";
 import { adminSupabase } from "@/supabase/supabaseAdmin";
 import { TABLE_COOKIE, createTableSession } from "@/lib/table/table-session";
-import { APP_ROUTES } from "@/config/app-routes";
 
 export async function GET(
   req: Request,
@@ -28,7 +27,8 @@ export async function GET(
   }
 
   const session = await createTableSession(table.id);
-  const origin = new URL(req.url).origin;
+  const origin = process.env.NEXT_PUBLIC_DOMAIN_URL;
+
   const response = NextResponse.redirect(
     new URL(origin + APP_ROUTES.GUEST.ROOT),
   );

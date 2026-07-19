@@ -36,10 +36,21 @@ export async function serverActionGetMenuItemInfo(
     };
   }
 
+  const tableInfo = await getCurrentTable();
+
+  let isAllowOrder = true;
+
+  if (!tableInfo?.tableId && info.data.products.is_only_allow_dinein) {
+    isAllowOrder = false;
+  } else if (!info.data.products.is_active) {
+    isAllowOrder = false;
+  }
+
   return {
     data: {
       info: info.data,
       options: options.data,
+      isAllowOrder,
     },
     success: true,
     error: null,

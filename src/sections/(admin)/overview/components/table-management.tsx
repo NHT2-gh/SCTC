@@ -54,7 +54,7 @@ export default function TableManagement() {
                 </button>
                 <Link
                   target="_blank"
-                  href={`${window.location.origin}/${APP_ROUTES.GUEST.TABLE.DETAIL(table.qr_token)}`}
+                  href={`${window.location.origin}${APP_ROUTES.GUEST.TABLE.DETAIL(table.qr_token)}`}
                 >
                   <button>
                     <SquareArrowOutUpRightIcon
