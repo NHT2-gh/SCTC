@@ -151,9 +151,9 @@ export default function ProductPageView({ product }: ProductPageViewProps) {
     );
   }, [filterValues, options, product.info.products.selling_price, quantity]);
 
-  const fixedOpt = info.products.is_only_allow_dinein
-    ? _product_setting.fixedOptionType.dine_in
-    : _product_setting.fixedOptionType.take_away;
+  const fixedOpt = info.products.product_type
+    ? _product_setting.fixedOptions[info.products.product_type]
+    : [];
 
   return (
     <section className="bg-[#8D1111] [&_hr]:border-[#E2DDCD] relative flex flex-col h-dvh">

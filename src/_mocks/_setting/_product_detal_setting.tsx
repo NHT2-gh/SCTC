@@ -1,15 +1,30 @@
+import { ProductType } from "@/types/menu";
 import { OrderStatus } from "@/types/order";
+
+type OptionFixedType = "sweet" | "ice" | "alcoholic";
+
+export const allOptionFixedType: OptionFixedType[] = [
+  "sweet",
+  "ice",
+  "alcoholic",
+];
+
+const fixedOptionType: Record<keyof typeof ProductType, OptionFixedType[]> = {
+  food: [],
+  coffee: ["sweet", "ice"],
+  cocktail: ["alcoholic"],
+  matcha: ["sweet", "ice"],
+  hojicha: ["sweet", "ice"],
+  tea: ["sweet", "ice"],
+};
 
 export const _product_setting = {
   quantity: {
     min: 1,
     max: 10,
   },
-  fixedOptionType: {
-    all: ["sweet", "ice", "alcoholic"],
-    take_away: ["sweet", "ice"],
-    dine_in: ["alcoholic"],
-  },
+
+  fixedOptions: fixedOptionType,
 
   processOrder: {
     [OrderStatus.PENDING]: {

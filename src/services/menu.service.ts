@@ -5,6 +5,7 @@ import {
   MenuItem,
   MenuItemOption,
   MenuLayoutItem,
+  OptionType,
   Product,
 } from "@/types/menu";
 import { handlePostgresError } from "@/lib/error/postgres-error";
@@ -21,7 +22,10 @@ import {
 import { SelectedOption } from "@/types/cart";
 import { FixedOptionAdapter, OptionsAdapter } from "@/adapters/options.adapter";
 import { AddProductOptionValidation } from "@/schemas/validation/product-option.validation";
-import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
+import {
+  _product_setting,
+  allOptionFixedType,
+} from "@/_mocks/_setting/_product_detal_setting";
 
 class MenuService {
   private baseTable: string;
@@ -369,7 +373,7 @@ class MenuService {
     const query = supabase
       .from("menu_items_options")
       .select(`*`)
-      .in("option_type", _product_setting.fixedOptionType.all);
+      .in("option_type", allOptionFixedType);
 
     const { data: fixedOptions, error } = await query;
 

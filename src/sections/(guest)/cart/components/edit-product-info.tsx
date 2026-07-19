@@ -160,9 +160,9 @@ export default function EditProductInfo({
       optionPrice.reduce((total, option) => total + (option?.price ?? 0), 0)
     );
   }, [filterValues, productOptions?.data.custom, product.selling_price]);
-  const fixedOpt = cartItem.menu_item.products.is_only_allow_dinein
-    ? _product_setting.fixedOptionType.dine_in
-    : _product_setting.fixedOptionType.take_away;
+  const fixedOpt = product.product_type
+    ? _product_setting.fixedOptions[product.product_type]
+    : [];
   return (
     <>
       <div onClick={onClose} className="fixed h-[100vh] w-screen bg-black/10" />
