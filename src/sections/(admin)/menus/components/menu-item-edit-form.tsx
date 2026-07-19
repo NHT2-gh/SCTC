@@ -325,7 +325,6 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
 
       <Button
         type="submit"
-        disabled={!data.is_allow_order}
         onClick={handleSubmit(onSubmit, (err) => {
           console.log("VALIDATION ERROR", err);
         })}
