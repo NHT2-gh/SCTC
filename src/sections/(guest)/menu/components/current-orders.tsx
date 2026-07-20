@@ -12,17 +12,17 @@ export default function CurrentOrders() {
   const { activeOrders, clearOrders } = useOrderHistory();
   const [view, setView] = useState(false);
 
-  if (activeOrders && activeOrders.length === 0) {
-    return;
-  }
+  // if (activeOrders && activeOrders.length === 0) {
+  //   return;
+  // }
   return (
     <div
       slot="bottom"
-      className="max-w-[340px] w-full mx-auto h-fit fixed bottom-5 left-4 right-4 z-[100] bg-brand-800 rounded-3xl py-2 px-2"
+      className="max-w-[340px] w-full mx-auto fixed bottom-5 left-4 right-4 z-[100] bg-brand-800 rounded-3xl py-3 px-4"
     >
       <button
         onClick={() => setView(!view)}
-        className="text-white w-full flex items-center justify-between gap-2 px-4"
+        className="text-white w-full flex items-center justify-between gap-2"
       >
         <p className="text-nowrap text-sm">
           Ỏooo, cục dàng đang có {activeOrders.length} đơn á nha !!!
@@ -33,7 +33,7 @@ export default function CurrentOrders() {
           className={cn("hover:cursor-pointer", { "rotate-180": view })}
         />
       </button>
-      {activeOrders.length > 0 && (
+      {activeOrders && activeOrders.length > 0 && (
         <button className={cn("mt-2 w-full space-y-2", { hidden: !view })}>
           {activeOrders.map((order) => (
             <Link
@@ -62,8 +62,14 @@ export default function CurrentOrders() {
           ))}
         </button>
       )}
-
-      <button onClick={() => clearOrders()}></button>
+      {activeOrders && activeOrders.length > 0 && (
+        <button
+          className="bg-amber-50 px-2 py-1 rounded-lg mt-1 w-full"
+          onClick={() => clearOrders()}
+        >
+          Clear
+        </button>
+      )}
     </div>
   );
 }

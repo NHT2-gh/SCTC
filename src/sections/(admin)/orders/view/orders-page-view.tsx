@@ -21,7 +21,6 @@ import { MainContainer } from "@/components/common/page-layout";
 import Link from "next/link";
 import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
 import { FilterBoxRender } from "@/components/filter/filter-box-render";
-import { FilterValue } from "@/components/filter/filter-box-render/type";
 import { FilterIcon } from "lucide-react";
 
 export default function OrdersPageView() {

@@ -84,7 +84,7 @@ export default function OrderItemCard({
             size="sm"
             variant={"outline"}
             className="mt-4"
-            onClick={() => onCancel(order.tracking_order)}
+            onClick={() => onCancel(order.id)}
           >
             Cancel order
           </Button>
