@@ -23,6 +23,7 @@ export enum ProductType {
   matcha = "matcha",
   hojicha = "hojicha",
   tea = "tea",
+  cacao = "cacao",
 }
 
 export type MenuType = keyof typeof MenuEnumType;

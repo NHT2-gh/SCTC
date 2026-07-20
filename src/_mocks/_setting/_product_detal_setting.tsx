@@ -16,6 +16,7 @@ const fixedOptionType: Record<keyof typeof ProductType, OptionFixedType[]> = {
   matcha: ["sweet", "ice"],
   hojicha: ["sweet", "ice"],
   tea: ["sweet", "ice"],
+  cacao: ["sweet", "ice"],
 };
 
 export const _product_setting = {

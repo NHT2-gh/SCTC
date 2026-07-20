@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   useGetAllOrder,
@@ -19,30 +19,26 @@ import { useGetTable } from "@/hooks/queries/use-overview";
 import { FilterStatus, ModalViewOrder } from "../components";
 import { MainContainer } from "@/components/common/page-layout";
 import Link from "next/link";
+import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
+import { FilterBoxRender } from "@/components/filter/filter-box-render";
+import { FilterValue } from "@/components/filter/filter-box-render/type";
+import { FilterIcon } from "lucide-react";
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
   const { data: tables } = useGetTable();
   const updateOrderStatus = useUpdateOrderStatus();
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [orderView, setOrderView] = useUrlState("view_order", "");
   const { filterValues, updateFilter, removeFilter, clearFilters } = useFilter({
-    filterConfigs: [
-      {
-        type: "checkbox",
-        key: "status",
-        options: Object.entries(OrderStatus).map(([key, value]) => ({
-          label: value,
-          value: key,
-        })),
-      },
-    ],
+    filterConfigs: orderFilterConfig,
     initSubmit: true,
   });
-  const [qrUrl, setQrUrl] = React.useState<string | null>(null);
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
   const { data: orders, refetch: refetchOrders } = useGetAllOrder({
     filters: filterValues,
   });
-  const [orderIdsSelected, setIdsOrderSelected] = React.useState<string[]>([]);
+  const [orderIdsSelected, setIdsOrderSelected] = useState<string[]>([]);
 
   useEffect(() => {
     setIdsOrderSelected(
@@ -161,7 +157,24 @@ export default function OrdersPageView() {
               >
                 Clear
               </Button>
+              <Button
+                onClick={() => {
+                  setFiltersOpen(!filtersOpen);
+                }}
+                className="w-fit"
+              >
+                <FilterIcon />
+              </Button>
             </div>
+          )}
+
+          {filtersOpen && (
+            <FilterBoxRender
+              filterConfigs={orderFilterConfig}
+              handleFilterChange={updateFilter}
+              handleClearAllFilters={clearFilters}
+              filterValues={filterValues}
+            />
           )}
 
           <div className="w-full py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:max-h-[65vh] max-h-[70vh] overflow-y-scroll">
@@ -198,7 +211,7 @@ export default function OrdersPageView() {
             ))}
           </div>
         </div>
-        {orders?.data && filterValues["status"] === OrderStatus.DONE && (
+        {orders?.data && (
           <div className="p-2 bg-white absolute bottom-4 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
             {orderIdsSelected.length > 0 && (
               <h3 className="font-bold">
@@ -223,10 +236,8 @@ export default function OrdersPageView() {
             <Button
               size="sm"
               variant="outline"
-              onClick={() =>
-                // handleUpdateStatus(orderIdsSelected, OrderStatus.COMPLETED)
-                handlePayment()
-              }
+              disabled={filterValues["status"] !== OrderStatus.DONE}
+              onClick={() => handlePayment()}
               className="w-full mt-2 bg-lime-200"
             >
               Thanh toán
