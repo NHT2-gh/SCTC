@@ -14,8 +14,9 @@ import { CartItem, SelectedOption } from "@/types/cart";
 import { OptionType } from "@/types/menu";
 import { formatCurrency } from "@/utils/format-data";
 import React, { useEffect, useMemo, useState } from "react";
-import CustomNumberInput from "../../products/view/components/custom-number-input";
+import CustomNumberInput from "../../products/components/custom-number-input";
 import { useCart } from "@/hooks/use-cart";
+import { FixedOption } from "../../products/components";
 
 interface EditProductInfoProps {
   cartItem: CartItem;
@@ -160,9 +161,7 @@ export default function EditProductInfo({
       optionPrice.reduce((total, option) => total + (option?.price ?? 0), 0)
     );
   }, [filterValues, productOptions?.data.custom, product.selling_price]);
-  const fixedOpt = product.product_type
-    ? _product_setting.fixedOptions[product.product_type]
-    : [];
+
   return (
     <>
       <div onClick={onClose} className="fixed h-[100vh] w-screen bg-black/10" />
@@ -191,46 +190,15 @@ export default function EditProductInfo({
             </span>
           </div>
 
-          {fixedOpt.map((type) => (
-            <div key={type} className={cn("space-y-4")}>
-              <div className="space-y-2">
-                <Label className={cn("text-black", delagothic.className)}>
-                  {OptionType[type as keyof typeof OptionType]}
-                </Label>
-                <div className="flex flex-wrap gap-2.5">
-                  {productOptions?.data.fixed
-                    ?.filter((item) => item.option_type === type)
-                    .map((option) => (
-                      <button
-                        key={option.option_id}
-                        onClick={() => {
-                          filterValues[option.option_type] ===
-                          String(option.option_id)
-                            ? removeFilter(type)
-                            : updateFilter(
-                                option.option_type,
-                                String(option.option_id),
-                              );
-                        }}
-                        className={cn(
-                          "rounded-full px-2 py-1 border border-[#E2DDCD]",
-                          {
-                            "border-[#B60F14B2] bg-[#B60F1426]":
-                              filterValues[option.option_type] ===
-                                String(option.option_id) ||
-                              (!filterValues[type] &&
-                                option.component_name === "Bình thường"),
-                          },
-                        )}
-                      >
-                        {option.component_name}
-                      </button>
-                    ))}
-                </div>
-              </div>
-              <hr />
-            </div>
-          ))}
+          {productOptions?.data.fixed && (
+            <FixedOption
+              value={filterValues}
+              productType={product.product_type}
+              update={updateFilter}
+              remove={removeFilter}
+              fixedOptions={productOptions?.data.fixed}
+            />
+          )}
 
           {productOptionSchame && productOptionSchame.length > 0 && (
             <FilterBoxRender
@@ -241,6 +209,7 @@ export default function EditProductInfo({
               className={cn(
                 "bg-[unset] border-none mx-0 [&>div]:p-0",
                 "[&_.filter-item-label]:font-delagothic",
+                "[&_.filter-box-content]:flex [&_.filter-box-content]:flex-col",
               )}
             />
           )}

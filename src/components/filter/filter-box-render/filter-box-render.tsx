@@ -25,7 +25,7 @@ export default function FilterBoxRender({
       slot="filter-box"
       className={cn("m-3 border rounded-lg bg-neutral-50 ", className)}
     >
-      <div className="grid p-3 gap-5 grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
+      <div className="filter-box-content grid p-3 gap-5 grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
         {filterConfigs
           .filter(
             (item) =>

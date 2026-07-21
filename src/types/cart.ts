@@ -7,6 +7,7 @@ export interface SelectedOption {
   price: number;
   option_type: keyof typeof OptionType;
   option_id: string;
+  is_default?: boolean;
   menu_item_id?: string;
   description?: string;
   limit?: number;

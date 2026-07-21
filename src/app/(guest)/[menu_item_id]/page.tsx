@@ -10,13 +10,10 @@ export default async function ProductPage({
   params: Promise<{ menu_item_id: string }>;
 }) {
   const { menu_item_id } = await params;
-  const { data, success } = await serverActionGetMenuItemInfo(menu_item_id);
-
-  if (!success || !data) return notFound();
 
   return (
     <Suspense fallback={<LoadingPageView />}>
-      <ProductPageView product={data} />
+      <ProductPageView menu_item_id={menu_item_id} />
     </Suspense>
   );
 }

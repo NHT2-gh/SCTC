@@ -29,5 +29,6 @@ export function FixedOptionAdapter(
     description: option.description,
     price: option.price,
     option_type: option.option_type,
+    is_default: option.is_default,
   }));
 }

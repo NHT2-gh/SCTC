@@ -71,6 +71,7 @@ export interface MenuItemOption {
   option_type: keyof typeof OptionType;
   option_name: string;
   description?: string;
+  is_default?: boolean;
 }
 
 export interface ItemOptionDetail {

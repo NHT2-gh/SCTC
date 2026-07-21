@@ -5,7 +5,7 @@ import { ImageOff } from "lucide-react";
 import { formatCurrency } from "@/utils/format-data";
 import { useCart } from "@/hooks/use-cart";
 import { useUrlState } from "@/hooks/use-url-state";
-import CustomNumberInput from "../../products/view/components/custom-number-input";
+import CustomNumberInput from "../../products/components/custom-number-input";
 
 export default function CartItem({ item }: { item: CartItem }) {
   const { updateQuantity } = useCart();
