@@ -12,7 +12,11 @@ export default async function OrderDetailPage({
 
   const orderDetail = await serverActionGetOrderDetail(tracking_code);
 
-  if (orderDetail.error || orderDetail.data === null) {
+  if (
+    orderDetail.error ||
+    !orderDetail.data ||
+    orderDetail.data.order === null
+  ) {
     return notFound();
   }
 

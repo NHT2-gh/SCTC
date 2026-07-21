@@ -21,7 +21,7 @@ export enum ProductType {
   coffee = "coffee",
   cocktail = "cocktail",
   matcha = "matcha",
-  hojicha = "hojicha",
+  houjicha = "houjicha",
   tea = "tea",
   cacao = "cacao",
 }

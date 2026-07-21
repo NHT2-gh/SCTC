@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { MapTextStatusOrder, OrderDetail, OrderStatus } from "@/types/order";
-import { DeliveryMethod } from "@/types/checkout";
+import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 import {
   formatCurrency,
   formatDateTime,
@@ -54,7 +54,7 @@ export default async function Bill({
         </li>
         <li>
           <p>Hình thức nhận hàng: </p>{" "}
-          <span>{DeliveryMethod[data.order.delivery_method]}</span>
+          <span>{DeliveryMethodMapText[data.order.delivery_method]}</span>
         </li>
         <li>
           <p>Thời gian nhận hàng: </p>{" "}

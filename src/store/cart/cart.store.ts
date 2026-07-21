@@ -37,6 +37,8 @@ export const useCartStore = create<CartStore>()(
             line_note: payload.line_note?.trim(),
           };
 
+          console.log(incoming);
+
           const existing = state.items.find((item) =>
             isSameCartItem(item, incoming),
           );

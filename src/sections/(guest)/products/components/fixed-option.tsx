@@ -43,7 +43,8 @@ export default function FixedOption({
               <button
                 key={option.option_id}
                 onClick={() => {
-                  value[option.option_type] === String(option.option_id)
+                  value[option.option_type] === String(option.option_id) &&
+                  !option.is_default
                     ? remove(type)
                     : update(option.option_type, String(option.option_id));
                 }}

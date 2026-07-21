@@ -22,7 +22,7 @@ export function FixedOptionAdapter(
   fiexedOptions: MenuItemOption[],
 ): SelectedOption[] {
   return fiexedOptions.map((option) => ({
-    id: v4(),
+    id: String(option.id),
     option_id: String(option.id),
     component_id: String(option.id),
     component_name: option.option_name,

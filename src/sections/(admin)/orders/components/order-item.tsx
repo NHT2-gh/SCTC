@@ -2,7 +2,7 @@ import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { Button } from "@/components/ui/button";
 import { useUpdateOrderStatus } from "@/hooks/queries/use-order";
 import { cn } from "@/lib/utils";
-import { DeliveryMethod } from "@/types/checkout";
+import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 import { Order, OrderStatus } from "@/types/order";
 import {
   formatCurrency,
@@ -62,14 +62,19 @@ export default function OrderItemCard({
         <li className="flex items-center gap-2">
           <p>Customer Name:</p> <span>{order.customer_name}</span>
         </li>
-        {order.notes && <li>Note: {order.notes}</li>}
-        <li> Delivery method: {DeliveryMethod[order.delivery_method]}</li>
+        <li>Delivery method: {DeliveryMethodMapText[order.delivery_method]}</li>
+        <li>
+          Created at: {formatDateTime(order.created_at, { withTime: true })}
+        </li>
         <li>
           Pickup time:
           {order.delivery_method === "pre_order"
             ? formatDateTimev2(order.pick_up_time, { withTime: true })
             : formatDateTime(order.created_at, { withTime: true })}
         </li>
+        {order.notes && (
+          <li className="whitespace-pre-line">Note: {order.notes}</li>
+        )}
       </ul>
 
       <div className="flex gap-1 justify-end font-semibold text-brand-500 text-base">

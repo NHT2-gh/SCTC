@@ -14,7 +14,7 @@ const fixedOptionType: Record<keyof typeof ProductType, OptionFixedType[]> = {
   coffee: ["sweet", "ice"],
   cocktail: ["alcoholic"],
   matcha: ["sweet", "ice"],
-  hojicha: ["sweet", "ice"],
+  houjicha: ["sweet", "ice"],
   tea: ["sweet", "ice"],
   cacao: ["sweet", "ice"],
 };

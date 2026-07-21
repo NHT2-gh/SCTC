@@ -1,6 +1,6 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/input";
-import { DeliveryMethod } from "@/types/checkout";
+import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 import {
   formatCurrency,
   formatDateTime,
@@ -31,24 +31,24 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
             <p>No:</p> <b>{data.order.tracking_order} </b>
           </li>
           <li>
-            <p>Khách hàng: </p> <span>{data.order.customer_name}</span>
+            <p>Customer Name: </p> <span>{data.order.customer_name}</span>
           </li>
           <li>
-            <p>SĐT: </p> <span>{data.order.customer_phone}</span>
+            <p>Customer Phone: </p> <span>{data.order.customer_phone}</span>
           </li>
           <li>
-            <p>Ngày đặt: </p>{" "}
+            <p>Created at: </p>{" "}
             <span>
               {formatDateTime(data.order.created_at, { withTime: true })}
             </span>
           </li>
           <li>
-            <p>Hình thức: </p>{" "}
-            <span>{DeliveryMethod[data.order.delivery_method]}</span>
+            <p>Delivery method: </p>{" "}
+            <span>{DeliveryMethodMapText[data.order.delivery_method]}</span>
           </li>
           {data.order.pick_up_time && (
             <li>
-              <p>Thời gian nhận hàng: </p>{" "}
+              <p>Pickup time: </p>{" "}
               {data.order.delivery_method === "pre_order"
                 ? formatDateTimev2(data.order.pick_up_time, { withTime: true })
                 : formatDateTime(data.order.created_at, { withTime: true })}
@@ -104,9 +104,9 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
         </ul>
         <hr />
         <ul className="px-3 [&>li]:flex [&>li]:justify-between [&>li]:items-center">
-          <li>Ghi chú: {data.order.notes}</li>
+          <li className="whitespace-pre-line">Note: {data.order.notes}</li>
           <li>
-            <p>Tổng cộng:</p> <span>{formatCurrency(data.order.subtotal)}</span>
+            <p>Total:</p> <span>{formatCurrency(data.order.subtotal)}</span>
           </li>
         </ul>
       </div>

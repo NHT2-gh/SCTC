@@ -13,9 +13,9 @@ export default function MainContainer({
   links,
 }: MainContainerProps) {
   return (
-    <section>
+    <section className="h-full">
       <Breadcrumb pageTitle={title} links={links} />
-      <section className="rounded-lg overflow-hidden bg-white p-3 md:p-5 shadow-theme-sm dark:bg-gray-800 space-y-4 relative z-0 min-h-[85vh]">
+      <section className="rounded-lg overflow-hidden bg-white p-3 md:p-5 shadow-theme-sm dark:bg-gray-800 space-y-4 relative z-0 min-h-full">
         {children}
       </section>
     </section>

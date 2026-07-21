@@ -15,7 +15,7 @@ export default function GuestLayout({
         {/* <AppHeader /> */}
         {/* Page Content */}
         <main
-          className={`max-w-[31.25rem] mx-auto h-fit min-h-[100dvh] ${itim.className}`}
+          className={`max-w-[31.25rem] relative mx-auto h-fit min-h-[100dvh] ${itim.className}`}
         >
           {children}
         </main>

@@ -1,9 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { CartItemsList, CartSummary } from "../components";
+import { CartItemsList } from "../components";
 import { APP_ROUTES } from "@/config/app-routes";
 import { NavigationBar } from "@/components/common/navigation-bar";
-import { useRouter } from "next/navigation";
 import { CartItem } from "@/types/cart";
 import EditProductInfo from "../components/edit-product-info";
 import { useUrlState } from "@/hooks/use-url-state";
@@ -17,9 +16,8 @@ import Link from "next/link";
 export default function CartPageView() {
   const [itemEditting, setItemEditting] = useState<CartItem | null>(null);
   const [idItemEditing, setIdItemEditting] = useUrlState("edit", "");
-  const { items, cartSummary, count, clearCart } = useCart();
+  const { items, cartSummary, count } = useCart();
   const editBlock = useModal();
-  const router = useRouter();
 
   useEffect(() => {
     const itemEditting = items.find(
@@ -33,7 +31,7 @@ export default function CartPageView() {
   }, [idItemEditing, itemEditting, items]);
 
   return (
-    <section className="flex relative flex-col h-[100vh]">
+    <section className="flex relative flex-col h-[100dvh]">
       <NavigationBar
         backHref={APP_ROUTES.GUEST.ROOT}
         title="Túi hàng"
@@ -42,10 +40,10 @@ export default function CartPageView() {
 
       <CartItemsList
         items={items}
-        className="max-h-[calc(100vh-9rem)] overflow-y-scroll"
+        className="max-h-[calc(100%-4rem)] overflow-y-scroll"
       />
 
-      <div className="w-full sticky bottom-[0] p-1.5 after:absolute after:inset-0 after:z-[-1] after:bg-[linear-gradient(90deg,rgba(255,250,234,0)_0%,rgba(255,250,234,0.3)_25.96%)] after:backdrop-blur-[20px] after:blur-[1px]">
+      <div className="w-full bottom-4 p-1.5 after:absolute after:inset-0 after:z-[-1] after:bg-[linear-gradient(90deg,rgba(255,250,234,0)_0%,rgba(255,250,234,0.3)_25.96%)] after:backdrop-blur-[20px] after:blur-[1px]">
         <Link href={APP_ROUTES.GUEST.CHECKOUT.VIEW}>
           <button
             disabled={count === 0}

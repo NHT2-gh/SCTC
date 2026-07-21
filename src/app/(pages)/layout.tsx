@@ -42,7 +42,7 @@ export default function AdminLayout({
           {/* Header */}
           <AppHeader />
           {/* Page Content */}
-          <div className="p-4 md:px-5 mx-auto max-w-full">
+          <div className="p-4 md:px-5 mx-auto max-w-full h-[calc(100vh-8rem)]">
             <AudioProvider />
             <OrderRealtimeListener />
             {children}

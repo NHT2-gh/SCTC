@@ -45,16 +45,14 @@ export default function CartItem({ item }: { item: CartItem }) {
 
           {item.selected_options && item.selected_options.length > 0 && (
             <p className="overflow-hidden space-x-0.5 text-nowrap max-w-[10.5625rem] text-ellipsis">
-              {item.selected_options
-                .filter((option) => option.component_name !== "Bình thường")
-                .map((option) => (
-                  <span
-                    className="inline-flex text-[#6E6E6E] gap-0.5 after:content-[','] last:after:hidden"
-                    key={option.id}
-                  >
-                    {option.component_name}
-                  </span>
-                ))}
+              {item.selected_options.map((option) => (
+                <span
+                  className="inline-flex text-[#6E6E6E] gap-0.5 after:content-[','] last:after:hidden"
+                  key={option.id}
+                >
+                  {option.component_name}
+                </span>
+              ))}
             </p>
           )}
           {item.line_note && <span className=" italic">{item.line_note}</span>}

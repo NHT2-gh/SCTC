@@ -27,7 +27,11 @@ export default function ModalViewOrder({
   if (!order?.success) return;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="pt-0 bg-white">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      className="pt-0 bg-white pb-10 md:mb-0 !max-w-[37.5rem]"
+    >
       <div className="p-4 space-y-4">
         <div className="capitalize flex gap-3 items-center justify-center">
           <span
@@ -51,7 +55,7 @@ export default function ModalViewOrder({
 
       {_product_setting.processOrder[order.data.order.status].value < 5 && (
         <Button
-          className="block mx-auto mt-5"
+          className="block mx-auto"
           onClick={async () => {
             await onUpdateStatus(
               [order.data.order.id],

@@ -41,7 +41,8 @@ export const useOrderStore = create<OrderStore>()(
       partialize: (state) => ({
         orders: state.orders.filter((order) => {
           const isToday =
-            new Date(order.pick_up_time).getDate() === new Date().getDate();
+            new Date(order.pick_up_time).getDate() === new Date().getDate() ||
+            !order.pick_up_time === undefined;
 
           return isToday;
         }),

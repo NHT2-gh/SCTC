@@ -109,7 +109,7 @@ export default function OrdersPageView() {
   return (
     <>
       <MainContainer title={"Orders"}>
-        <div className="relative space-y-2">
+        <div className="relative flex flex-col gap-2">
           <FilterStatus
             filterValues={filterValues}
             updateFilter={updateFilter}
@@ -176,7 +176,7 @@ export default function OrdersPageView() {
             />
           )}
 
-          <div className="w-full py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:max-h-[65vh] max-h-[70vh] overflow-y-scroll">
+          <div className="w-full grow py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-scroll">
             {orders?.data.map((order) => (
               <div
                 key={order.id}

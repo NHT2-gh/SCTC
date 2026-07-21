@@ -105,7 +105,28 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
 
       setProductOptionSchame(productOptionsSchema);
     }
-  }, [options.custom]);
+    if (options.fixed && options.fixed.length > 0) {
+      const fixedOpt = info.products.product_type
+        ? _product_setting.fixedOptions[info.products.product_type]
+        : [];
+
+      if (!fixedOpt) return;
+
+      const normalOptions = options.fixed.reduce(
+        (acc, option) => {
+          fixedOpt.map((type) => {
+            if (option.option_type === type && option.is_default) {
+              acc[type] = String(option.option_id);
+            }
+          });
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+
+      setFilterValue(normalOptions);
+    }
+  }, [options.custom, options.fixed]);
 
   const totalPrice = useMemo(() => {
     const basePrice = product.info.products.selling_price;
