@@ -44,4 +44,8 @@ export const queryKeys = {
   overview: {
     getAvailableTables: () => ["overview", "available-tables"],
   },
+
+  store: {
+    getAnnouncement: () => ["store", "announcements"],
+  },
 };

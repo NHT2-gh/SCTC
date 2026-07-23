@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { useUrlState } from "@/hooks/use-url-state";
 import CategoryTabs from "../components/category-tabs";
 import CurrentOrders from "../components/current-orders";
 import FloatingCartButton from "@/components/cart/floaing-cart-button";
+import { FloatingHelpButton } from "@/components/floading-help-button";
 
 interface MenuPageViewProps {
   menuLayout: MenuLayoutItem[];
@@ -28,7 +29,7 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
   }, [menuLayout, page]);
 
   return (
-    <section className="pt-4 bg-[#FFFAEA] min-h-[100vh] h-fit relative after:absolute after:inset-0 after:content-['']  after:bg-[url('/images/backgrounds/bg-menu.webp')] after:bg-cover after:bg-no-repeat after:opacity-10">
+    <section className="pt-4 bg-[#FFFAEA] min-w-[375px] min-h-[100vh] h-fit relative after:absolute after:inset-0 after:content-['']  after:bg-[url('/images/backgrounds/bg-menu.webp')] after:bg-cover after:bg-no-repeat after:opacity-10">
       <div className="pl-[3.125rem] pr-5 mb-4 flex justify-between">
         <div
           className="bg-[url('/images/logo/logo-text.webp')] w-[7rem] aspect-[93/56] bg-cover bg-center bg-no-repeat relative before:absolute before:top-3 before:left-[-3.125rem] before:bg-[url('/images/logo/logo-left-hand.webp')] before:bg-cover before:bg-center before:bg-no-repeat before:aspect-square before:size-[4.5rem]
@@ -44,9 +45,7 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
           className="w-[108px] aspect-[108/60] object-contain"
         />
       </div>
-      <div
-        className={cn("min-w-[375px] w-full mx-auto overflow-hidden p-4 h-fit")}
-      >
+      <div className={cn("mx-auto w-full overflow-hidden p-4 h-fit")}>
         <CategoryTabs
           value={Number(page)}
           onSelected={(page) => setPage(Number(page))}
@@ -95,6 +94,7 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
       <CurrentOrders />
 
       <FloatingCartButton />
+      <FloatingHelpButton />
     </section>
   );
 }

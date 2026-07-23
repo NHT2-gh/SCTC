@@ -27,11 +27,7 @@ export default function ModalViewOrder({
   if (!order?.success) return;
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      className="pt-0 bg-white pb-10 md:mb-0 !max-w-[37.5rem]"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} className="max-w-[37.5rem]">
       <div className="p-4 space-y-4">
         <div className="capitalize flex gap-3 items-center justify-center">
           <span

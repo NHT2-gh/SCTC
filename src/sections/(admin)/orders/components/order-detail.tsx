@@ -14,16 +14,8 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
   return (
     <div className="space-y-2">
       <div className="flex justify-center items-center gap-2 bg-neutral-500/40 text-neutral-950 w-[80%] mx-auto py-2 px-4">
-        <span className="text-md">
-          {data.order.notes?.includes("/dinein/tb")
-            ? OrderTypeMap.dine_in
-            : OrderTypeMap[data.order.order_type]}
-        </span>
-        {data.order.table_id ? (
-          <span>(Bàn {data.order.table_id})</span>
-        ) : data.order.notes?.includes("/dinein/tb") ? (
-          <span>({data.order.notes?.split("/")?.at(-1)})</span>
-        ) : null}
+        <span className="text-md">{OrderTypeMap[data.order.order_type]}</span>
+        {data.order.table_id && <span>(Bàn {data.order.table_id})</span>}
       </div>
       <div className="w-full p-4 space-y-4">
         <ul className="space-y-2 text-wrap [&>li]:flex [&>li>p]:w-[50%] [&>li]:items-center">
@@ -31,29 +23,28 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
             <p>No:</p> <b>{data.order.tracking_order} </b>
           </li>
           <li>
-            <p>Customer Name: </p> <span>{data.order.customer_name}</span>
-          </li>
-          <li>
-            <p>Customer Phone: </p> <span>{data.order.customer_phone}</span>
-          </li>
-          <li>
-            <p>Created at: </p>{" "}
+            <p>Customer: </p>{" "}
             <span>
-              {formatDateTime(data.order.created_at, { withTime: true })}
+              {data.order.customer_name} {" - "} {data.order.customer_phone}
             </span>
           </li>
           <li>
             <p>Delivery method: </p>{" "}
             <span>{DeliveryMethodMapText[data.order.delivery_method]}</span>
           </li>
-          {data.order.pick_up_time && (
-            <li>
-              <p>Pickup time: </p>{" "}
-              {data.order.delivery_method === "pre_order"
-                ? formatDateTimev2(data.order.pick_up_time, { withTime: true })
-                : formatDateTime(data.order.created_at, { withTime: true })}
-            </li>
-          )}
+          <li>
+            <p>Created time: </p>{" "}
+            <span>
+              {formatDateTime(data.order.created_at, { withTime: true })}
+            </span>
+          </li>
+
+          <li>
+            <p>Pickup time: </p>{" "}
+            {data.order.delivery_method === DeliveryMethod.pre_order
+              ? formatDateTimev2(data.order.pick_up_time, { withTime: true })
+              : formatDateTime(data.order.created_at, { withTime: true })}
+          </li>
         </ul>
         <hr />
 

@@ -1,22 +1,18 @@
 import React, { useEffect } from "react";
-import { useOrderHistory } from "@/hooks/use-order";
-import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { formatCurrency } from "@/utils/format-data";
-import Link from "next/link";
-import { APP_ROUTES } from "@/config/app-routes";
+import { ChevronDown } from "lucide-react";
 import { OrderStatus } from "@/types/order";
+import { APP_ROUTES } from "@/config/app-routes";
+import { formatCurrency } from "@/utils/format-data";
+import { useOrderHistory } from "@/hooks/use-order";
 
 export default function CurrentOrders() {
-  const { activeOrders, clearOrders } = useOrderHistory();
+  const { activeOrders } = useOrderHistory();
   const [view, setView] = useState(false);
+  if (!activeOrders || activeOrders.length === 0) return null;
 
-  useEffect(() => {
-    if (!activeOrders || activeOrders.length === 0) {
-      return;
-    }
-  }, [activeOrders]);
   return (
     <div
       slot="bottom"
@@ -35,7 +31,8 @@ export default function CurrentOrders() {
           className={cn("hover:cursor-pointer", { "rotate-180": view })}
         />
       </button>
-      {activeOrders && activeOrders.length > 0 && view && (
+
+      {view && activeOrders.length > 0 && (
         <div className="space-4">
           <button className={cn("mt-2 w-full space-y-2")}>
             {activeOrders.map((order) => (
