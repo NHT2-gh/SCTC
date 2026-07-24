@@ -14,10 +14,16 @@ export enum OrderStatus {
 }
 
 export enum PaymentMethod {
-  MOMO = "momo",
-  QR = "qr",
+  // MOMO = "momo",
+  QR = "bank_qr",
   CASH = "cash",
 }
+
+export const MapTextPaymentMethod: Record<PaymentMethod, string> = {
+  // [PaymentMethod.MOMO]: "Ví MoMo",
+  [PaymentMethod.QR]: "Mã QR ngân hàng",
+  [PaymentMethod.CASH]: "Tiền mặt",
+};
 
 export enum PaymentType {
   GROUP = "group",
@@ -55,6 +61,7 @@ export interface Order {
   order_items_count: number;
   delivery_method: DeliveryMethod;
   tracking_order: string;
+  payment_method: PaymentMethod;
   order_type: OrderType;
   created_at: string;
   updated_at: string;
@@ -124,4 +131,5 @@ export interface AddOrderResponen {
   order_items_count: number;
   tracking_order: string;
   pick_up_time: string;
+  payment_method: PaymentMethod;
 }

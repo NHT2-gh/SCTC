@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useUpdateOrderStatus } from "@/hooks/queries/use-order";
 import { cn } from "@/lib/utils";
 import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
-import { Order, OrderStatus } from "@/types/order";
+import { MapTextPaymentMethod, Order, OrderStatus } from "@/types/order";
 import {
   formatCurrency,
   formatDateTime,
@@ -63,6 +63,7 @@ export default function OrderItemCard({
           <p>Customer Name:</p> <span>{order.customer_name}</span>
         </li>
         <li>Delivery method: {DeliveryMethodMapText[order.delivery_method]}</li>
+        <li>Payment method: {MapTextPaymentMethod[order.payment_method]}</li>
         <li>
           Created at: {formatDateTime(order.created_at, { withTime: true })}
         </li>

@@ -1,7 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import { MapTextStatusOrder, OrderDetail, OrderStatus } from "@/types/order";
-import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
+import {
+  MapTextPaymentMethod,
+  MapTextStatusOrder,
+  OrderDetail,
+  OrderStatus,
+} from "@/types/order";
+import { DeliveryMethodMapText } from "@/types/checkout";
 import {
   formatCurrency,
   formatDateTime,
@@ -9,6 +14,7 @@ import {
 } from "@/utils/format-data";
 import { CheckCircle } from "lucide-react";
 import { getCurrentTable } from "@/lib/table/get-current-table";
+import GenerateBankQr from "./generate-bank-qr";
 
 interface BillComponentProps {
   data: OrderDetail;
@@ -20,7 +26,6 @@ export default async function Bill({
   backgroundUrl = "bill-card-1.webp",
 }: BillComponentProps) {
   const currentTable = await getCurrentTable();
-
   return (
     <article
       style={{ backgroundImage: `url(/images/backgrounds/${backgroundUrl})` }}
@@ -61,6 +66,10 @@ export default async function Bill({
           <span>
             {formatDateTimev2(data.order.pick_up_time, { withTime: true })}
           </span>
+        </li>
+        <li>
+          <p>Phương thức thanh toán: </p>{" "}
+          <span>{MapTextPaymentMethod[data.order.payment_method]}</span>
         </li>
       </ul>
       <hr />
@@ -126,11 +135,16 @@ export default async function Bill({
         </span>
       </div>
 
-      {/* <div className="absolute top-1/2 -translate-y-1/2 right-0 w-full flex items-center justify-center bg-brand-500/40 px-10 py-5 rotate-[-20deg]">
-        <span className="capitalize">
-          {MapTextStatusOrder[data.order.status]}
-        </span>
-      </div> */}
+      {data.order.status === OrderStatus.CONFIRMED && (
+        <>
+          <GenerateBankQr
+            status={data.order.status}
+            orderIds={[data.order.id]}
+            paymentMethod={data.order.payment_method}
+            tableId={data.order.table_id?.toString() ?? ""}
+          />
+        </>
+      )}
     </article>
   );
 }

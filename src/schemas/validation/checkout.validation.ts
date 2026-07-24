@@ -1,4 +1,5 @@
 import { DeliveryMethod } from "@/types/checkout";
+import { PaymentMethod } from "@/types/order";
 import { z } from "zod";
 
 export const CustomerInfoValidation = z.object({
@@ -22,6 +23,7 @@ export const checkoutValidation = z.object({
   delivery_method: z.enum(DeliveryMethod),
   pickup_at: z.string().optional(),
   note: z.string().max(100, "Số lượng kí tự không vượt quá 100").optional(),
+  payment_method: z.enum(PaymentMethod),
 });
 
 export const checkoutFormValidation = checkoutValidation.superRefine(

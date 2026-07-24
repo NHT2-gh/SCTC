@@ -93,7 +93,11 @@ class OrderService {
       arrayParamFilters.map(([key, value]) => {
         if (value) {
           if (Array.isArray(value)) {
-            query.in(key, value as string[]);
+            if (key === "created_at") {
+              query.gte(key, `${value[0]}`).lte(key, `${value[1]}`);
+            } else {
+              query.in(key, value as string[]);
+            }
           } else {
             query.eq(key, value as string);
           }

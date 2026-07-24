@@ -6,7 +6,11 @@ import {
   formatDateTime,
   formatDateTimev2,
 } from "@/utils/format-data";
-import { OrderDetail as OrderDetailType, OrderTypeMap } from "@/types/order";
+import {
+  MapTextPaymentMethod,
+  OrderDetail as OrderDetailType,
+  OrderTypeMap,
+} from "@/types/order";
 
 export default function OrderDetail({ data }: { data: OrderDetailType }) {
   const [itemsDone, setItemsDone] = React.useState<string[]>([]);
@@ -31,6 +35,10 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
           <li>
             <p>Delivery method: </p>{" "}
             <span>{DeliveryMethodMapText[data.order.delivery_method]}</span>
+          </li>
+          <li>
+            <p>Payment method: </p>{" "}
+            <span>{MapTextPaymentMethod[data.order.payment_method]}</span>
           </li>
           <li>
             <p>Created time: </p>{" "}

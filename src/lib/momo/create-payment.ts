@@ -64,13 +64,13 @@ export function buildCreatePaymentPayload({
 }
 
 export async function createPayment(
-  tracking_codes: string[],
+  ids: string[],
   payment_type: PaymentType,
   payment_menthod: PaymentMethod,
   table_id: string,
 ) {
   const orders = await orderService.getAllOrder({
-    filters: { id: tracking_codes },
+    filters: { id: ids },
   });
 
   if (!orders || !orders.success || !orders.data) {
@@ -102,20 +102,20 @@ export async function createPayment(
     }
   }
 
-  if (payment_menthod === PaymentMethod.MOMO) {
-    const payload = buildCreatePaymentPayload({
-      orderId: orderId,
-      amount: totalAmount,
-      payment_type,
-      table_id,
-    });
+  // if (payment_menthod === PaymentMethod.MOMO) {
+  //   const payload = buildCreatePaymentPayload({
+  //     orderId: orderId,
+  //     amount: totalAmount,
+  //     payment_type,
+  //     table_id,
+  //   });
 
-    try {
-      const result = await createCollectionLink(payload);
+  //   try {
+  //     const result = await createCollectionLink(payload);
 
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  }
+  //     return result;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }

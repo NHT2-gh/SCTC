@@ -17,6 +17,7 @@ export default function OrderDetailPageView({
   if (!orderDetail.order) return null;
   const template =
     _mock_bill_style[Math.floor(Math.random() * _mock_bill_style.length)];
+
   return (
     <section
       style={{

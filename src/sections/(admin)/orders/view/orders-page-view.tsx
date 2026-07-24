@@ -81,7 +81,7 @@ export default function OrdersPageView() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          trackingCodes: orderIdsSelected,
+          ids: orderIdsSelected,
           paymentType:
             orderIdsSelected.length === 1
               ? PaymentType.INDIVIDUAL
@@ -176,7 +176,7 @@ export default function OrdersPageView() {
             />
           )}
 
-          <div className="w-full grow py-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-scroll">
+          <div className="w-full grow p-2 pb-[4.75rem] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[63vh] overflow-y-scroll">
             {orders?.data.map((order) => (
               <div
                 key={order.id}
@@ -210,6 +210,7 @@ export default function OrdersPageView() {
             ))}
           </div>
         </div>
+
         {orders?.data && (
           <div className="p-2 bg-white absolute bottom-4 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
             {orderIdsSelected.length > 0 && (
@@ -235,7 +236,6 @@ export default function OrdersPageView() {
             <Button
               size="sm"
               variant="outline"
-              disabled={filterValues["status"] !== OrderStatus.DONE}
               onClick={() => handlePayment()}
               className="w-full mt-2 bg-lime-200"
             >

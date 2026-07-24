@@ -16,7 +16,7 @@ import { APP_ROUTES } from "@/config/app-routes";
 import { delagothic } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { useOrderHistory } from "@/hooks/use-order";
-import { AddOrderResponen } from "@/types/order";
+import { AddOrderResponen, Order, PaymentMethod } from "@/types/order";
 import ModalAlert from "@/components/modal/alerts/modal-alert";
 import { useModal } from "@/hooks/useModal";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,7 @@ export default function CheckoutInfoForm() {
       customer: checkoutInfo.customer,
       delivery_method:
         checkoutInfo.delivery_method || DeliveryMethod.pickup_now,
+      payment_method: checkoutInfo.payment_method || PaymentMethod.CASH,
     },
   );
   const deliveryMethodValue = useWatch({
@@ -54,7 +55,6 @@ export default function CheckoutInfoForm() {
     updateCheckout({
       customer: data.customer,
       delivery_method: data.delivery_method as DeliveryMethod,
-      note: data.note!,
     });
 
     try {
@@ -74,16 +74,17 @@ export default function CheckoutInfoForm() {
         throw new Error(text);
       }
 
-      const result = (await res.json()) as AddOrderResponen;
+      const { order: result } = (await res.json()) as { order: Order };
 
       if (result.tracking_order) {
         addOrder({
-          order_id: result.order_id,
+          order_id: result.id,
           subtotal: result.subtotal,
           status: result.status,
           order_items_count: result.order_items_count,
           tracking_order: result.tracking_order,
           pick_up_time: result.pick_up_time,
+          payment_method: result.payment_method,
         });
         clearCart();
         router.push(APP_ROUTES.GUEST.ORDER.VIEW(result.tracking_order));

@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { OrderStore } from "./config";
 import { STORAGE_KEYS } from "../storage_keys";
-import { OrderStatus } from "@/types/order";
 
 export const useOrderStore = create<OrderStore>()(
   persist(
