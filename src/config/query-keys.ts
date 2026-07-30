@@ -24,12 +24,19 @@ export const queryKeys = {
     ],
   },
   product: {
-    getAll: (params?: GetWithFilterParams) => ["drinks", params],
+    getAll: (params?: GetWithFilterParams) => ["products", params],
     detail: {
+      getProductInfo: (id: string) => ["product-detail"],
       getProductOptions: (menuItemId: string) => [
         "product-detail",
         "opions",
         menuItemId,
+      ],
+      getProductRecipes: (productId: string) => ["product-recipes", productId],
+      getProductRecipeDetail: (recipeId: string) => [
+        "product-recipes",
+        "detail",
+        recipeId,
       ],
     },
   },

@@ -11,6 +11,9 @@ import {
   OrderDetail as OrderDetailType,
   OrderTypeMap,
 } from "@/types/order";
+import { Link2 } from "lucide-react";
+import Link from "next/link";
+import { APP_ROUTES } from "@/config/app-routes";
 
 export default function OrderDetail({ data }: { data: OrderDetailType }) {
   const [itemsDone, setItemsDone] = React.useState<string[]>([]);
@@ -24,22 +27,31 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
       <div className="w-full p-4 space-y-4">
         <ul className="space-y-2 text-wrap [&>li]:flex [&>li>p]:w-[50%] [&>li]:items-center">
           <li>
-            <p>No:</p> <b>{data.order.tracking_order} </b>
+            <p>No:</p>{" "}
+            <Link
+              className="font-bold text-blue-400"
+              href={APP_ROUTES.GUEST.ORDER.VIEW(data.order.tracking_order)}
+            >
+              {data.order.tracking_order}
+            </Link>
           </li>
           <li>
-            <p>Customer: </p>{" "}
+            <p>Customer Info: </p>{" "}
             <span>
-              {data.order.customer_name} {" - "} {data.order.customer_phone}
+              {data.order.customer_name}
+              {data.order.customer_phone && (
+                <span>
+                  {" - "}
+                  {data.order.customer_phone}
+                </span>
+              )}
             </span>
           </li>
           <li>
             <p>Delivery method: </p>{" "}
             <span>{DeliveryMethodMapText[data.order.delivery_method]}</span>
           </li>
-          <li>
-            <p>Payment method: </p>{" "}
-            <span>{MapTextPaymentMethod[data.order.payment_method]}</span>
-          </li>
+
           <li>
             <p>Created time: </p>{" "}
             <span>
@@ -52,6 +64,10 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
             {data.order.delivery_method === DeliveryMethod.pre_order
               ? formatDateTimev2(data.order.pick_up_time, { withTime: true })
               : formatDateTime(data.order.created_at, { withTime: true })}
+          </li>
+          <li>
+            <p>Payment method: </p>{" "}
+            <span>{MapTextPaymentMethod[data.order.payment_method]}</span>
           </li>
         </ul>
         <hr />
@@ -102,10 +118,18 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
           ))}
         </ul>
         <hr />
-        <ul className="px-3 [&>li]:flex [&>li]:justify-between [&>li]:items-center">
-          <li className="whitespace-pre-line">Note: {data.order.notes}</li>
+        <ul className="px-3 [&>li]:flex [&>li]:justify-between [&>li]:items-center space-y-2">
+          <li className="whitespace-pre-line">
+            Note:{" "}
+            {data.order.notes
+              ? data.order.notes
+              : "-- No note for this order --"}
+          </li>
           <li>
-            <p>Total:</p> <span>{formatCurrency(data.order.subtotal)}</span>
+            <p>Total:</p>{" "}
+            <span className="font-bold">
+              {formatCurrency(data.order.subtotal)}
+            </span>
           </li>
         </ul>
       </div>

@@ -58,18 +58,21 @@ class ComponentService {
   }
 
   async upsertComponentRecipeItems(
-    data: ComponentRecipeItem[],
+    recipe_items: ComponentRecipeItem[],
   ): Promise<MutationResult> {
-    if (!data.length) {
+    if (!recipe_items.length) {
       return {
         success: false,
         message: ErrorCode["INVALID_INPUT"],
       };
     }
 
-    const { error } = await supabase.from(this.tableDetail).upsert(data, {
+    const query = supabase.from(this.tableDetail).upsert(recipe_items, {
       onConflict: "id",
+      ignoreDuplicates: false,
     });
+
+    const { error } = await query;
 
     if (error) handlePostgresError(error);
 
@@ -109,6 +112,29 @@ class ComponentService {
     const { error } = await supabase
       .from(this.tableName)
       .insert(data as unknown as Component);
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
+    };
+  }
+
+  async updateComponent(
+    componentId: string,
+    data: Partial<Component>,
+  ): Promise<MutationResult> {
+    if (!data) {
+      return {
+        success: false,
+        message: ErrorCode["INVALID_INPUT"],
+      };
+    }
+
+    const { error } = await supabase
+      .from(this.tableName)
+      .update(data as unknown as Component)
+      .eq("id", componentId);
 
     if (error) handlePostgresError(error);
 

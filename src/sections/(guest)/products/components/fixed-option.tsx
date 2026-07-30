@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { OptionType, ProductType } from "@/types/menu";
+import { OptionType } from "@/types/menu";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { delagothic } from "@/lib/fonts";
 import { SelectedOption } from "@/types/cart";
 import { cn } from "@/lib/utils";
 import Label from "@/components/form/label/label";
 import { FilterValue } from "@/components/filter/filter-box-render/type";
+import { ProductType } from "@/types/product";
 
 export interface FixedOptionProps {
   productType: ProductType;

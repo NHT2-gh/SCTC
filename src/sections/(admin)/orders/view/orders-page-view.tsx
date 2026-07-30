@@ -5,6 +5,7 @@ import {
   useGetAllOrder,
   useUpdateOrderStatus,
 } from "@/hooks/queries/use-order";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import { useModal } from "@/hooks/useModal";
@@ -16,9 +17,12 @@ import { useUrlState } from "@/hooks/use-url-state";
 import { formatCurrency } from "@/utils/format-data";
 import OrderItemCard from "../components/order-item";
 import { useGetTable } from "@/hooks/queries/use-overview";
-import { FilterStatus, ModalViewOrder } from "../components";
+import {
+  FilterStatus,
+  ModalViewExportBills,
+  ModalViewOrder,
+} from "../components";
 import { MainContainer } from "@/components/common/page-layout";
-import Link from "next/link";
 import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
 import { FilterBoxRender } from "@/components/filter/filter-box-render";
 import { FilterIcon } from "lucide-react";
@@ -36,8 +40,11 @@ export default function OrdersPageView() {
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   const { data: orders, refetch: refetchOrders } = useGetAllOrder({
     filters: filterValues,
+    page: 1,
+    limit: 100,
   });
   const [orderIdsSelected, setIdsOrderSelected] = useState<string[]>([]);
+  const [orderTrackingCodes, setOrderTrackingCodes] = useState<string[]>([]);
 
   useEffect(() => {
     setIdsOrderSelected(
@@ -236,6 +243,7 @@ export default function OrdersPageView() {
             <Button
               size="sm"
               variant="outline"
+              disabled={filterValues["status"] === OrderStatus.COMPLETED}
               onClick={() => handlePayment()}
               className="w-full mt-2 bg-lime-200"
             >

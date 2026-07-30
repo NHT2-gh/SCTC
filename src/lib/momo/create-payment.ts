@@ -82,7 +82,7 @@ export async function createPayment(
     0,
   );
 
-  const orderId = `${payment_type === PaymentType.INDIVIDUAL ? `IND${orders.data[0].tracking_order}` : `GRP${table_id}${Date.now().toString()}`}`;
+  const orderId = `${payment_type === PaymentType.INDIVIDUAL ? `IND${orders.data[0].tracking_order}` : `GRP${table_id}T${Date.now().toString()}`}`;
 
   if (payment_menthod === PaymentMethod.CASH) {
     return;

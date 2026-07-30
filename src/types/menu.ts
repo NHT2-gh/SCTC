@@ -1,7 +1,8 @@
 import { Component } from "./component";
+import { Product } from "./product";
 
 export enum MenuEnumType {
-  drink = "Drink",
+  fixed = "Cố định",
   cocktail = "Cocktail",
   food = "Food",
 }
@@ -16,16 +17,6 @@ export enum OptionType {
   alcoholic = "Độ cồn",
 }
 
-export enum ProductType {
-  food = "food",
-  coffee = "coffee",
-  cocktail = "cocktail",
-  matcha = "matcha",
-  houjicha = "houjicha",
-  tea = "tea",
-  cacao = "cacao",
-}
-
 export type MenuType = keyof typeof MenuEnumType;
 
 export interface Menu {
@@ -35,17 +26,6 @@ export interface Menu {
   publish_at: string;
   unpublish_at: string;
   type: MenuType;
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  description?: string;
-  selling_price: number;
-  image_url: string[];
-  is_active: boolean;
-  is_only_allow_dinein: boolean;
-  product_type: ProductType;
 }
 
 export interface MenuItem {

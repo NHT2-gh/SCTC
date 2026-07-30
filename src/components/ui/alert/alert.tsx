@@ -118,12 +118,12 @@ const Alert: React.FC<AlertProps> = ({
   return (
     <div
       className={cn(
-        "rounded-full border p-2 z-[1001] animate-leave",
+        "rounded-full border p-2 min-w-[6.25rem] z-[1001] animate-leave",
         variantClasses[variant].container,
         { "animate-enter": t?.visible },
       )}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-center gap-3">
         <div
           className={cn("-mt-0.5 rounded-full ", variantClasses[variant].icon)}
         >
@@ -135,7 +135,7 @@ const Alert: React.FC<AlertProps> = ({
             {title}
           </h4>
           {message && (
-            <p className="text-sm mt-1 text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               {message}
             </p>
           )}

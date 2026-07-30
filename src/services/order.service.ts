@@ -112,6 +112,13 @@ class OrderService {
       });
     }
 
+    if (params?.page && params?.limit) {
+      query.range(
+        (params.page - 1) * params.limit,
+        params.page * params.limit - 1,
+      );
+    }
+
     const { data: orders, error } = await query;
 
     if (error) handlePostgresError(error);

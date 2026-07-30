@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Product } from "@/types/menu";
+import { Product } from "@/types/product";
 import { delagothic } from "@/lib/fonts";
 
 interface DrinkCardProps {

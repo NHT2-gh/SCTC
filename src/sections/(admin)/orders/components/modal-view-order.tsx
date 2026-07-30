@@ -1,11 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import Modal, { ModalProps } from "@/components/ui/modal/modal";
-import { useGetDetailOrder } from "@/hooks/queries/use-order";
-import { OrderStatus } from "@/types/order";
 import React, { useEffect } from "react";
-import OrderDetail from "./order-detail";
 import { cn } from "@/lib/utils";
+import OrderDetail from "./order-detail";
+import { OrderStatus } from "@/types/order";
+import { Button } from "@/components/ui/button";
+import { useGetDetailOrder } from "@/hooks/queries/use-order";
+import Modal, { ModalProps } from "@/components/ui/modal/modal";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 
 interface ModalViewOrder extends Omit<ModalProps, "children"> {
@@ -27,7 +27,12 @@ export default function ModalViewOrder({
   if (!order?.success) return;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="max-w-[37.5rem]">
+    <Modal
+      isFullScreen
+      isOpen={isOpen}
+      onClose={onClose}
+      className="max-w-[37.5rem]"
+    >
       <div className="p-4 space-y-4">
         <div className="capitalize flex gap-3 items-center justify-center">
           <span

@@ -1,3 +1,7 @@
+export enum UnitType {
+  gram = "g",
+  ml = "ml",
+}
 export interface Ingredient {
   id: string;
   code: string;
@@ -9,6 +13,7 @@ export interface Ingredient {
   cost_per_unit: number;
   notes?: string;
   ingredient_categories?: IngredientCategories;
+  unit: UnitType;
 }
 
 export interface IngredientCategories {

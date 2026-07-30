@@ -24,7 +24,7 @@ export const APP_ROUTES = {
     RECIPES: {
       BASE: "/admin/recipes",
       COMPONENTS_RECIPES: () => `${APP_ROUTES.ADMIN.RECIPES.BASE}/components`,
-      DRINK_RECIPES: () => `${APP_ROUTES.ADMIN.RECIPES.BASE}/drinks`,
+      PRODUCT_RECIPES: () => `${APP_ROUTES.ADMIN.RECIPES.BASE}/product-recipes`,
     },
 
     MENUS: {

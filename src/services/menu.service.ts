@@ -5,8 +5,6 @@ import {
   MenuItem,
   MenuItemOption,
   MenuLayoutItem,
-  OptionType,
-  Product,
 } from "@/types/menu";
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import {

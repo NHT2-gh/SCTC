@@ -36,6 +36,12 @@ export const ingredientFormSchema: FormSchema = {
       placeholder: "Nhập tên nguyên liệu",
     },
     {
+      name: "code",
+      type: "text",
+      label: "Tên",
+      placeholder: "Nhập mã nguyên liệu",
+    },
+    {
       name: "purchase_quantity",
       type: "number",
       label: "Số lượng mua",

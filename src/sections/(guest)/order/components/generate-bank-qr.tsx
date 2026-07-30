@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
+import { showToast } from "@/lib/toast";
 
 interface GenerateBankQrProps {
   orderIds: string[];
@@ -40,25 +41,28 @@ export default function GenerateBankQr({
         setQrUrl(data.data.qrUrl);
       }
     } catch (error) {
-      console.error(error);
+      showToast.error({
+        title: "Lỗi khi tạo mã thanh toán",
+        description: "Vui lòng liên hệ nhân viên",
+      });
     }
   }, [orderIds]);
 
   useEffect(() => {
     if (
-      _product_setting.processOrder[status].value === 0 ||
-      _product_setting.processOrder[status].value > 5
-    )
-      return;
-
-    handlePayment();
+      _product_setting.processOrder[status].value >= 1 &&
+      _product_setting.processOrder[status].value < 5
+    ) {
+      handlePayment();
+    }
+    return;
   }, [handlePayment]);
 
   return (
     qrUrl && (
       <div className="mt-2 w-fit mx-auto rounded-lg overflow-hidden">
         <Link href={qrUrl} target="_blank">
-          <Image src={qrUrl} alt="QR Code" width={200} height={200} />
+          <Image src={qrUrl} alt="QR Code" width={150} height={150} />
         </Link>
       </div>
     )

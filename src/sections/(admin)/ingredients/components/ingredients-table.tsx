@@ -1,11 +1,28 @@
 "use client";
-import React, { InputHTMLAttributes, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { useIngredients } from "@/hooks/queries/use-ingredient";
+import {
+  useEditIngredient,
+  useIngredients,
+} from "@/hooks/queries/use-ingredient";
 import { DataEmpty } from "@/components/common/table/state";
 import { TableHeader, TableTitle } from "@/components/table";
 import { TableHeaderColumn } from "@/components/table/table-header";
 import { SearchBar } from "@/components/search-bar";
+import { formatCurrency } from "@/utils/format-data";
+import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import {
+  ingredientValidationSchema,
+  IngredientValidationSchema,
+} from "@/schemas/validation/ingredient.validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UnitType } from "@/types/ingredient";
+import { Edit2Icon } from "lucide-react";
+import { FormField } from "@/components/form";
+import Form from "@/components/form/Form";
+import { categories } from "@/schemas/form-schemas/ingredient-form-schema";
+import { showToast } from "@/lib/toast";
 
 const columns: TableHeaderColumn[] = [
   { key: "code", title: "Mã" },
@@ -24,54 +41,224 @@ export default function IngredientsTable() {
   const {
     data: ingredientsData,
     isLoading: isLoadingIngredients,
+    refetch,
     error,
   } = useIngredients({ searchText: searchText });
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [editIngredientIndex, setEditIngredientIndex] = useState<number>();
+  const updateIngredient = useEditIngredient();
+  const editIngredient = useMemo(() => {
+    if (typeof editIngredientIndex === "number")
+      return ingredientsData?.data[editIngredientIndex];
+    else return undefined;
+  }, [ingredientsData?.data, editIngredientIndex]);
+
+  const editForm = useForm<IngredientValidationSchema>({
+    resolver: zodResolver(ingredientValidationSchema),
+    defaultValues: {
+      id: editIngredient?.id || "",
+      name: editIngredient?.name || "",
+      category_code: editIngredient?.category_code || "",
+      purchase_price: editIngredient?.purchase_price || 0,
+      yield_percentage: editIngredient?.yield_percentage || 0,
+      unit: editIngredient?.unit || UnitType.gram,
+      purchase_quantity: editIngredient?.purchase_quantity || 0,
+      notes: editIngredient?.notes || "",
+    },
+  });
+
+  useEffect(() => {
+    editForm.reset({
+      id: editIngredient?.id || "",
+      name: editIngredient?.name || "",
+      code: editIngredient?.code || "",
+      category_code: editIngredient?.category_code || "",
+      purchase_quantity: editIngredient?.purchase_quantity || 0,
+      purchase_price: Math.round(editIngredient?.purchase_price || 0),
+      yield_percentage: editIngredient?.yield_percentage || 0,
+      unit: editIngredient?.unit || UnitType.gram,
+      notes: editIngredient?.notes || "",
+    });
+  }, [editIngredient]);
+
+  const { handleSubmit } = editForm;
+
+  const onSubmit = async (data: IngredientValidationSchema) => {
+    try {
+      const result = await updateIngredient.mutateAsync(data);
+      if (result.success) {
+        showToast.success({
+          title: "Cập nhật nguyên liệu thành công",
+          description: "Đã cập nhật thông tin nguyên liệu",
+        });
+        setEditIngredientIndex(undefined);
+        refetch();
+      }
+    } catch (error) {
+      showToast.error({
+        title: "Lỗi hệ thống",
+        description: "Vui lòng thử lại",
+      });
+    }
+  };
 
   return (
     <div className="border border-gray-200 rounded-xl">
-      <TableTitle title="Bảng nguyên liệu">
-        <SearchBar
-          ref={searchInputRef}
-          handleKeyDown={(value) => {
-            setSearchText(value);
-          }}
-          handleOnChange={(value) => {
-            if (!value.trim()) setSearchText(undefined);
-          }}
-        />
-      </TableTitle>
-      <Table>
-        <TableHeader columns={columns} />
-        <TableBody>
-          {(ingredientsData?.data.length === 0 ||
-            isLoadingIngredients ||
-            error) && (
-            <DataEmpty
-              colSpan={columns.length}
-              message={
-                isLoadingIngredients
-                  ? "Đang tải dữ liệu..."
-                  : ingredientsData?.data.length
-                    ? "Không tìm thấy nguyên liệu"
-                    : "Lỗi hệ thống vui lòng thử lại"
-              }
-            />
-          )}
-          {ingredientsData?.data.map((ingredient) => (
-            <TableRow key={ingredient.id}>
-              <TableCell>{ingredient.code}</TableCell>
-              <TableCell>{ingredient.category_code}</TableCell>
-              <TableCell>{ingredient.name}</TableCell>
-              <TableCell>{ingredient.purchase_quantity}</TableCell>
-              <TableCell>{ingredient.purchase_price}</TableCell>
-              <TableCell>{ingredient.yield_percentage}</TableCell>
-              <TableCell>{ingredient.cost_per_unit}</TableCell>
-              <TableCell>{ingredient.notes}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Form className="!grid-cols-1" onSubmit={handleSubmit(onSubmit)}>
+        <TableTitle title="Bảng nguyên liệu">
+          <SearchBar
+            ref={searchInputRef}
+            handleKeyDown={(value) => {
+              setSearchText(value);
+            }}
+            handleOnChange={(value) => {
+              if (!value.trim()) setSearchText(undefined);
+            }}
+          />
+        </TableTitle>
+        <Table>
+          <TableHeader columns={columns} />
+          <TableBody>
+            {(ingredientsData?.data.length === 0 ||
+              isLoadingIngredients ||
+              error) && (
+              <DataEmpty
+                colSpan={columns.length}
+                message={
+                  isLoadingIngredients
+                    ? "Đang tải dữ liệu..."
+                    : ingredientsData?.data.length
+                      ? "Không tìm thấy nguyên liệu"
+                      : "Lỗi hệ thống vui lòng thử lại"
+                }
+              />
+            )}
+            {ingredientsData?.data.map((ingredient, index) => (
+              <>
+                <TableRow
+                  key={ingredient.id}
+                  className={index === editIngredientIndex ? "bg-blue-50" : ""}
+                >
+                  <TableCell>{ingredient.code}</TableCell>
+                  <TableCell>{ingredient.category_code}</TableCell>
+                  <TableCell>{ingredient.name}</TableCell>
+                  <TableCell>{ingredient.purchase_quantity}</TableCell>
+                  <TableCell>
+                    {formatCurrency(ingredient.purchase_price)}
+                  </TableCell>
+                  <TableCell>{ingredient.yield_percentage}%</TableCell>
+                  <TableCell>
+                    {formatCurrency(ingredient.cost_per_unit)}
+                  </TableCell>
+                  <TableCell>{ingredient.notes}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outline"
+                      onClick={() => setEditIngredientIndex(index)}
+                    >
+                      <Edit2Icon className="size-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+
+                {index === editIngredientIndex && (
+                  <TableRow key={ingredient.id + index} className="[&_td]:px-1">
+                    <TableCell>
+                      <FormField
+                        field={{
+                          type: "text",
+                          placeholder: "Mã nguyên liệu",
+                          name: "code",
+                        }}
+                        form={editForm}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        field={{
+                          type: "select",
+                          placeholder: "Danh mục",
+                          name: "category_code",
+                          options: [...categories],
+                        }}
+                        form={editForm}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        field={{
+                          type: "text",
+                          placeholder: "Tên nguyên liệu",
+                          name: "name",
+                        }}
+                        form={editForm}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        field={{
+                          type: "number",
+                          placeholder: "Số lượng",
+                          name: "purchase_quantity",
+                        }}
+                        form={editForm}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        field={{
+                          type: "number",
+                          placeholder: "Giá mua",
+                          name: "purchase_price",
+                        }}
+                        form={editForm}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        field={{
+                          type: "number",
+                          placeholder: "%",
+                          name: "yield_percentage",
+                        }}
+                        form={editForm}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        field={{
+                          type: "number",
+                          placeholder: "Giá cost / đơn vị",
+                          name: "cost_per_unit",
+                          value:
+                            editForm.watch("purchase_price") /
+                            editForm.watch("purchase_quantity"),
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        field={{
+                          type: "text",
+                          placeholder: "Ghi chú",
+                          name: "notes",
+                        }}
+                        form={editForm}
+                      />
+                    </TableCell>
+
+                    <TableCell>
+                      <Button type="submit" className="w-full h-fit">
+                        Cập nhật
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
+            ))}
+          </TableBody>
+        </Table>
+      </Form>
     </div>
   );
 }

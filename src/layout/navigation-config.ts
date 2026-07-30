@@ -25,11 +25,11 @@ const NavItems: NavItem[] = [
   {
     icon: "listOrdered",
     name: "Recipes",
-    path: APP_ROUTES.ADMIN.RECIPES.DRINK_RECIPES(),
+    path: APP_ROUTES.ADMIN.RECIPES.PRODUCT_RECIPES(),
     subItems: [
       {
-        name: "Recipe",
-        path: APP_ROUTES.ADMIN.RECIPES.DRINK_RECIPES(),
+        name: "Product Recipes",
+        path: APP_ROUTES.ADMIN.RECIPES.PRODUCT_RECIPES(),
       },
       {
         name: "Component Recipes",

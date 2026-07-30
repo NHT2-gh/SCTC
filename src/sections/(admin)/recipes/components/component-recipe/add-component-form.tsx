@@ -4,18 +4,15 @@ import { useAddComponent } from "@/hooks/queries/use-component";
 import { showToast } from "@/lib/toast";
 import { componentFormSchema } from "@/schemas/form-schemas/component-form-schema";
 import { ComponentValidationSchema } from "@/schemas/validation/component.validation";
-import React, { useState } from "react";
+import React from "react";
 
 const defaultValues: Record<
   keyof ComponentValidationSchema,
   string | number | undefined
 > = {
   name: "",
-  yield_quantity: "",
-  yield_unit: "g",
   description: undefined,
   component_type: "",
-  items: undefined,
 };
 
 export default function ComponentAddForm() {

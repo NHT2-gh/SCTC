@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Product } from "@/types/menu";
+import { Product } from "@/types/product";
 import { formatCurrency } from "@/utils/format-data";
 import { cn } from "@/lib/utils";
 

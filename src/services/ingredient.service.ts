@@ -74,6 +74,32 @@ class IngredientService {
       message: "Thêm nguyên liệu thành công",
     };
   }
+
+  async editIngredient(data: IngredientValidationSchema) {
+    if (!data) {
+      return {
+        success: false,
+        message: errorMessageMap["INVALID_INPUT"],
+      };
+    }
+    const query = supabase.from(this.tableName).update(data).eq("id", data.id);
+
+    const { data: result, error } = await query.single();
+
+    if (error) {
+      mapErrorToMessage(error);
+    }
+    if (!data) {
+      return {
+        success: false,
+        message: "Sửa nguyên liệu thất bại",
+      };
+    }
+    return {
+      success: true,
+      message: "Sửa nguyên liệu thành công",
+    };
+  }
 }
 
 export const ingredientService = new IngredientService();

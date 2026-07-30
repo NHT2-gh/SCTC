@@ -1,17 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { CartItemsList } from "../components";
-import { APP_ROUTES } from "@/config/app-routes";
-import { NavigationBar } from "@/components/common/navigation-bar";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { CartItem } from "@/types/cart";
-import EditProductInfo from "../components/edit-product-info";
-import { useUrlState } from "@/hooks/use-url-state";
 import { useCart } from "@/hooks/use-cart";
 import { useModal } from "@/hooks/useModal";
+import { CartItemsList } from "../components";
 import { delagothic, itim } from "@/lib/fonts";
+import { APP_ROUTES } from "@/config/app-routes";
+import { useUrlState } from "@/hooks/use-url-state";
 import { formatCurrency } from "@/utils/format-data";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import EditProductInfo from "../components/edit-product-info";
+import { NavigationBar } from "@/components/common/navigation-bar";
 
 export default function CartPageView() {
   const [itemEditting, setItemEditting] = useState<CartItem | null>(null);

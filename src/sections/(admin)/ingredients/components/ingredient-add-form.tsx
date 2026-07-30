@@ -6,12 +6,15 @@ import { IngredientValidationSchema } from "@/schemas/validation/ingredient.vali
 
 const defaultValues: Record<keyof IngredientValidationSchema, string | number> =
   {
+    id: "",
     name: "",
     category_code: "OTHER",
     purchase_price: 0,
     purchase_quantity: 0,
+    code: "",
     unit: "gram",
     yield_percentage: 100,
+    notes: "",
   };
 
 export default function IngredientAddForm() {

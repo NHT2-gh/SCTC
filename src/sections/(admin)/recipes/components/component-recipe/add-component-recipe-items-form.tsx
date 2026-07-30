@@ -1,38 +1,44 @@
 import Form from "@/components/form/Form";
-import React, { useState } from "react";
+import React from "react";
 import { FormField } from "@/components/form";
 import {
   ComponentRecipeItemsValidationSchema,
-  recipeItemValidationSchema,
+  componentRecipeItemValidationSchema,
   RecipeItemValidationSchema,
 } from "@/schemas/validation/component.validation";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useIngredients } from "@/hooks/queries/use-ingredient";
 import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-interface AddComponentRecipeItemsFormProps {
-  componentId: string;
-}
 export default function AddComponentRecipeItemsForm({
   componentId,
-}: AddComponentRecipeItemsFormProps) {
+}: {
+  componentId: string;
+}) {
   const { data: ingredients } = useIngredients();
   const componentRecipeForm =
     useFormContext<ComponentRecipeItemsValidationSchema>();
 
   const { append } = useFieldArray({
     control: componentRecipeForm.control,
-    name: "component_items",
+    name: "recipe_items",
   });
 
+  const yieldQuantity = useWatch({
+    control: componentRecipeForm.control,
+    name: "yield_quantity",
+  });
+
+  const { setValue } = componentRecipeForm;
+
   const addComponentItemForm = useForm<RecipeItemValidationSchema>({
-    resolver: zodResolver(recipeItemValidationSchema),
+    resolver: zodResolver(componentRecipeItemValidationSchema),
     defaultValues: {
-      component_id: componentId,
       ingredient_id: "",
       quantity: 0,
+      component_id: componentId,
     },
   });
 
@@ -40,6 +46,7 @@ export default function AddComponentRecipeItemsForm({
 
   const onSubmit = (data: RecipeItemValidationSchema) => {
     append(data);
+    setValue("yield_quantity", yieldQuantity + data.quantity);
     reset();
   };
 

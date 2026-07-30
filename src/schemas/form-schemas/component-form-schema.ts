@@ -13,24 +13,9 @@ export const componentFormSchema: FormSchema = {
       name: "name",
       type: "text",
       label: "Tên",
-      className: "col-span-2",
+      className: "",
       placeholder: "Nhập tên công thức",
     },
-    {
-      name: "yield_quantity",
-      type: "number",
-      label: "Số lượng thành phẩm",
-      placeholder: "Nhập số lượng thành phẩm",
-    },
-    {
-      name: "yield_unit",
-      type: "select",
-      label: "Đơn vị",
-      placeholder: "Chọn đơn vị",
-      defaultValue: "gram",
-      options: units,
-    },
-
     {
       name: "component_type",
       type: "select",

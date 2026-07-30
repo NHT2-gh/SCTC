@@ -1,6 +1,7 @@
 export const mutationKeys = {
   ingredient: {
     add: ["ingredient", "add"],
+    update: ["ingredient", "update"],
   },
 
   componentRecipe: {
@@ -26,5 +27,7 @@ export const mutationKeys = {
   product: {
     add: ["product", "add"],
     update: ["product", "update"],
+    calculateCost: ["product", "calculate-cost"],
+    newRecipe: ["product", "new-recipe"],
   },
 };

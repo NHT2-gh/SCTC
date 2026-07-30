@@ -1,7 +1,7 @@
 import Modal, { type ModalProps } from "@/components/ui/modal/modal";
 import { Component, ComponentRecipeItem } from "@/types/component";
 import React, { useState } from "react";
-import { AddComponentRecipeItemsForm } from ".";
+import { AddComponentRecipeItemsForm } from "..";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -18,6 +18,10 @@ import {
 } from "@/hooks/queries/use-component";
 import Form from "@/components/form/Form";
 import { Alert } from "@/components/alert";
+import { FormField } from "@/components/form";
+import { componentService } from "@/services/component.service";
+import { showToast } from "@/lib/toast";
+import { useCalculateProductCost } from "@/hooks/queries/use-product";
 
 interface ModalComponentRecipeItemsProps {
   component: Component;
@@ -47,7 +51,8 @@ export default function ModalComponentRecipeItems({
   const componentRecipeItems = useForm<ComponentRecipeItemsValidationSchema>({
     resolver: zodResolver(componentRecipeItemsValidationSchema),
     defaultValues: {
-      component_items: items,
+      recipe_items: items,
+      yield_quantity: component.yield_quantity,
     },
     mode: "onChange",
   });
@@ -58,17 +63,17 @@ export default function ModalComponentRecipeItems({
   } = componentRecipeItems;
 
   const onSubmit = async (data: ComponentRecipeItemsValidationSchema) => {
-    if (dirtyFields.component_items) {
+    if (dirtyFields.recipe_items) {
       const diffComponentItems = diffArray<RecipeItemValidationSchema>({
         initial: items,
-        current: data.component_items,
-        dirtyFields: dirtyFields.component_items,
+        current: data.recipe_items,
+        dirtyFields: dirtyFields.recipe_items,
       });
 
       if (diffComponentItems.upsert.length > 0) {
-        const res = await upsertRecipeItems.mutateAsync(
-          diffComponentItems.upsert,
-        );
+        const res = await upsertRecipeItems.mutateAsync({
+          recipe_items: diffComponentItems.upsert,
+        });
         setResult({
           updated: {
             success: res.success,
@@ -88,6 +93,16 @@ export default function ModalComponentRecipeItems({
         });
       }
     }
+    if (dirtyFields.yield_quantity) {
+      try {
+        const result = await componentService.updateComponent(component.id, {
+          yield_quantity: data.yield_quantity,
+        });
+        if (result.success) showToast.success({ title: "Cập nhật thành công" });
+      } catch {
+        showToast.error({ title: "Cập nhật thất bại" });
+      }
+    }
   };
 
   return (
@@ -105,13 +120,22 @@ export default function ModalComponentRecipeItems({
             console.log("VALIDATION ERROR", err);
           })}
         >
-          {items.length === 0 && !dirtyFields.component_items && (
+          {items.length === 0 && !dirtyFields.recipe_items && (
             <p className="italic text-gray-500 dark:text-gray-400">
               Chưa có nguyên liệu nào được thêm
             </p>
           )}
           <ComponentRecipeItemsList />
 
+          <FormField
+            field={{
+              type: "number",
+              label: "Khối lượng thành phẩm (g)",
+              name: "yield_quantity",
+            }}
+            className="w-full max-w-[300px]"
+            form={componentRecipeItems}
+          />
           {result && (
             <>
               <p>

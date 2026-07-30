@@ -16,11 +16,12 @@ export interface Component {
   name: string;
   description: string;
   component_type: keyof typeof ComponentType;
+  yield_quantity: number;
 }
 
 export interface ComponentRecipeItem {
   id?: string;
-  component_id: string;
   ingredient_id: string;
   quantity: number;
+  component_id: string;
 }

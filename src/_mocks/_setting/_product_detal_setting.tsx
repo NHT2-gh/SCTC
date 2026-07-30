@@ -1,4 +1,4 @@
-import { ProductType } from "@/types/menu";
+import { ProductType } from "@/types/product";
 import { OrderStatus } from "@/types/order";
 
 type OptionFixedType = "sweet" | "ice" | "alcoholic";

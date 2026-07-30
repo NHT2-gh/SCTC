@@ -39,10 +39,19 @@ export const useOrderStore = create<OrderStore>()(
       name: STORAGE_KEYS.ORDERS,
       partialize: (state) => ({
         orders: state.orders.filter((order) => {
-          if (
-            order.pick_up_time &&
-            new Date(order.pick_up_time).getDate() === new Date().getDate()
-          ) {
+          if (!order.pick_up_time) {
+            return false;
+          }
+
+          const orderPickUpTime = new Date(order.pick_up_time);
+          const now = new Date();
+
+          const isToday =
+            orderPickUpTime.getFullYear() === now.getFullYear() &&
+            orderPickUpTime.getMonth() === now.getMonth() &&
+            orderPickUpTime.getDate() === now.getDate();
+
+          if (isToday) {
             return true;
           } else if (!order.pick_up_time) {
             return false;
@@ -51,6 +60,29 @@ export const useOrderStore = create<OrderStore>()(
           return false;
         }),
       }),
+
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as typeof currentState;
+
+        const now = new Date();
+
+        return {
+          ...currentState,
+          ...persisted,
+          orders:
+            persisted.orders?.filter((order) => {
+              if (!order.pick_up_time) return false;
+
+              const pickup = new Date(order.pick_up_time);
+
+              return (
+                pickup.getFullYear() === now.getFullYear() &&
+                pickup.getMonth() === now.getMonth() &&
+                pickup.getDate() === now.getDate()
+              );
+            }) ?? [],
+        };
+      },
     },
   ),
 );

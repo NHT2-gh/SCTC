@@ -29,8 +29,8 @@ export function useDeleteComponentRecipeItems() {
 export function useUpsertComponentRecipeItems() {
   return useMutation({
     mutationKey: mutationKeys.componentRecipe.upsert,
-    mutationFn: (data: ComponentRecipeItem[]) =>
-      componentService.upsertComponentRecipeItems(data),
+    mutationFn: (payload: { recipe_items: ComponentRecipeItem[] }) =>
+      componentService.upsertComponentRecipeItems(payload.recipe_items),
   });
 }
 

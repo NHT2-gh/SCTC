@@ -9,6 +9,7 @@ export interface ModalProps {
   children: React.ReactNode;
   ref?: React.RefObject<HTMLDivElement | null>;
   showCloseButton?: boolean; // New prop to control close button visibility
+  isFullScreen?: boolean;
 }
 
 export default function Modal({
@@ -17,7 +18,8 @@ export default function Modal({
   children,
   className,
   ref,
-  showCloseButton = true, // Default to true for backwards compatibility
+  showCloseButton = true,
+  isFullScreen = false, // Default to true for backwards compatibility
 }: ModalProps) {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -52,7 +54,10 @@ export default function Modal({
   return (
     <div
       slot="modal"
-      className="fixed left-0 right-0 top-0 bottom-0 md:inset-0 md:bg-[unset] flex items-center justify-center  modal z-[2000] lg:pl-[4rem] dark:bg-gray-900 "
+      className={cn(
+        "fixed left-0 right-0 top-0 bottom-0 md:inset-0 md:bg-[unset]  md:top-10 flex items-center justify-center  modal z-[50] lg:pl-[4rem] dark:bg-gray-900 ",
+        { "z-[200] md:top-0": isFullScreen },
+      )}
     >
       <div
         className="modal-overlay absolute inset-0 bg-gray-400/50 backdrop-blur-[32px]"
