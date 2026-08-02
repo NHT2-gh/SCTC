@@ -9,6 +9,7 @@ export const units = [
 export const categories = [
   { value: "DAIRY", label: "Kem" },
   { value: "TEA", label: "Trà" },
+  { value: "POWDER", label: "Bột" },
   { value: "SYRUP", label: "Siro" },
   { value: "COFFEE", label: "Cà phê" },
   { value: "CHOCOLATE", label: "Socola" },
@@ -32,13 +33,13 @@ export const ingredientFormSchema: FormSchema = {
     {
       name: "name",
       type: "text",
-      label: "Tên",
+      label: "Tên nguyên liệu",
       placeholder: "Nhập tên nguyên liệu",
     },
     {
       name: "code",
       type: "text",
-      label: "Tên",
+      label: "Mã nguyên liệu",
       placeholder: "Nhập mã nguyên liệu",
     },
     {

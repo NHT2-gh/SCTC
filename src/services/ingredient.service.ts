@@ -61,9 +61,9 @@ class IngredientService {
     const { data: result, error } = await query.single();
 
     if (error) {
-      mapErrorToMessage(error);
+      handlePostgresError(error);
     }
-    if (!data) {
+    if (!result) {
       return {
         success: false,
         message: "Thêm nguyên liệu thất bại",

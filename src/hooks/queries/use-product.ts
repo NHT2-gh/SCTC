@@ -70,9 +70,9 @@ export function useCreateNewRecipeVersion() {
     mutationKey: mutationKeys.product.newRecipe,
     mutationFn: (payload: { productId: string }) =>
       productService.createNewRecipe(payload.productId),
-    onSuccess: () => {
+    onSuccess: (_, { productId }) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.product.getAll(),
+        queryKey: queryKeys.product.detail.getProductRecipes(productId),
       });
     },
   });

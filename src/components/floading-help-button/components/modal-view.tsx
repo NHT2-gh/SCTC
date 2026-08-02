@@ -14,7 +14,8 @@ export default function ModalView({ isOpen, onClose }: ModalViewProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="w-[90vw] rounded-2xl max-h-[85vh] pt-0 p-3"
+      isFullScreen
+      className="rounded-2xl max-h-[85vh] !max-w-[600px] pt-0 p-3"
     >
       <div className="w-full flex flex-col">
         <div className=" w-full h-[12.5rem]">

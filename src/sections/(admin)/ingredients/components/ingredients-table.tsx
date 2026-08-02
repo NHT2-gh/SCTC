@@ -103,7 +103,7 @@ export default function IngredientsTable() {
   };
 
   return (
-    <div className="border border-gray-200 rounded-xl">
+    <div className="border border-gray-200 dark:border-gray-800 rounded-xl">
       <Form className="!grid-cols-1" onSubmit={handleSubmit(onSubmit)}>
         <TableTitle title="Bảng nguyên liệu">
           <SearchBar
@@ -134,127 +134,138 @@ export default function IngredientsTable() {
               />
             )}
             {ingredientsData?.data.map((ingredient, index) => (
-              <>
-                <TableRow
-                  key={ingredient.id}
-                  className={index === editIngredientIndex ? "bg-blue-50" : ""}
-                >
-                  <TableCell>{ingredient.code}</TableCell>
-                  <TableCell>{ingredient.category_code}</TableCell>
-                  <TableCell>{ingredient.name}</TableCell>
-                  <TableCell>{ingredient.purchase_quantity}</TableCell>
-                  <TableCell>
-                    {formatCurrency(ingredient.purchase_price)}
-                  </TableCell>
-                  <TableCell>{ingredient.yield_percentage}%</TableCell>
-                  <TableCell>
-                    {formatCurrency(ingredient.cost_per_unit)}
-                  </TableCell>
-                  <TableCell>{ingredient.notes}</TableCell>
-                  <TableCell>
+              <TableRow
+                key={ingredient.id}
+                className={index === editIngredientIndex ? "bg-blue-50" : ""}
+              >
+                <TableCell>
+                  {index === editIngredientIndex ? (
+                    <FormField
+                      field={{
+                        type: "text",
+                        placeholder: "Mã nguyên liệu",
+                        name: "code",
+                      }}
+                      form={editForm}
+                    />
+                  ) : (
+                    ingredient.code
+                  )}
+                </TableCell>
+                <TableCell>
+                  {index === editIngredientIndex ? (
+                    <FormField
+                      field={{
+                        type: "select",
+                        placeholder: "Danh mục",
+                        name: "category_code",
+                        options: categories,
+                      }}
+                      form={editForm}
+                    />
+                  ) : (
+                    ingredient.category_code
+                  )}
+                </TableCell>
+                <TableCell>
+                  {index === editIngredientIndex ? (
+                    <FormField
+                      field={{
+                        type: "text",
+                        placeholder: "Tên nguyên liệu",
+                        name: "name",
+                      }}
+                      form={editForm}
+                    />
+                  ) : (
+                    ingredient.name
+                  )}
+                </TableCell>
+                <TableCell>
+                  {index === editIngredientIndex ? (
+                    <FormField
+                      field={{
+                        type: "number",
+                        placeholder: "Số lượng mua",
+                        name: "purchase_quantity",
+                      }}
+                      form={editForm}
+                    />
+                  ) : (
+                    ingredient.purchase_quantity
+                  )}
+                </TableCell>
+                <TableCell>
+                  {index === editIngredientIndex ? (
+                    <FormField
+                      field={{
+                        type: "number",
+                        placeholder: "Giá mua",
+                        name: "purchase_price",
+                      }}
+                      form={editForm}
+                    />
+                  ) : (
+                    formatCurrency(ingredient.purchase_price)
+                  )}
+                </TableCell>
+                <TableCell>
+                  {index === editIngredientIndex ? (
+                    <FormField
+                      field={{
+                        type: "number",
+                        placeholder: "% Thu hồi",
+                        name: "yield_percentage",
+                      }}
+                      form={editForm}
+                    />
+                  ) : (
+                    ingredient.yield_percentage + "%"
+                  )}
+                </TableCell>
+                <TableCell>
+                  {index === editIngredientIndex ? (
+                    <FormField
+                      field={{
+                        type: "number",
+                        placeholder: "Giá cost / đơn vị",
+                        name: "cost_per_unit",
+                      }}
+                      form={editForm}
+                    />
+                  ) : (
+                    formatCurrency(ingredient.cost_per_unit)
+                  )}
+                </TableCell>
+                <TableCell>
+                  {index === editIngredientIndex ? (
+                    <FormField
+                      field={{
+                        type: "text",
+                        placeholder: "Ghi chú",
+                        name: "notes",
+                      }}
+                      form={editForm}
+                    />
+                  ) : (
+                    ingredient.notes
+                  )}
+                </TableCell>
+                <TableCell>
+                  {index === editIngredientIndex ? (
+                    <Button type="submit" className="w-full h-fit">
+                      Cập nhật
+                    </Button>
+                  ) : (
                     <Button
                       variant="outline"
                       onClick={() => setEditIngredientIndex(index)}
                     >
                       <Edit2Icon className="size-4" />
                     </Button>
-                  </TableCell>
-                </TableRow>
-
-                {index === editIngredientIndex && (
-                  <TableRow key={ingredient.id + index} className="[&_td]:px-1">
-                    <TableCell>
-                      <FormField
-                        field={{
-                          type: "text",
-                          placeholder: "Mã nguyên liệu",
-                          name: "code",
-                        }}
-                        form={editForm}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormField
-                        field={{
-                          type: "select",
-                          placeholder: "Danh mục",
-                          name: "category_code",
-                          options: [...categories],
-                        }}
-                        form={editForm}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormField
-                        field={{
-                          type: "text",
-                          placeholder: "Tên nguyên liệu",
-                          name: "name",
-                        }}
-                        form={editForm}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormField
-                        field={{
-                          type: "number",
-                          placeholder: "Số lượng",
-                          name: "purchase_quantity",
-                        }}
-                        form={editForm}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormField
-                        field={{
-                          type: "number",
-                          placeholder: "Giá mua",
-                          name: "purchase_price",
-                        }}
-                        form={editForm}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormField
-                        field={{
-                          type: "number",
-                          placeholder: "%",
-                          name: "yield_percentage",
-                        }}
-                        form={editForm}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormField
-                        field={{
-                          type: "number",
-                          placeholder: "Giá cost / đơn vị",
-                          name: "cost_per_unit",
-                          value:
-                            editForm.watch("purchase_price") /
-                            editForm.watch("purchase_quantity"),
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormField
-                        field={{
-                          type: "text",
-                          placeholder: "Ghi chú",
-                          name: "notes",
-                        }}
-                        form={editForm}
-                      />
-                    </TableCell>
-
-                    <TableCell>
-                      <Button type="submit" className="w-full h-fit">
-                        Cập nhật
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </>
+                  )}
+                </TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>

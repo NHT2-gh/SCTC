@@ -33,9 +33,6 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
 
     if (originalArray) {
       const { added, removed } = diffBasicArray<string>(originalArray, ids);
-
-      console.log(added, removed);
-
       if (added && added.length > 0) {
         try {
           const resultAdd = await addMenuItems.mutateAsync({

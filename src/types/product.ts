@@ -41,6 +41,7 @@ export interface ProductRecipeVersion {
   is_actice: boolean;
   note: boolean;
   products: Product;
+  cost: number;
 }
 
 export enum ItemType {

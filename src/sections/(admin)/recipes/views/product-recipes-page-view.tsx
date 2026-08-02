@@ -14,6 +14,9 @@ import { ListProductRecipes, ModalProductRecipeEdit } from "../components";
 import { ProductRecipeVersion } from "@/types/product";
 import { formatCurrency } from "@/utils/format-data";
 import ModalAlert from "@/components/modal/alerts/modal-alert";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
+import { showToast } from "@/lib/toast";
 
 export default function ComponentsRecipesPageView() {
   const [searchText, setSearchText] = useState<string>();
@@ -38,12 +41,16 @@ export default function ComponentsRecipesPageView() {
     refetch: refetchRecipes,
   } = useGetProductRecipe(productSelected);
 
-  const handleCreateNewRecipe = async (productId: string) => {
+  const handleCreateNewRecipe = async () => {
     try {
-      const result = await createNewRecipe.mutateAsync({ productId });
+      const result = await createNewRecipe.mutateAsync({
+        productId: productSelected!,
+      });
       if (result.success) {
-        await refetchRecipes();
-        modalAlertCreateRecipe.closeModal();
+        if (modalAlertCreateRecipe.isOpen) {
+          modalAlertCreateRecipe.closeModal();
+        }
+        showToast.success({ title: "Thêm công thức thành công" });
       }
     } catch (error) {}
   };
@@ -108,7 +115,19 @@ export default function ComponentsRecipesPageView() {
       </ComponentCard>
 
       {recipes && recipes.data[0] && recipes.data[0].products.name && (
-        <ComponentCard title={`Công thức của ${recipes.data[0].products.name}`}>
+        <ComponentCard
+          className="space-y-3"
+          title={`Công thức của ${recipes.data[0].products.name}`}
+        >
+          <div className="flex items-center gap-4">
+            <Button onClick={() => handleCreateNewRecipe()}>
+              Add Recipe Version
+            </Button>
+            <Button variant="outline" onClick={() => refetchRecipes()}>
+              <RefreshCw />
+            </Button>
+          </div>
+
           {recipes?.data.length > 0 ? (
             <ListProductRecipes
               recipes={recipes.data}
@@ -150,7 +169,7 @@ export default function ComponentsRecipesPageView() {
           type="success"
           title="Hiện tại chưa có công thức nào cho đồ uống này"
           description="Bạn có muốn tạo mới một công thức không?"
-          onConfirm={() => handleCreateNewRecipe(productSelected!)}
+          onConfirm={() => handleCreateNewRecipe()}
           confirmText="Thêm mới"
         />
       )}

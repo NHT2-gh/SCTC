@@ -3,7 +3,6 @@ import { ThemeToggleButton } from "@/components/common/theme-toggle-button";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/header/UserDropdown";
 import { useSidebar } from "@/context/SidebarContext";
-import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
 const AppHeader: React.FC = () => {

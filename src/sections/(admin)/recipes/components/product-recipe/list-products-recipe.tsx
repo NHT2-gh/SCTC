@@ -23,21 +23,12 @@ export default function ListProductRecipes({
         >
           <div className="">
             <p>Version: {recipe.version_number}</p>
-            <p className="text-sm">
-              Ghi chú: {recipe.note ? recipe.note : "Không có ghi chú"}
-            </p>
-
-            <p>Cost: {formatCurrency(recipe.products.cost)}</p>
+            <p>Note: {recipe.note}</p>
+            <p>Cost: {formatCurrency(recipe.cost)}</p>
           </div>
           <div className="flex items-center gap-2 justify-end">
-            <Button size="sm" onClick={() => onEditRecipe(recipe)}>
-              Edit
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onDeleteRecipe(recipe)}
-            >
+            <Button onClick={() => onEditRecipe(recipe)}>Edit</Button>
+            <Button variant="outline" onClick={() => onDeleteRecipe(recipe)}>
               Delete
             </Button>
           </div>
