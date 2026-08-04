@@ -41,6 +41,11 @@ export const queryKeys = {
     },
   },
 
+  promotion: {
+    getAll: () => ["promotions"],
+    getById: (id: string) => ["promotions", id],
+  },
+
   options: (params?: GetWithFilterParams) => ["options", params],
 
   order: {
