@@ -1,15 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
+
+import Link from "next/link";
 import Image from "next/image";
+import { BrushCleaning, FilterIcon, RotateCw } from "lucide-react";
 import {
   useGetAllOrder,
   useUpdateOrderStatus,
 } from "@/hooks/queries/use-order";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import { useModal } from "@/hooks/useModal";
-import { OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
 import { FormField } from "@/components/form";
 import { useFilter } from "@/hooks/use-filter";
 import { Button } from "@/components/ui/button";
@@ -17,15 +18,11 @@ import { useUrlState } from "@/hooks/use-url-state";
 import { formatCurrency } from "@/utils/format-data";
 import OrderItemCard from "../components/order-item";
 import { useGetTable } from "@/hooks/queries/use-overview";
-import {
-  FilterStatus,
-  ModalViewExportBills,
-  ModalViewOrder,
-} from "../components";
+import { FilterStatus, ModalViewOrder } from "../components";
 import { MainContainer } from "@/components/common/page-layout";
-import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
+import { OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
 import { FilterBoxRender } from "@/components/filter/filter-box-render";
-import { FilterIcon } from "lucide-react";
+import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
@@ -44,7 +41,6 @@ export default function OrdersPageView() {
     limit: 100,
   });
   const [orderIdsSelected, setIdsOrderSelected] = useState<string[]>([]);
-  const [orderTrackingCodes, setOrderTrackingCodes] = useState<string[]>([]);
 
   useEffect(() => {
     setIdsOrderSelected(
@@ -124,55 +120,41 @@ export default function OrdersPageView() {
             countOrder={orders?.data.length}
           />
 
-          {tables?.data && (
-            <div className="flex items-center gap-4">
-              <FormField
-                className="w-full md:w-[18.75rem]"
-                field={{
-                  type: "select",
-                  name: "tableId",
-                  placeholder: "Select table",
-                  handleOnChange: (value: string) => {
-                    updateFilter("table_id", Number(value));
-                  },
-                  options: tables?.data.map((table) => {
-                    return {
-                      label: table.name,
-                      value: Number(table.id),
-                    };
-                  }),
-                }}
-              />
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => {
+                setFiltersOpen(!filtersOpen);
+              }}
+              className="grow "
+            >
+              <FilterIcon /> Filter
+            </Button>
 
-              <Button
-                variant="outline"
-                onClick={() => {
-                  refetchOrders();
-                  setQrUrl(null);
-                }}
-              >
-                Refetch
-              </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                refetchOrders();
+                setQrUrl(null);
+              }}
+              className="shrink-0"
+            >
+              <RotateCw />
+            </Button>
 
-              <Button
-                onClick={() => {
-                  clearFilters();
-                  setIdsOrderSelected([]);
-                }}
-                className="w-fit"
-              >
-                Clear
-              </Button>
-              <Button
-                onClick={() => {
-                  setFiltersOpen(!filtersOpen);
-                }}
-                className="w-fit"
-              >
-                <FilterIcon />
-              </Button>
-            </div>
-          )}
+            <Button
+              onClick={() => {
+                filterValues.length !== 0 && clearFilters();
+                orderIdsSelected.length !== 0 && setIdsOrderSelected([]);
+              }}
+              variant="outline"
+              disabled={
+                filterValues.length === 0 && orderIdsSelected.length === 0
+              }
+              className="shrink-0"
+            >
+              <BrushCleaning />
+            </Button>
+          </div>
 
           {filtersOpen && (
             <FilterBoxRender
@@ -180,7 +162,28 @@ export default function OrdersPageView() {
               handleFilterChange={updateFilter}
               handleClearAllFilters={clearFilters}
               filterValues={filterValues}
-            />
+            >
+              {tables?.data && (
+                <FormField
+                  className="w-full md:w-[18.75rem]"
+                  field={{
+                    type: "select",
+                    name: "tableId",
+                    placeholder: "Select table",
+                    label: "Bàn",
+                    handleOnChange: (value: string) => {
+                      updateFilter("table_id", Number(value));
+                    },
+                    options: tables?.data.map((table) => {
+                      return {
+                        label: table.name,
+                        value: Number(table.id),
+                      };
+                    }),
+                  }}
+                />
+              )}
+            </FilterBoxRender>
           )}
 
           <div className="w-full grow p-2 pb-[4.75rem] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[63vh] overflow-y-scroll">

@@ -307,6 +307,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
                   <TableCell>{formatCurrency(option.price)}</TableCell>
                   <TableCell>
                     <InputNumber
+                      className="min-w-[70px] text-center"
                       handleOnChange={(value: number) =>
                         setValue(`options.${index}.limit`, value)
                       }

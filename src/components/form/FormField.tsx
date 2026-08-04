@@ -69,7 +69,7 @@ export default function FormField({
     return null;
   }
   return (
-    <div className={cn("field-item h-fit", field.className, className)}>
+    <div className={cn("field-item h-fit w-full", className)}>
       {field.type !== "switch" && (
         <Label
           className={cn("mb-1", { "h-0 mb-0": !field.label })}
@@ -94,6 +94,7 @@ export default function FormField({
               <>
                 <FieldComponent
                   {...field}
+                  className={field.className}
                   disabled={disabled}
                   onChange={onChange}
                   onBlur={onBlur}

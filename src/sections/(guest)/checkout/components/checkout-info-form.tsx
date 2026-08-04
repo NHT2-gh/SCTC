@@ -35,7 +35,7 @@ export default function CheckoutInfoForm() {
       customer: checkoutInfo.customer,
       delivery_method:
         checkoutInfo.delivery_method || DeliveryMethod.pickup_now,
-      payment_method: checkoutInfo.payment_method || PaymentMethod.CASH,
+      payment_method: checkoutInfo.payment_method || PaymentMethod.QR,
     },
   );
   const deliveryMethodValue = useWatch({
@@ -55,6 +55,7 @@ export default function CheckoutInfoForm() {
     updateCheckout({
       customer: data.customer,
       delivery_method: data.delivery_method as DeliveryMethod,
+      payment_method: data.payment_method as PaymentMethod,
     });
 
     try {

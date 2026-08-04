@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { LayoutIcon } from "lucide-react";
 import { APP_ROUTES } from "@/config/app-routes";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 interface MenuDetailProps {
   id: string;
@@ -106,6 +107,9 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
           <Link
             key={item.id}
             href={APP_ROUTES.ADMIN.MENUS.ITEMS.DETAIL(id, item.id)}
+            className={cn("w-full", {
+              "opacity-50": !item.products.is_active,
+            })}
           >
             <ProductCard item={item.products} />
           </Link>

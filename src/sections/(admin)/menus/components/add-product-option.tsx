@@ -47,12 +47,10 @@ export default function AddProductOption() {
 
   return (
     <div className="bg-neutral-100 p-4 rounded-xl mt-4">
-      <Form
-        onSubmit={handleSubmit(onSubmit)}
-        className="!grid-cols-[repeat(auto-fill,minmax(300px,1fr))]"
-      >
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <FormField
           form={addProductOptionForm}
+          className="col-span-2"
           field={{
             type: "text",
             name: "option_name",

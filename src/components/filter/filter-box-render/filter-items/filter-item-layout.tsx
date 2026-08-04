@@ -23,12 +23,12 @@ export default function FilterItemLayout({
     <div className={cn("filter-item space-y-3 h-full", className)}>
       <div className="flex items-center justify-between">
         {label && (
-          <Label className="filter-item-label text-sm/[120%] font-bold  text-text-primary inline-block">
+          <Label className="filter-item-label text-sm/[120%] font-bold text-text-primary inline-block">
             {label}
           </Label>
         )}
         {subLabel && (
-          <Label className="text-xs/[120%] font-medium  text-text-primary inline-block ">
+          <Label className="text-xs/[120%] font-medium text-text-primary inline-block ">
             {subLabel}
           </Label>
         )}

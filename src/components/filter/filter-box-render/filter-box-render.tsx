@@ -10,14 +10,14 @@ interface FilterBoxRenderProps {
   handleClearAllFilters: () => void;
   filterValues: Record<string, FilterValue>;
   className?: string;
+  children?: React.ReactNode; //add extra components here
 }
 
 export default function FilterBoxRender({
   filterConfigs,
   handleFilterChange,
-  // handleClearAllFilters,
   filterValues,
-
+  children,
   className,
 }: FilterBoxRenderProps) {
   return (
@@ -41,6 +41,7 @@ export default function FilterBoxRender({
               onChange={(value) => handleFilterChange(config.key, value)}
             />
           ))}
+        {children}
       </div>
     </div>
   );

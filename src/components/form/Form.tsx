@@ -15,9 +15,9 @@ export default function Form({ onSubmit, children, className }: FormProps) {
         onSubmit(event);
       }}
       className={cn(
-        "grid gap-5 md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(500px,1fr))]",
+        "w-full grid gap-2 md:gap-5 md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(500px,1fr))]",
         className,
-      )} // Default spacing between form fields
+      )}
     >
       {children}
     </form>

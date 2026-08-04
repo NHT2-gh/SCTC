@@ -21,7 +21,7 @@ export default function GridLayout({
   return (
     <div
       className={cn(
-        `grid gap-5 md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(500px,1fr))]`,
+        `grid gap-2 md:gap-5 md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(500px,1fr))]`,
       )}
     >
       {fields.map((field) => (
