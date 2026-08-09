@@ -7,7 +7,7 @@ import {
 } from "@/hooks/queries/use-ingredient";
 import { DataEmpty } from "@/components/common/table/state";
 import { TableHeader, TableTitle } from "@/components/table";
-import { TableHeaderColumn } from "@/components/table/table-header";
+import { ColumnDefinition } from "@/components/table/table-header";
 import { SearchBar } from "@/components/search-bar";
 import { formatCurrency } from "@/utils/format-data";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ import Form from "@/components/form/Form";
 import { categories } from "@/schemas/form-schemas/ingredient-form-schema";
 import { showToast } from "@/lib/toast";
 
-const columns: TableHeaderColumn[] = [
+const columns: ColumnDefinition[] = [
   { key: "code", title: "Mã" },
   { key: "categoryName", title: "Danh mục" },
   { key: "name", title: "Tên" },

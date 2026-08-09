@@ -71,7 +71,7 @@ class OrderService {
   }
 
   async getAllOrder(
-    params?: GetWithFilterParams,
+    params?: GetWithFilterParams<Order>,
   ): Promise<ResponseStandard<Order[]>> {
     const query = supabase.from(this.baseTable).select(
       `

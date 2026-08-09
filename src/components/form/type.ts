@@ -8,7 +8,7 @@ import {
   UseFormReturn,
   UseFormSetValue,
 } from "react-hook-form";
-import { DateOption, Hook } from "flatpickr/dist/types/options";
+import { DateOption, DateRangeLimit, Hook } from "flatpickr/dist/types/options";
 
 // Base field types
 export type FieldType =
@@ -94,12 +94,18 @@ export interface SelectFieldConfig extends BaseFieldConfig {
   handleOnChange?: (value: string) => void;
 }
 
-export interface DateFieldConfig extends Omit<BaseFieldConfig, "onChange"> {
+export default interface DateFieldConfig extends Omit<
+  BaseFieldConfig,
+  "onChange"
+> {
   id: string;
   name?: string;
   mode?: "single" | "multiple" | "range";
   pickerType?: "date" | "datetime" | "time";
-  handleOnChange?: Hook | Hook[];
+  handleOnChange?: (
+    value: [string | null, string | null] | string | null,
+  ) => void;
+  defaultValue?: string | string[];
   defaultDate?: DateOption;
   placeholder?: string;
   disabled?: boolean;

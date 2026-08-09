@@ -7,6 +7,10 @@ import { Button } from "@/components/ui/button";
 import { useGetDetailOrder } from "@/hooks/queries/use-order";
 import Modal, { ModalProps } from "@/components/ui/modal/modal";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
+import ApplyPromotions from "./apply-promotions";
+import { TableDropdown } from "@/components/common/table-dropdown";
+import { Settings2Icon } from "lucide-react";
+import { DropdownItem } from "@/components/ui/dropdown";
 
 interface ModalViewOrder extends Omit<ModalProps, "children"> {
   trackingCode: string;
@@ -31,7 +35,7 @@ export default function ModalViewOrder({
       isFullScreen
       isOpen={isOpen}
       onClose={onClose}
-      className="max-w-[37.5rem]"
+      className="max-w-[60vw]"
     >
       <div className="p-4 space-y-4">
         <div className="capitalize flex gap-3 items-center justify-center">
@@ -52,6 +56,8 @@ export default function ModalViewOrder({
         </div>
 
         <OrderDetail data={order.data} />
+
+        <ApplyPromotions orderDetail={order.data} />
       </div>
 
       {_product_setting.processOrder[order.data.order.status].value < 5 && (
@@ -75,6 +81,34 @@ export default function ModalViewOrder({
           }
         </Button>
       )}
+
+      <TableDropdown
+        dropdownButton={
+          <Button
+            variant="outline"
+            className="text-gray-500 dark:text-gray-400"
+          >
+            <Settings2Icon />
+          </Button>
+        }
+        dropdownContent={
+          <>
+            <DropdownItem
+              onItemClick={() => {
+                async () => {
+                  await onUpdateStatus(
+                    [order.data.order.id],
+                    OrderStatus.CANCELLED,
+                  );
+                  await refetch();
+                };
+              }}
+            >
+              Cancel Order
+            </DropdownItem>
+          </>
+        }
+      />
     </Modal>
   );
 }

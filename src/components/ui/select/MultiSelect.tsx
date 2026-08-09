@@ -159,7 +159,7 @@ export default function MultiSelect({
                 </div>
               </div>
               {options.map((option, index) => (
-                <div key={index}>
+                <div key={option.value + index}>
                   <div
                     className={`hover:bg-primary/5 w-full cursor-pointer rounded-t border-b border-gray-200 dark:border-gray-800`}
                     onClick={() => handleSelect(option.value)}

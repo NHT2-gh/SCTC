@@ -1,6 +1,6 @@
-import { AddPromotionPageView } from "@/sections/(admin)/promotions/view";
 import React from "react";
+import { PromotionDetailPageView } from "@/sections/(admin)/promotions/view";
 
-export default function AddPromotionPage() {
-  return <AddPromotionPageView />;
+export default function PromotionDetailPage() {
+  return <PromotionDetailPageView />;
 }

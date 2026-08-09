@@ -1,34 +1,44 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.css";
-import { DateFieldConfig } from "../form/type";
-import { Instance } from "flatpickr/dist/types/instance";
-import { cn } from "@/lib/utils";
 import { Calendar } from "lucide-react";
+import DateFieldConfig from "../form/type";
+import { Instance } from "flatpickr/dist/types/instance";
+import { DateRangeLimit } from "flatpickr/dist/types/options";
 
 export default function DatePicker({
   id,
   mode,
   name,
   handleOnChange,
-  defaultDate,
+  defaultValue,
   placeholder,
   disabled,
   pickerType,
+  defaultDate,
 }: DateFieldConfig) {
   const inputRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<Instance | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     if (!inputRef.current) return;
-
     const options: flatpickr.Options.Options = {
       mode: mode ?? "single",
       static: true,
       monthSelectorType: "static",
-      defaultDate: defaultDate,
-      onChange: handleOnChange,
+      defaultDate: defaultValue || defaultDate,
+      onChange: (_, dateStr, instance) => {
+        if (instance.config.mode === "range") {
+          const [start, end] = dateStr.split(" to ");
+
+          handleOnChange?.([start || null, end || null]);
+        } else {
+          handleOnChange?.(dateStr);
+        }
+      },
     };
 
     switch (pickerType) {

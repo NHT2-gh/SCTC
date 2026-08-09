@@ -6,7 +6,6 @@ import { FieldItemProps, NumberFieldConfig } from "@/components/form/type";
 export default function InputNumberField({
   control,
   fieldConfig,
-  error,
 }: FieldItemProps<NumberFieldConfig>) {
   return (
     <Controller

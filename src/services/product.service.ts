@@ -21,7 +21,7 @@ class ProductService {
   }
 
   async getAllProduct(
-    params?: GetWithFilterParams,
+    params?: GetWithFilterParams<Product>,
   ): Promise<ResponseStandard<Product[]>> {
     const query = supabase.from(this.tableName).select(`*`);
 

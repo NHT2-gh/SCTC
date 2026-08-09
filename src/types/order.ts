@@ -2,6 +2,7 @@ import { CheckoutInfo } from "@/store/checkout/config";
 import { CartItem } from "./cart";
 import { DeliveryMethod } from "./checkout";
 import { MenuItem, OptionType } from "./menu";
+import { ProductType } from "./product";
 
 export enum OrderStatus {
   PENDING = "pending",
@@ -99,6 +100,7 @@ export interface OrderItem {
     product_name: string;
     product_description: string | null;
     product_selling_price: number;
+    product_type: ProductType;
   };
 }
 

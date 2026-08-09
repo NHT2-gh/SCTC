@@ -22,7 +22,7 @@ export function useCreateOrder() {
   });
 }
 
-export function useGetAllOrder(params?: GetWithFilterParams) {
+export function useGetAllOrder(params?: GetWithFilterParams<Order>) {
   return useQuery({
     queryKey: queryKeys.order.getAll(params),
     queryFn: () => orderService.getAllOrder(params),

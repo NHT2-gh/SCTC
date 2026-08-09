@@ -1,7 +1,6 @@
 import { FormSchema } from "@/components/form/type";
-import { DeliveryMethod } from "@/types/checkout";
 import { checkoutFormValidation } from "../validation/checkout.validation";
-import { MapTextPaymentMethod, PaymentMethod } from "@/types/order";
+import { MapTextPaymentMethod } from "@/types/order";
 
 export const checkoutFormSchema: FormSchema = {
   fields: [
@@ -10,6 +9,8 @@ export const checkoutFormSchema: FormSchema = {
       label: "Tên / Nickname",
       placeholder: "Nhập tên hoặc nickname",
       type: "text",
+      className: "col-span-1",
+      required: true,
     },
     {
       name: "customer.phone_number",
@@ -17,6 +18,7 @@ export const checkoutFormSchema: FormSchema = {
       placeholder: "Nhập số điện thoại",
       type: "text",
       required: false,
+      className: "col-span-1",
     },
     {
       name: "note",
@@ -44,6 +46,7 @@ export const checkoutFormSchema: FormSchema = {
       label: "Phương thức thanh toán",
       className: "col-span-2",
       placeholder: "Chọn phương thức thanh toán",
+      required: true,
       multiple: false,
       type: "select",
       options: Object.entries(MapTextPaymentMethod).map(([key, value]) => ({

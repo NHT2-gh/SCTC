@@ -41,7 +41,7 @@ class MenuService {
   }
 
   async getAllMenus(
-    params?: GetWithFilterParams,
+    params?: GetWithFilterParams<Menu>,
   ): Promise<ResponseStandard<Menu[]>> {
     const { data, error } = await supabase.from(this.baseTable).select(`*`);
 
@@ -223,7 +223,7 @@ class MenuService {
   }
 
   async getAllOptions(
-    params?: GetWithFilterParams,
+    params?: GetWithFilterParams<MenuItemOption>,
   ): Promise<ResponseStandard<MenuItemOption[]>> {
     const query = supabase.from("menu_items_options").select(
       `*,
@@ -233,7 +233,7 @@ class MenuService {
       `,
     );
 
-    if (params?.filters?.type === "fixed") {
+    if (params?.filters?.option_type !== "fixed") {
       query.in("option_type", ["ice", "sweet"]);
     } else {
       query.notIn("option_type", ["ice", "sweet"]);

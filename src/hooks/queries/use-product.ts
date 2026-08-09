@@ -7,8 +7,9 @@ import { ProductInfoValidation } from "@/schemas/validation/menu.validation";
 import { mutationKeys } from "@/config/mutation-keys";
 import { AddProductOptionValidation } from "@/schemas/validation/product-option.validation";
 import { ProductRecipeItemValidationSchema } from "@/schemas/validation/recipe.validation";
+import { Product } from "@/types/product";
 
-export function useGetAllProduct(params?: GetWithFilterParams) {
+export function useGetAllProduct(params: GetWithFilterParams<Product>) {
   return useQuery({
     queryKey: queryKeys.product.getAll(params),
     queryFn: () => productService.getAllProduct(params),

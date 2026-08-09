@@ -13,6 +13,16 @@ export enum ProductType {
   cacao = "cacao",
 }
 
+export const ProductTypeMapText: Record<ProductType, string> = {
+  [ProductType.food]: "Thức ăn",
+  [ProductType.coffee]: "Cà phê",
+  [ProductType.cocktail]: "Cocktail",
+  [ProductType.matcha]: "Matcha",
+  [ProductType.houjicha]: "Houjicha",
+  [ProductType.tea]: "Trà",
+  [ProductType.cacao]: "Cacao",
+};
+
 export interface Product {
   id: string;
   name: string;

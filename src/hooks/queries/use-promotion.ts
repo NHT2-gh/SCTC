@@ -1,21 +1,58 @@
+"use client";
 import { queryKeys } from "@/config/query-keys";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { promotionService } from "@/services/promotion.service";
 import { mutationKeys } from "@/config/mutation-keys";
-import { Promotion } from "@/types/promotions";
-import { AddPromotionValidation } from "@/schemas/validation/promotion.validation";
+import { promotionValidation } from "@/schemas/validation/promotion.validation";
+import { GetWithFilterParams } from "@/types/common";
+import { Promotion, RequestApplyPromotion } from "@/types/promotions";
 
-export function useGetAllPromotion() {
+export function useGetAllPromotion(params?: GetWithFilterParams<Promotion>) {
   return useQuery({
-    queryKey: queryKeys.promotion.getAll(),
-    queryFn: () => promotionService.getAll(),
+    queryKey: queryKeys.promotion.getAll(params),
+    queryFn: () => promotionService.getAll(params!),
   });
 }
 
 export function useAddPromotion() {
   return useMutation({
     mutationKey: mutationKeys.promotion.add,
-    mutationFn: (data: AddPromotionValidation) =>
+    mutationFn: (data: promotionValidation) =>
       promotionService.addPromotion(data),
+  });
+}
+
+export function useGetPromotionDetail(id?: string) {
+  return useQuery({
+    queryKey: queryKeys.promotion.getById(id!),
+    queryFn: () => promotionService.getDetail(id!),
+  });
+}
+
+export function useUpdatePromotion() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: mutationKeys.promotion.add,
+    mutationFn: (data: promotionValidation) =>
+      promotionService.updatePromotion(data),
+
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.promotion.getAll(),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.promotion.getById(variables.id!),
+      });
+    },
+  });
+}
+
+export function useApplyPromotion() {
+  return useMutation({
+    mutationKey: mutationKeys.promotion.apply,
+    mutationFn: (data: RequestApplyPromotion) =>
+      promotionService.applyPromotion(data),
   });
 }

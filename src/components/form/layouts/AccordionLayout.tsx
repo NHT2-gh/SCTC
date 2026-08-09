@@ -55,7 +55,7 @@ export default function AccordionLayout({
         return (
           <div
             key={section.id}
-            className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+            className="border border-gray-200 dark:border-gray-700 rounded-lg"
           >
             {/* Section Header */}
             <button
@@ -97,13 +97,14 @@ export default function AccordionLayout({
 
             {/* Section Content */}
             {isOpen && (
-              <div className="p-4 space-y-6 bg-white dark:bg-gray-900">
+              <div className="p-4 grid gap-y-4 gap-x-3 bg-white dark:bg-gray-900">
                 {getFieldsForSection(section.id).map((field) => (
                   <FormField
                     key={field.name}
                     field={field}
                     form={form}
                     disabled={disabled}
+                    className={field.className}
                   />
                 ))}
               </div>

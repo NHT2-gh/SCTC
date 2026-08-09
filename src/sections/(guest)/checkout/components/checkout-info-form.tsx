@@ -16,7 +16,7 @@ import { APP_ROUTES } from "@/config/app-routes";
 import { delagothic } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { useOrderHistory } from "@/hooks/use-order";
-import { AddOrderResponen, Order, PaymentMethod } from "@/types/order";
+import { Order, PaymentMethod } from "@/types/order";
 import ModalAlert from "@/components/modal/alerts/modal-alert";
 import { useModal } from "@/hooks/useModal";
 import { Button } from "@/components/ui/button";
@@ -121,12 +121,17 @@ export default function CheckoutInfoForm() {
       <div className="grow">
         <Form
           onSubmit={handleSubmit(onSubmit)}
-          className="h-full !grid-cols-2 gap-2"
+          className="h-full gap-2 !grid-cols-2"
         >
           {checkoutFormSchema.fields.map((field) =>
             field.name == "pickup_at" &&
             deliveryMethodValue == "pickup_now" ? null : (
-              <FormField key={field.name} field={field} form={checkoutForm} />
+              <FormField
+                key={field.name}
+                field={field}
+                form={checkoutForm}
+                className={field.className}
+              />
             ),
           )}
         </Form>

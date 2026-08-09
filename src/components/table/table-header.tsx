@@ -3,12 +3,13 @@ import React from "react";
 import { Checkbox } from "../ui/input";
 import { TableCell, TableHeader as TableHeaderUI, TableRow } from "../ui/table";
 
-export interface TableHeaderColumn {
+export interface ColumnDefinition {
   key: string;
   title: string;
   className?: string;
   description?: string;
   isHiddenOnMobile?: boolean;
+  width?: number;
 }
 
 export default function TableHeader({
@@ -17,7 +18,7 @@ export default function TableHeader({
   handleSelectAll,
   className,
 }: {
-  columns: TableHeaderColumn[];
+  columns: ColumnDefinition[];
   className?: string;
   selectAll?: boolean;
   handleSelectAll?: (isSelectAll: boolean) => void;
