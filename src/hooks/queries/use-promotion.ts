@@ -5,7 +5,11 @@ import { promotionService } from "@/services/promotion.service";
 import { mutationKeys } from "@/config/mutation-keys";
 import { promotionValidation } from "@/schemas/validation/promotion.validation";
 import { GetWithFilterParams } from "@/types/common";
-import { Promotion, RequestApplyPromotion } from "@/types/promotions";
+import {
+  Promotion,
+  RequestApplyPromotion,
+  RequestPromotionAllow,
+} from "@/types/promotions";
 
 export function useGetAllPromotion(params?: GetWithFilterParams<Promotion>) {
   return useQuery({
@@ -50,9 +54,31 @@ export function useUpdatePromotion() {
 }
 
 export function useApplyPromotion() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: mutationKeys.promotion.apply,
-    mutationFn: (data: RequestApplyPromotion) =>
+    mutationFn: (data: RequestApplyPromotion[]) =>
       promotionService.applyPromotion(data),
+
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.promotion.orderDiscount(variables[0].order_id),
+      });
+    },
+  });
+}
+
+export function useGetPromotionAllow(resquest: RequestPromotionAllow) {
+  return useQuery({
+    queryKey: queryKeys.promotion.allow(resquest),
+    queryFn: () => promotionService.getPromotionAllow(resquest),
+  });
+}
+
+export function useGetOrderDiscount(orderId: string) {
+  return useQuery({
+    queryKey: queryKeys.promotion.orderDiscount(orderId),
+    queryFn: () => promotionService.getOrderDiscount(orderId),
   });
 }

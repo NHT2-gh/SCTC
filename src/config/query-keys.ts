@@ -4,7 +4,7 @@ import { Ingredient } from "@/types/ingredient";
 import { Menu, MenuItemOption } from "@/types/menu";
 import { Order } from "@/types/order";
 import { Product } from "@/types/product";
-import { Promotion } from "@/types/promotions";
+import { Promotion, RequestPromotionAllow } from "@/types/promotions";
 
 export const queryKeys = {
   profile: {
@@ -52,6 +52,16 @@ export const queryKeys = {
   promotion: {
     getAll: (params?: GetWithFilterParams<Promotion>) => ["promotions"],
     getById: (id: string) => ["promotions", id],
+    allow: (resquest: RequestPromotionAllow) => [
+      "promotions",
+      "allow",
+      resquest,
+    ],
+    orderDiscount: (orderId: string) => [
+      "promotions",
+      "order-discount",
+      orderId,
+    ],
   },
 
   options: (params?: GetWithFilterParams<MenuItemOption>) => [

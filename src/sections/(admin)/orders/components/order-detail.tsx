@@ -89,7 +89,7 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
               <div className="grow">
                 <p className="text-wrap">
                   {index + 1}
-                  {". "} {item.product.product_name}
+                  {". "} {item.product.name}
                 </p>
                 <p className="text-right">{item.order_item.quantity}</p>
 

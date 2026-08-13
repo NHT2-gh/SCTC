@@ -1,3 +1,4 @@
+import { CartItem } from "./cart";
 import { ProductType } from "./product";
 
 export enum DaysOfWeek {
@@ -84,8 +85,8 @@ export interface Conditions {
   min_order_value: number;
   max_discount_value: number;
   min_discount_amount: number;
-  max_usage_per_user: number;
-  applicable_categories?: ProductType;
+  applicable_categories?: ProductType[];
+  applicable_products?: string[];
   time_apply?: {
     days_of_week: number[];
     hour_range: { start: string; end: string };
@@ -102,9 +103,34 @@ export interface OrderDiscount {
   promotion_snapshot: Promotion;
   applied_by: string;
   reason: string;
+  promtion_code: string;
 }
 
 export interface RequestApplyPromotion {
-  promotions: Promotion[];
+  id?: string;
+  promotion: Promotion & { coupon_codes?: string };
   order_id: string;
+}
+
+export interface PromotionForOrder {
+  reason: string;
+  isAllow: boolean;
+  coupon_codes: string[];
+  promotion: Promotion & { coupon_codes?: string[] };
+}
+
+export const ReasonMap: Record<string, string> = {
+  MIN_ORDER_VALUE_NOT_MET: "Giá trị đơn hàng không đủ để áp dụng",
+  MAX_DISCOUNT_VALUE_EXCEEDED: "Giá trị giảm giá vượt quá giới hạn",
+  MIN_DISCOUNT_AMOUNT_NOT_MET: "Giá trị giảm giá tối thiểu chưa đạt",
+  APPPLICABLE_CATEGORIES_NOT_MATCH: "Danh mục áp dụng không khớp",
+  TIME_APPLY_NOT_IN_RANGE: "Thời gian áp dụng không nằm trong khoảng",
+  PROMOTION_LIMIT_REACHED: "Giới hạn sử dụng khuyến mãi đã đạt",
+};
+
+export interface RequestPromotionAllow {
+  _subtotal: number;
+  _product_items: {
+    product_type: string;
+  }[];
 }

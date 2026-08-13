@@ -6,7 +6,14 @@ import {
   MutationResult,
   ResponseStandard,
 } from "@/types/common";
-import { Promotion, RequestApplyPromotion } from "@/types/promotions";
+import {
+  OrderDiscount,
+  Promotion,
+  PromotionForOrder,
+  RequestApplyPromotion,
+  RequestPromotionAllow,
+} from "@/types/promotions";
+import { orderService } from "./order.service";
 
 class PromotionService {
   private promotionTable: string;
@@ -88,27 +95,62 @@ class PromotionService {
     };
   }
 
-  async applyPromotion(data: RequestApplyPromotion): Promise<MutationResult> {
+  async applyPromotion(data: RequestApplyPromotion[]): Promise<MutationResult> {
     const query = supabase
       .from(this.orderDiscountsTable)
-      .insert(
-        data.promotions.map((p) => {
+      .upsert(
+        data.map((p) => {
           return {
-            order_id: data.order_id,
-            promotion_id: p.id,
-            promotion_snapshot: JSON.stringify(p),
-            discount_value: p.discount_value,
-            discount_type: p.discount_type,
-            applied_by: "admin",
+            id: p.id,
+            order_id: p.order_id,
+            promotion_id: p.promotion.id,
+            promtion_code: p.promotion.coupon_codes,
+            promotion_snapshot: JSON.stringify(p.promotion),
+            discount_value: p.promotion.discount_value,
             reason: "Đủ điều kiện áp dụng khuyến mãi",
           };
         }),
       )
       .select("*");
     const { error } = await query;
+
+    try {
+      orderService.updateOrder;
+    } catch {}
     if (error) handlePostgresError(error);
     return {
       success: true,
+    };
+  }
+
+  async getPromotionAllow(
+    resquest: RequestPromotionAllow,
+  ): Promise<ResponseStandard<PromotionForOrder[]>> {
+    const query = supabase.rpc("get_promotions_allow", resquest).select();
+    const { data, error } = await query;
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
+      data: data || [],
+    };
+  }
+
+  async getOrderDiscount(
+    orderId: string,
+  ): Promise<ResponseStandard<OrderDiscount[]>> {
+    const query = supabase
+      .from(this.orderDiscountsTable)
+      .select("*")
+      .eq("order_id", orderId);
+
+    const { data: promotions, error } = await query;
+
+    if (error) handlePostgresError(error);
+
+    return {
+      success: true,
+      data: promotions || [],
     };
   }
 }

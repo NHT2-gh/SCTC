@@ -72,8 +72,7 @@ export function useUpdateOrderStatus() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: mutationKeys.order.update,
-    mutationFn: (payload: UpdateOrderDTO) =>
-      orderService.updateOrderStatus(payload),
+    mutationFn: (payload: UpdateOrderDTO) => orderService.updateOrder(payload),
 
     onSuccess(_, variables) {
       queryClient.invalidateQueries({
@@ -82,7 +81,7 @@ export function useUpdateOrderStatus() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.order.getAll({
           filters: {
-            status: variables.status,
+            status: variables.status!,
           },
         }),
       });

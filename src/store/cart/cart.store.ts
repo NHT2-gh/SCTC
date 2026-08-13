@@ -15,7 +15,7 @@ export type CartStore = CartState & CartActions;
 
 export const useCartStore = create<CartStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       items: [],
       isHydrated: false,
 
