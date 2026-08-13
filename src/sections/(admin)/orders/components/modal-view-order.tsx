@@ -35,7 +35,7 @@ export default function ModalViewOrder({
       isFullScreen
       isOpen={isOpen}
       onClose={onClose}
-      className="max-w-[60vw]"
+      className="md:max-w-[60vw]"
     >
       <div className="p-4 space-y-4">
         <div className="capitalize flex gap-3 items-center justify-center">
