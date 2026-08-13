@@ -2,9 +2,8 @@ import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { mutationKeys } from "@/config/mutation-keys";
 import { queryKeys } from "@/config/query-keys";
 import { orderService } from "@/services/order.service";
-import { CheckoutInfo } from "@/store/checkout/config";
 import { subscribeOrders } from "@/supabase/realtime/order.sub";
-import { CartItem } from "@/types/cart";
+
 import { GetWithFilterParams, ResponseStandard } from "@/types/common";
 import {
   CreateOrderDTO,
@@ -22,7 +21,7 @@ export function useCreateOrder() {
   });
 }
 
-export function useGetAllOrder(params?: GetWithFilterParams) {
+export function useGetAllOrder(params?: GetWithFilterParams<Order>) {
   return useQuery({
     queryKey: queryKeys.order.getAll(params),
     queryFn: () => orderService.getAllOrder(params),
@@ -72,8 +71,7 @@ export function useUpdateOrderStatus() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: mutationKeys.order.update,
-    mutationFn: (payload: UpdateOrderDTO) =>
-      orderService.updateOrderStatus(payload),
+    mutationFn: (payload: UpdateOrderDTO) => orderService.updateOrder(payload),
 
     onSuccess(_, variables) {
       queryClient.invalidateQueries({
@@ -82,7 +80,7 @@ export function useUpdateOrderStatus() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.order.getAll({
           filters: {
-            status: variables.status,
+            status: variables.status!,
           },
         }),
       });

@@ -18,11 +18,12 @@ export interface ResponseStandard<T> extends MutationResult {
   pagination?: Pagination;
 }
 
-export interface GetWithFilterParams {
+export interface GetWithFilterParams<T> {
   page?: number;
   limit?: number;
   searchText?: string;
-  filters?: Record<string, FilterValue>;
+  filters?: Record<keyof T | string, FilterValue>;
+  orderBy?: { columnName: keyof T; asc: boolean };
 }
 
 export interface ServerActionResponse<T> extends MutationResult {

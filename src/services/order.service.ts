@@ -71,7 +71,7 @@ class OrderService {
   }
 
   async getAllOrder(
-    params?: GetWithFilterParams,
+    params?: GetWithFilterParams<Order>,
   ): Promise<ResponseStandard<Order[]>> {
     const query = supabase.from(this.baseTable).select(
       `
@@ -129,7 +129,7 @@ class OrderService {
     };
   }
 
-  async updateOrderStatus(data: UpdateOrderDTO): Promise<MutationResult> {
+  async updateOrder(data: UpdateOrderDTO): Promise<MutationResult> {
     if (!data.ids)
       return {
         success: false,

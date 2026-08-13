@@ -6,10 +6,8 @@ import { MultiSelect, Select } from "../ui/select";
 import {
   Checkbox,
   FileInput,
-  Input,
   NumberInput,
   PasswordInput,
-  PhoneInput,
   Radio,
   Textarea,
   TextInput,
@@ -76,8 +74,11 @@ export default function FormField({
           htmlFor={field.name}
         >
           {field.label}
-          {field.required && (
+          {field.label && field.required && (
             <span className="text-error-500 ml-1 align-middle">*</span>
+          )}
+          {field.label && !field.required && (
+            <span className="text-gray-500 ml-1">{"(Nếu có)"}</span>
           )}
         </Label>
       )}

@@ -1,6 +1,6 @@
 "use clinet";
 import { TableHeader, TableTitle } from "@/components/table";
-import { TableHeaderColumn } from "@/components/table/table-header";
+import { ColumnDefinition } from "@/components/table/table-header";
 import Modal from "@/components/ui/modal/modal";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { APP_ROUTES } from "@/config/app-routes";
@@ -11,7 +11,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import QRCode from "react-qr-code";
 
-const colums: TableHeaderColumn[] = [
+const colums: ColumnDefinition[] = [
   {
     key: "table_number",
     title: "Table Number",

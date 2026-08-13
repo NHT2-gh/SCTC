@@ -125,7 +125,7 @@ export default function OrdersPageView() {
               onClick={() => {
                 setFiltersOpen(!filtersOpen);
               }}
-              className="grow "
+              className="grow md:grow-0"
             >
               <FilterIcon /> Filter
             </Button>
@@ -171,13 +171,14 @@ export default function OrdersPageView() {
                     name: "tableId",
                     placeholder: "Select table",
                     label: "Bàn",
+                    value: String(filterValues["table_id"]),
                     handleOnChange: (value: string) => {
-                      updateFilter("table_id", Number(value));
+                      updateFilter("table_id", String(value));
                     },
                     options: tables?.data.map((table) => {
                       return {
                         label: table.name,
-                        value: Number(table.id),
+                        value: String(table.id),
                       };
                     }),
                   }}

@@ -17,7 +17,7 @@ class IngredientService {
   }
 
   async getAllIngredient(
-    params?: GetWithFilterParams,
+    params?: GetWithFilterParams<Ingredient>,
   ): Promise<ResponseStandard<Ingredient[]>> {
     const query = supabase.from(this.tableName).select(
       `

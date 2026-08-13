@@ -1,17 +1,12 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/input";
 import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
-import {
-  formatCurrency,
-  formatDateTime,
-  formatDateTimev2,
-} from "@/utils/format-data";
+import { formatDateTime, formatDateTimev2 } from "@/utils/format-data";
 import {
   MapTextPaymentMethod,
   OrderDetail as OrderDetailType,
   OrderTypeMap,
 } from "@/types/order";
-import { Link2 } from "lucide-react";
 import Link from "next/link";
 import { APP_ROUTES } from "@/config/app-routes";
 
@@ -20,9 +15,11 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
 
   return (
     <div className="space-y-2">
-      <div className="flex justify-center items-center gap-2 bg-neutral-500/40 text-neutral-950 w-[80%] mx-auto py-2 px-4">
-        <span className="text-md">{OrderTypeMap[data.order.order_type]}</span>
-        {data.order.table_id && <span>(Bàn {data.order.table_id})</span>}
+      <div className="flex items-center gap-2">
+        <div className="flex justify-center items-center gap-2 bg-neutral-500/40 text-neutral-950 w-[80%] mx-auto py-2 px-4">
+          <span className="text-md">{OrderTypeMap[data.order.order_type]}</span>
+          {data.order.table_id && <span>(Bàn {data.order.table_id})</span>}
+        </div>
       </div>
       <div className="w-full p-4 space-y-4">
         <ul className="space-y-2 text-wrap [&>li]:flex [&>li>p]:w-[50%] [&>li]:items-center">
@@ -92,7 +89,7 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
               <div className="grow">
                 <p className="text-wrap">
                   {index + 1}
-                  {". "} {item.product.product_name}
+                  {". "} {item.product.name}
                 </p>
                 <p className="text-right">{item.order_item.quantity}</p>
 
@@ -116,20 +113,12 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
               </div>
             </li>
           ))}
-        </ul>
-        <hr />
-        <ul className="px-3 [&>li]:flex [&>li]:justify-between [&>li]:items-center space-y-2">
-          <li className="whitespace-pre-line">
+
+          <li className="whitespace-pre-line mt-5">
             Note:{" "}
             {data.order.notes
               ? data.order.notes
               : "-- No note for this order --"}
-          </li>
-          <li>
-            <p>Total:</p>{" "}
-            <span className="font-bold">
-              {formatCurrency(data.order.subtotal)}
-            </span>
           </li>
         </ul>
       </div>

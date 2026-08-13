@@ -49,6 +49,12 @@ export const APP_ROUTES = {
       BASE: "/admin/orders",
       ADD: () => `${APP_ROUTES.ADMIN.BASE}/orders/add`,
     },
+
+    PROMOTIONS: {
+      BASE: "/admin/promotions",
+      ADD: () => `${APP_ROUTES.ADMIN.PROMOTIONS.BASE}/add`,
+      UPDATE: (id: string) => `${APP_ROUTES.ADMIN.PROMOTIONS.BASE}/${id}`,
+    },
   },
 
   GUEST: {

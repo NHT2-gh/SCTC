@@ -7,11 +7,11 @@ import {
   ProductOptionValidation,
 } from "@/schemas/validation/menu.validation";
 import { menuService } from "@/services/menu.service";
-import { productService } from "@/services/product.service";
 import { GetWithFilterParams } from "@/types/common";
+import { Menu, MenuItemOption } from "@/types/menu";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export function useGetMenus(params?: GetWithFilterParams) {
+export function useGetMenus(params?: GetWithFilterParams<Menu>) {
   return useQuery({
     queryKey: queryKeys.menu.getAll(params),
     queryFn: () => menuService.getAllMenus(params),
@@ -153,7 +153,7 @@ export function useUpdateProductInfo(menuId: string) {
   });
 }
 
-export function useAllOption(params?: GetWithFilterParams) {
+export function useAllOption(params?: GetWithFilterParams<MenuItemOption>) {
   return useQuery({
     queryKey: queryKeys.options(params),
     queryFn: () => menuService.getAllOptions(params),

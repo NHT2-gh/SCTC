@@ -2,6 +2,7 @@ import { CheckoutInfo } from "@/store/checkout/config";
 import { CartItem } from "./cart";
 import { DeliveryMethod } from "./checkout";
 import { MenuItem, OptionType } from "./menu";
+import { Product, ProductType } from "./product";
 
 export enum OrderStatus {
   PENDING = "pending",
@@ -19,6 +20,11 @@ export enum PaymentMethod {
   CASH = "cash",
 }
 
+export enum PaymentStatus {
+  PENDING = "pending",
+  PAID = "paid",
+  UNPAID = "unpaid",
+}
 export const MapTextPaymentMethod: Record<PaymentMethod, string> = {
   // [PaymentMethod.MOMO]: "Ví MoMo",
   [PaymentMethod.QR]: "Mã QR ngân hàng",
@@ -94,12 +100,10 @@ export interface OrderItem {
     menu_item_id: string;
     line_note: string | null;
   };
-  product: {
-    id: string;
-    product_name: string;
-    product_description: string | null;
-    product_selling_price: number;
-  };
+  product: Pick<
+    Product,
+    "id" | "name" | "description" | "product_type" | "selling_price"
+  >;
 }
 
 export interface OrderItemCard {
@@ -114,7 +118,10 @@ export interface OrderItemCard {
 
 export interface UpdateOrderDTO {
   ids: string[];
-  status: OrderStatus;
+  status?: OrderStatus;
+  payment_status?: PaymentStatus;
+  discount_value?: number;
+  total?: number;
 }
 
 export interface CreateOrderDTO {

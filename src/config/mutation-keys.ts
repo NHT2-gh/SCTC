@@ -30,4 +30,10 @@ export const mutationKeys = {
     calculateCost: ["product", "calculate-cost"],
     newRecipe: ["product", "new-recipe"],
   },
+
+  promotion: {
+    add: ["promotion", "add"],
+    update: ["promotion", "update"],
+    apply: ["promotion", "apply"],
+  },
 };

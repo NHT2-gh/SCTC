@@ -10,7 +10,7 @@ import StepperLayout from "./layouts/StepperLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormRendererProps, FormSchema } from "./type";
 import AccordionLayout from "./layouts/AccordionLayout";
-import { useForm, UseFormReturn, FieldValues, useWatch } from "react-hook-form";
+import { useForm, UseFormReturn, FieldValues } from "react-hook-form";
 import Form from "./Form";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +22,6 @@ export default function FormRenderer({
   defaultValues,
   disabled = false,
   className,
-  setValue,
   submitButtonText = "Submit",
   showSubmitButton = true,
 }: FormRendererProps) {
@@ -33,7 +32,8 @@ export default function FormRenderer({
   );
 
   const {
-    formState: { errors },
+    reset,
+    formState: { errors, isDirty },
   } = form;
 
   // Reset form with new default values when they change
@@ -44,9 +44,15 @@ export default function FormRenderer({
   }, [defaultValues, form]);
 
   const handleSubmit = form.handleSubmit(
-    (data) => {
+    async (data) => {
       console.log("ping");
-      onSubmit(data, form);
+      console.log(errors);
+      try {
+        await onSubmit(data, form);
+        reset();
+      } catch (error) {
+        onError?.(error, form);
+      }
     },
     (errors) => {
       onError?.(errors, form);
@@ -146,7 +152,10 @@ export default function FormRenderer({
         <div className="mt-8 flex justify-end gap-4">
           <Button
             variant="outline"
-            onClick={onCancel}
+            onClick={() => {
+              onCancel;
+              reset();
+            }}
             disabled={form.formState.isSubmitting}
             startIcon={<XIcon className="size-4" />}
           >
@@ -154,7 +163,7 @@ export default function FormRenderer({
           </Button>
           <Button
             type="submit"
-            disabled={disabled || form.formState.isSubmitting}
+            disabled={disabled || form.formState.isSubmitting || !isDirty}
             loading={form.formState.isSubmitting}
           >
             {submitButtonText}

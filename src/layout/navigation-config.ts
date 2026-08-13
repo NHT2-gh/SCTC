@@ -70,6 +70,23 @@ const NavItems: NavItem[] = [
     ],
     role: ["admin"],
   },
+
+  {
+    icon: "coupon",
+    name: "Promotions",
+    path: APP_ROUTES.ADMIN.PROMOTIONS.BASE,
+    subItems: [
+      {
+        name: "Promotions List",
+        path: APP_ROUTES.ADMIN.PROMOTIONS.BASE,
+      },
+      {
+        name: "Add Promotion",
+        path: APP_ROUTES.ADMIN.PROMOTIONS.ADD(),
+      },
+    ],
+    role: ["admin"],
+  },
 ];
 
 // CMS Sidebar Configuration
