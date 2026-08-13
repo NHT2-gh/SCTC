@@ -2,9 +2,8 @@ import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { mutationKeys } from "@/config/mutation-keys";
 import { queryKeys } from "@/config/query-keys";
 import { orderService } from "@/services/order.service";
-import { CheckoutInfo } from "@/store/checkout/config";
 import { subscribeOrders } from "@/supabase/realtime/order.sub";
-import { CartItem } from "@/types/cart";
+
 import { GetWithFilterParams, ResponseStandard } from "@/types/common";
 import {
   CreateOrderDTO,

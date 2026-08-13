@@ -121,7 +121,7 @@ export default function Bill({
             <li key={item.order_item.id}>
               <div>
                 <p className="text-wrap max-w-[9.375rem]">
-                  {item.product.product_name}
+                  {item.product.name}
                 </p>
                 <span>{item.order_item.quantity}</span>
                 <span className="ml-auto">

@@ -129,7 +129,7 @@ class OrderService {
     };
   }
 
-  async updateOrderStatus(data: UpdateOrderDTO): Promise<MutationResult> {
+  async updateOrder(data: UpdateOrderDTO): Promise<MutationResult> {
     if (!data.ids)
       return {
         success: false,

@@ -5,8 +5,9 @@ import { GetWithFilterParams } from "@/types/common";
 import { queryKeys } from "@/config/query-keys";
 import { mutationKeys } from "@/config/mutation-keys";
 import { IngredientValidationSchema } from "@/schemas/validation/ingredient.validation";
+import { Ingredient } from "@/types/ingredient";
 
-export function useIngredients(params?: GetWithFilterParams) {
+export function useIngredients(params?: GetWithFilterParams<Ingredient>) {
   return useQuery({
     queryKey: queryKeys.ingredient.getAll(params),
     queryFn: () => ingredientService.getAllIngredient(params),
