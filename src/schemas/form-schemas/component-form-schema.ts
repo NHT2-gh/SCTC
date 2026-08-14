@@ -30,7 +30,7 @@ export const componentFormSchema: FormSchema = {
     {
       name: "description",
       type: "textarea",
-      className: "col-span-2",
+      className: "md:col-span-2",
       label: "Mô tả",
       placeholder: "Nhập mô tả cho công thức thành phần",
     },

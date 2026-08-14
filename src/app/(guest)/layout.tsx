@@ -8,14 +8,14 @@ export default function GuestLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#FFFAEA] [&_header]:bg-[#FFFAEACC]">
+    <div className="min-h-screen overflow-hidden bg-[#FFFAEA] [&_header]:bg-[#FFFAEACC]">
       {/* Main Content Area */}
       <div className={`transition-all duration-300 ease-in-out `}>
         {/* Header */}
         {/* <AppHeader /> */}
         {/* Page Content */}
         <main
-          className={`max-w-[31.25rem] relative mx-auto h-fit min-h-[100dvh] ${itim.className}`}
+          className={`max-w-[31.25rem] relative mx-auto h-fit min-h-[100dvh] overflow-y-scroll ${itim.className}`}
         >
           {children}
         </main>

@@ -52,7 +52,7 @@ export default function AddComponentRecipeItemsForm({
 
   return (
     <>
-      <Form onSubmit={handleSubmit(onSubmit)} className="!grid-cols-3">
+      <Form onSubmit={handleSubmit(onSubmit)} className="md:!grid-cols-3">
         <FormField
           form={addComponentItemForm}
           field={{

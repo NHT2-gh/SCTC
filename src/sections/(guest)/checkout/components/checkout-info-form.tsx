@@ -89,8 +89,8 @@ export default function CheckoutInfoForm() {
           pick_up_time: result.pick_up_time,
           payment_method: result.payment_method,
         });
-        clearCart();
         router.push(APP_ROUTES.GUEST.ORDER.VIEW(result.tracking_order));
+        clearCart();
         setIsLoading(false);
       } else {
         throw new Error("Đặt hàng thất bại");
@@ -106,12 +106,6 @@ export default function CheckoutInfoForm() {
   useEffect(() => {
     setValue("customer", checkoutInfo.customer);
   }, [checkoutInfo]);
-
-  useEffect(() => {
-    if (cartSummary.item_count === 0) {
-      router.back();
-    }
-  }, [cartSummary]);
 
   return (
     <div className="grow flex flex-col gap-4">

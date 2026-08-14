@@ -56,7 +56,7 @@ export default function AddProductRecipeItemsForm({
       onSubmit={handleSubmit(onSubmit, (err) => {
         console.log("VALIDATION ERROR", err);
       })}
-      className="!grid-cols-4"
+      className="md:!grid-cols-4"
     >
       <FormField
         form={addProductRecipeItemForm}

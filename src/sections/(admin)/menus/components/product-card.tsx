@@ -43,7 +43,7 @@ export default function ProductCard({ item, className }: DrinkCardProps) {
       <Link
         href={APP_ROUTES.ADMIN.MENUS.ITEMS.DETAIL(item.menu_id, item.id)}
         className={cn("w-full ", {
-          "opacity-50 pointer-events-none": !item.products.is_active,
+          "opacity-50": !item.products.is_active,
         })}
       >
         <div className="w-full flex items-center gap-3">
