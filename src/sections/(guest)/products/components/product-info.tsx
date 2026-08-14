@@ -81,7 +81,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
         selected_options: selectedOptions,
       });
 
-      showToast.success({ title: "Bỏ túi thành công" });
+      showToast.success({ title: "Bỏ túi thành công", duration: 50 });
     },
   });
 
@@ -97,7 +97,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
         options: options.custom
           .filter((option) => option.option_type == key)
           .map((option) => ({
-            label: `${option.component_name} (+${formatCurrency(option.price)})`,
+            label: `${option.component_name}\t[+${formatCurrency(option.price)}]`,
             value: String(option.option_id),
             count: option.limit,
           })),
@@ -151,7 +151,6 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
 
   return (
     <>
-      {" "}
       <div className="product-image mb-10 flex justify-center">
         <Image
           unoptimized

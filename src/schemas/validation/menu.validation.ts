@@ -13,11 +13,11 @@ export const MenuLayoutItemEditValidation = z.object({
 
 export const productInfoValidation = z.object({
   id: z.string(),
-  name: z.string(),
-  selling_price: z.number(),
+  name: z.string().optional(),
+  selling_price: z.number().optional(),
   description: z.string().nullable().optional(),
   image_url: z.array(z.string()).nullable().optional(),
-  is_active: z.boolean(),
+  is_active: z.boolean().optional(),
 });
 
 export const productOptionValidation = z.object({

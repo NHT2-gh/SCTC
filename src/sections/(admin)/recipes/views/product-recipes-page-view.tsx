@@ -2,7 +2,7 @@
 import { ComponentCard } from "@/components/common/component-card";
 import { MainContainer } from "@/components/common/page-layout";
 import { SearchBar } from "@/components/search-bar";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useModal } from "@/hooks/useModal";
 import {
   useCreateNewRecipeVersion,

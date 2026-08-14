@@ -23,6 +23,7 @@ export default function AddProductRecipeItemsForm({
 }: AddProductRecipeItemsFormProps) {
   const { data: ingredients } = useIngredients();
   const { data: components } = useComponents();
+
   const productRecipeForm =
     useFormContext<ProductRecipeItemsValidationSchema>();
 
@@ -72,20 +73,22 @@ export default function AddProductRecipeItemsForm({
         }}
       />
 
-      <FormField
-        form={addProductRecipeItemForm}
-        field={{
-          name: "component_id",
-          type: "select",
-          label: "Thành phần",
-          placeholder: "Chọn thành phần",
-          options:
-            components?.data.map((item) => ({
-              label: `${item.name} ${item.description ? `(${item.description})` : ""}`,
-              value: item.id,
-            })) || [],
-        }}
-      />
+      {components && components.data && components?.data.length > 0 && (
+        <FormField
+          form={addProductRecipeItemForm}
+          field={{
+            name: "component_id",
+            type: "select",
+            label: "Thành phần",
+            placeholder: "Chọn thành phần",
+            options:
+              components?.data.map((item) => ({
+                label: `${item.name} ${item.description ? `(${item.description})` : ""}`,
+                value: item.id,
+              })) || [],
+          }}
+        />
+      )}
 
       <FormField
         form={addProductRecipeItemForm}

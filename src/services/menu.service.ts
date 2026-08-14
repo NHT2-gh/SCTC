@@ -225,7 +225,7 @@ class MenuService {
   async getAllOptions(
     params?: GetWithFilterParams<MenuItemOption>,
   ): Promise<ResponseStandard<MenuItemOption[]>> {
-    const query = supabase.from("menu_items_options").select(
+    const query = supabase.from(this.menuItemsOptions).select(
       `*,
       components!inner(
         *
@@ -233,19 +233,19 @@ class MenuService {
       `,
     );
 
-    if (params?.filters?.option_type !== "fixed") {
-      query.in("option_type", ["ice", "sweet"]);
+    if (params?.filters?.option_type === "fixed") {
+      query.in("option_type", allOptionFixedType);
     } else {
-      query.notIn("option_type", ["ice", "sweet"]);
+      query.notIn("option_type", allOptionFixedType);
     }
 
-    if (params?.searchText) {
-      if (params.searchText !== "/all") {
-        query.ilike("option_name", `%${params.searchText}%`);
-      }
+    if (params?.searchText && params.searchText !== "/all") {
+      query.ilike("option_name", `%${params.searchText}%`);
     }
 
     const { data: options, error } = await query;
+
+    console.log(options);
 
     if (error) handlePostgresError(error);
 

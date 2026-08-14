@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -20,9 +20,11 @@ import OrderItemCard from "../components/order-item";
 import { useGetTable } from "@/hooks/queries/use-overview";
 import { FilterStatus, ModalViewOrder } from "../components";
 import { MainContainer } from "@/components/common/page-layout";
+import ModalAlert from "@/components/modal/alerts/modal-alert";
 import { OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
 import { FilterBoxRender } from "@/components/filter/filter-box-render";
 import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
+import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
@@ -41,6 +43,16 @@ export default function OrdersPageView() {
     limit: 100,
   });
   const [orderIdsSelected, setIdsOrderSelected] = useState<string[]>([]);
+  const modalConfirm = useModal();
+
+  const totalAmount = useMemo(() => {
+    setQrUrl(null);
+
+    return orderIdsSelected.reduce((acc, orderId) => {
+      const orderData = orders?.data.find((order) => order.id === orderId);
+      return acc + (orderData?.subtotal || 0);
+    }, 0);
+  }, [orderIdsSelected, orders]);
 
   useEffect(() => {
     setIdsOrderSelected(
@@ -223,47 +235,50 @@ export default function OrdersPageView() {
         </div>
 
         {orders?.data && (
-          <div className="p-2 bg-white absolute bottom-4 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
-            {orderIdsSelected.length > 0 && (
-              <h3 className="font-bold">
-                Selected: {orderIdsSelected.length} orders
-              </h3>
-            )}
-
+          <div className="p-2 bg-white absolute bottom-10 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
             <h3 className="font-bold">
               Total Amount:
               <span className="ml-2 text-brand-500">
-                {formatCurrency(
-                  orderIdsSelected.reduce((acc, orderId) => {
-                    const orderData = orders?.data.find(
-                      (order) => order.id === orderId,
-                    );
-                    return acc + (orderData?.subtotal || 0);
-                  }, 0),
-                )}
+                {formatCurrency(totalAmount)}
               </span>
             </h3>
+
+            {orderIdsSelected.length > 0 && (
+              <h3 className="font-bold">
+                Selected: {orderIdsSelected.length} orders ({" "}
+                {orders.data
+                  .filter((order) => orderIdsSelected.includes(order.id))
+                  .reduce((acc, order) => {
+                    return acc + order.order_items_count;
+                  }, 0)}
+                {"  items )"}
+              </h3>
+            )}
 
             <Button
               size="sm"
               variant="outline"
-              disabled={filterValues["status"] === OrderStatus.COMPLETED}
+              disabled={
+                _product_setting.processOrder[
+                  filterValues["status"] as OrderStatus
+                ]?.value >= 5
+              }
               onClick={() => handlePayment()}
               className="w-full mt-2 bg-lime-200"
             >
               Thanh toán
             </Button>
 
-            {qrUrl && (
+            {qrUrl && totalAmount > 0 && (
               <div className="mt-2 w-fit mx-auto rounded-lg overflow-hidden">
                 <Link href={qrUrl} target="_blank">
                   <Image src={qrUrl} alt="QR Code" width={200} height={200} />
                 </Link>
                 <button
+                  disabled={!qrUrl}
                   className="w-full mt-2 bg-lime-200 rounded-lg px-2 py-1"
                   onClick={() => {
-                    handleUpdateStatus(orderIdsSelected, OrderStatus.COMPLETED);
-                    setQrUrl(null);
+                    modalConfirm.openModal();
                   }}
                 >
                   Đã nhận tiền.
@@ -284,6 +299,20 @@ export default function OrdersPageView() {
           }}
           trackingCode={orderView}
           onUpdateStatus={(id, status) => handleUpdateStatus(id, status)}
+        />
+      )}
+
+      {modalConfirm.isOpen && qrUrl && (
+        <ModalAlert
+          isOpen={modalConfirm.isOpen}
+          onClose={modalConfirm.closeModal}
+          type={"success"}
+          title={"Bạn chắc chắn đã nhận tiền từ khách hàng?"}
+          onConfirm={() => {
+            handleUpdateStatus(orderIdsSelected, OrderStatus.COMPLETED);
+            setQrUrl(null);
+          }}
+          confirmText={"Đã nhận"}
         />
       )}
     </>

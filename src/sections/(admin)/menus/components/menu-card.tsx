@@ -14,6 +14,7 @@ export default function MenuCard({ menuData, onView }: MenuCardProps) {
         <h4 className="font-bold"> {menuData.name}</h4>
         <span>Published : {menuData.is_published ? "True" : "Fasle"}</span>
       </div>
+
       <Button onClick={() => onView(menuData.id)}>View Menu</Button>
     </article>
   );

@@ -104,15 +104,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
           <span className="italic">Chưa có item nào được thêm</span>
         )}
         {menuItems?.data.map((item) => (
-          <Link
-            key={item.id}
-            href={APP_ROUTES.ADMIN.MENUS.ITEMS.DETAIL(id, item.id)}
-            className={cn("w-full", {
-              "opacity-50": !item.products.is_active,
-            })}
-          >
-            <ProductCard item={item.products} />
-          </Link>
+          <ProductCard key={item.id} item={item} />
         ))}
       </section>
     </MainContainer>

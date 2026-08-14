@@ -1,8 +1,7 @@
 import React from "react";
-import CartItem from "./cart-item";
-import { CartItem as CartItemType } from "@/types/cart";
 import { cn } from "@/lib/utils";
 import SwipeableCartItem from "./swipeable-cart-item";
+import { CartItem as CartItemType } from "@/types/cart";
 
 export default function CartItemsList({
   items,

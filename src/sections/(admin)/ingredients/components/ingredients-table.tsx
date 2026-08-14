@@ -67,21 +67,7 @@ export default function IngredientsTable() {
     },
   });
 
-  useEffect(() => {
-    editForm.reset({
-      id: editIngredient?.id || "",
-      name: editIngredient?.name || "",
-      code: editIngredient?.code || "",
-      category_code: editIngredient?.category_code || "",
-      purchase_quantity: editIngredient?.purchase_quantity || 0,
-      purchase_price: Math.round(editIngredient?.purchase_price || 0),
-      yield_percentage: editIngredient?.yield_percentage || 0,
-      unit: editIngredient?.unit || UnitType.gram,
-      notes: editIngredient?.notes || "",
-    });
-  }, [editIngredient]);
-
-  const { handleSubmit } = editForm;
+  const { handleSubmit, setValue } = editForm;
 
   const onSubmit = async (data: IngredientValidationSchema) => {
     try {
@@ -253,13 +239,33 @@ export default function IngredientsTable() {
                 </TableCell>
                 <TableCell>
                   {index === editIngredientIndex ? (
-                    <Button type="submit" className="w-full h-fit">
+                    <Button
+                      onClick={handleSubmit(onSubmit)}
+                      className="w-full h-fit"
+                    >
                       Cập nhật
                     </Button>
                   ) : (
                     <Button
                       variant="outline"
-                      onClick={() => setEditIngredientIndex(index)}
+                      onClick={() => {
+                        setValue("id", ingredient.id);
+                        setValue("name", ingredient.name);
+                        setValue("code", ingredient.code);
+                        setValue("category_code", ingredient.category_code);
+                        setValue(
+                          "purchase_quantity",
+                          ingredient.purchase_quantity,
+                        );
+                        setValue("purchase_price", ingredient.purchase_price);
+                        setValue(
+                          "yield_percentage",
+                          ingredient.yield_percentage,
+                        );
+                        setValue("unit", ingredient.unit);
+                        setValue("notes", ingredient.notes);
+                        setEditIngredientIndex(index);
+                      }}
                     >
                       <Edit2Icon className="size-4" />
                     </Button>

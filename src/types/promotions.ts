@@ -115,7 +115,6 @@ export interface RequestApplyPromotion {
 export interface PromotionForOrder {
   reason: string;
   isAllow: boolean;
-  coupon_codes: string[];
   promotion: Promotion & { coupon_codes?: string[] };
 }
 

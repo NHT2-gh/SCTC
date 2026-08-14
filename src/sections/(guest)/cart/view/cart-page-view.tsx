@@ -16,7 +16,7 @@ import { NavigationBar } from "@/components/common/navigation-bar";
 export default function CartPageView() {
   const [itemEditting, setItemEditting] = useState<CartItem | null>(null);
   const [idItemEditing, setIdItemEditting] = useUrlState("edit", "");
-  const { items, cartSummary, count } = useCart();
+  const { items, cartSummary } = useCart();
   const editBlock = useModal();
 
   useEffect(() => {
@@ -40,22 +40,28 @@ export default function CartPageView() {
 
       <CartItemsList
         items={items}
-        className="max-h-[calc(100%-4rem)] overflow-y-scroll"
+        className="max-h-[calc(100%-4rem)] min-h-[calc(100%-8rem)] overflow-y-scroll z-10"
       />
 
       <div className="w-full bottom-4 p-1.5 after:absolute after:inset-0 after:z-[-1] after:bg-[linear-gradient(90deg,rgba(255,250,234,0)_0%,rgba(255,250,234,0.3)_25.96%)] after:backdrop-blur-[20px] after:blur-[1px]">
         <Link href={APP_ROUTES.GUEST.CHECKOUT.VIEW}>
           <button
-            disabled={count === 0}
+            disabled={cartSummary.item_count === 0}
             className={cn(
               "w-full bg-[#8D1111] py-4 px-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed",
               delagothic.className,
             )}
           >
             <span className=" text-sm text-white ">
-              {count === 0 ? "Chưa có gì để chốt bà ơi !!!" : "Chốt đơn"}
+              {cartSummary.item_count === 0
+                ? "Chưa có gì để chốt bà ơi !!!"
+                : "Chốt đơn"}
               <span className={itim.className}>
-                {count === 0 ? "" : " -" + formatCurrency(cartSummary.subtotal)}
+                {cartSummary.item_count === 0
+                  ? ""
+                  : " - " + formatCurrency(cartSummary.subtotal)}
+                {cartSummary.item_count > 0 &&
+                  `  ( ${cartSummary.item_count} món )`}
               </span>
             </span>
           </button>

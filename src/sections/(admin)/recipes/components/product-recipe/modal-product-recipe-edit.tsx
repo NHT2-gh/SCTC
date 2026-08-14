@@ -132,11 +132,9 @@ export default function ModalProductRecipeEdit({
             </>
           )}
 
-          {productInfo?.data?.cost && productInfo.data?.cost !== 0 && (
-            <p className="mt-4 mb-4 font-semibold">
-              Giá vốn: {formatCurrency(productInfo.data.cost)}
-            </p>
-          )}
+          <p className="mt-4 mb-4 font-semibold">
+            Giá vốn: {formatCurrency(currentRecipe.cost)}
+          </p>
 
           <Button
             type="submit"

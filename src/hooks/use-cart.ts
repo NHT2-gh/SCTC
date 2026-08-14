@@ -1,12 +1,9 @@
-import { useCartStore } from "@/store/cart/cart.store";
-import { getCartSummary } from "@/store/cart/helper";
 import { useMemo } from "react";
+import { getCartSummary } from "@/store/cart/helper";
+import { useCartStore } from "@/store/cart/cart.store";
 
 export function useCart() {
   const items = useCartStore((state) => state.items);
-  const count = useCartStore((state) =>
-    state.items.reduce((acc, item) => acc + item.quantity, 0),
-  );
   const isEmpty = useCartStore((state) => state.items.length === 0);
   const isHydrated = useCartStore((state) => state.isHydrated);
   const add = useCartStore((state) => state.add_item);
@@ -28,7 +25,6 @@ export function useCart() {
     remove,
     //State
     items,
-    count,
     isEmpty,
     cartSummary,
     isLoading: !isHydrated,

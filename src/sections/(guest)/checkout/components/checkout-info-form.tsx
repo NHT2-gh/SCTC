@@ -21,11 +21,12 @@ import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 import { SingleFilterButtonGroup } from "@/components/filter/single-toggle";
 import { checkoutFormSchema } from "@/schemas/form-schemas/checkout-form-schema";
 import { CheckoutFormValidationType } from "@/schemas/validation/checkout.validation";
+import ApplyPromotion from "./apply-promotion";
 
 export default function CheckoutInfoForm() {
   const router = useRouter();
   const { addOrder } = useOrderHistory();
-  const { items, clearCart } = useCart();
+  const { items, cartSummary, clearCart } = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const { checkoutInfo, updateCheckout } = useCheckout();
   const modalAlert = useModal();
@@ -106,6 +107,12 @@ export default function CheckoutInfoForm() {
     setValue("customer", checkoutInfo.customer);
   }, [checkoutInfo]);
 
+  useEffect(() => {
+    if (cartSummary.item_count === 0) {
+      router.back();
+    }
+  }, [cartSummary]);
+
   return (
     <div className="grow flex flex-col gap-4">
       <h2>Thông tin nhận hàng</h2>
@@ -120,16 +127,19 @@ export default function CheckoutInfoForm() {
         className=" p-1"
       />
       <div className="grow">
-        <Form
-          onSubmit={handleSubmit(onSubmit)}
-          className="h-full gap-2 !grid-cols-2"
-        >
+        <Form onSubmit={handleSubmit(onSubmit)} className="h-full !grid-cols-2">
           {checkoutFormSchema.fields.map((field) =>
             field.name == "pickup_at" &&
             deliveryMethodValue == "pickup_now" ? null : (
               <FormField
                 key={field.name}
-                field={field}
+                field={{
+                  ...field,
+                  required:
+                    (deliveryMethodValue == DeliveryMethod.pre_order &&
+                      field.name === "pickup_at") ||
+                    field.required,
+                }}
                 form={checkoutForm}
                 className={field.className}
               />
@@ -137,26 +147,41 @@ export default function CheckoutInfoForm() {
           )}
         </Form>
       </div>
-
-      <Button
-        disabled={isLoading || formIsLoading}
-        onClick={() => {
-          if (deliveryMethodValue == DeliveryMethod.pre_order) {
-            modalAlert.openModal();
-          } else {
-            handleSubmit(onSubmit)();
-          }
-        }}
-        type="submit"
-        className={cn(
-          "flex-3  text-white py-4 px-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed",
-          delagothic.className,
+      <ApplyPromotion
+        subtotal={items.reduce(
+          (acc, item) =>
+            acc + item.menu_item.products.selling_price * item.quantity,
+          0,
         )}
-      >
-        {isLoading || formIsLoading
-          ? "Đừng có nhấn nữa đang ấy"
-          : "Chính thức chốt đơn"}
-      </Button>
+        products_type={items.map((item) => {
+          return {
+            product_type: item.menu_item.products.product_type,
+          };
+        })}
+        cart_items={items}
+      />
+
+      <div className="w-full flex items-center gap-5 sticky bottom-[-1.5px] p-1.5">
+        <Button
+          disabled={isLoading || formIsLoading || cartSummary.item_count === 0}
+          onClick={() => {
+            if (deliveryMethodValue == DeliveryMethod.pre_order) {
+              modalAlert.openModal();
+            } else {
+              handleSubmit(onSubmit)();
+            }
+          }}
+          type="submit"
+          className={cn(
+            "flex-3  text-white py-4 px-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed",
+            delagothic.className,
+          )}
+        >
+          {isLoading || formIsLoading
+            ? "Đừng có nhấn nữa đang ấy"
+            : "Chính thức chốt đơn"}
+        </Button>
+      </div>
 
       {modalAlert.isOpen && (
         <ModalAlert

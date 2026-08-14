@@ -163,7 +163,7 @@ export default function EditProductInfo({
   }, [filterValues, productOptions?.data.custom, product.selling_price]);
 
   return (
-    <section className="h-full">
+    <section className="h-full relative">
       <div
         onClick={onClose}
         className="fixed inset-0 z-20 w-screen bg-black/10"

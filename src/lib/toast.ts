@@ -9,7 +9,7 @@ interface ToastOptions {
 }
 
 export const showToast = {
-  success: ({ title, description, duration = 4000 }: ToastOptions) => {
+  success: ({ title, description, duration = 2000 }: ToastOptions) => {
     toast.custom(
       (t) =>
         createElement(CustomToast, {

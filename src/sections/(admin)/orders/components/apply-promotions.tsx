@@ -226,9 +226,9 @@ export default function ApplyPromotions({ orderDetail }: ApplyPromotionsProps) {
                       />
                     </div>
 
-                    {item.coupon_codes && (
+                    {item.promotion.coupon_codes && (
                       <div className="flex items-center gap-1">
-                        {item.coupon_codes.map((code) => (
+                        {item.promotion.coupon_codes.map((code) => (
                           <span
                             className="px-1 py-0.5 rounded-sm border text-[0.625rem]"
                             key={code}
