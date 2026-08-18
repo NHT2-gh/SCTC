@@ -19,7 +19,7 @@ import {
 } from "@/schemas/validation/menu.validation";
 import { SelectedOption } from "@/types/cart";
 import { FixedOptionAdapter, OptionsAdapter } from "@/adapters/options.adapter";
-import { AddProductOptionValidation } from "@/schemas/validation/product-option.validation";
+import { UpsertProductOptionValidation } from "@/schemas/validation/product-option.validation";
 import {
   _product_setting,
   allOptionFixedType,
@@ -187,6 +187,7 @@ class MenuService {
       "menuItemId" | "id" | "limit" | "option_id"
     >[],
   ): Promise<MutationResult> {
+    console.log(data);
     const query = supabase.from(this.itemOptionsDetailTable).upsert(
       data.map((option) => ({
         id: option.id,
@@ -227,7 +228,10 @@ class MenuService {
   ): Promise<ResponseStandard<MenuItemOption[]>> {
     const query = supabase.from(this.menuItemsOptions).select(
       `*,
-      components!inner(
+      components(
+        *
+      ),
+      ingredients(
         *
       )
       `,
@@ -245,20 +249,18 @@ class MenuService {
 
     const { data: options, error } = await query;
 
-    console.log(options);
-
     if (error) handlePostgresError(error);
 
     return {
-      success: false,
+      success: true,
       data: options || [],
     };
   }
 
-  async addProductOption(
-    data: AddProductOptionValidation,
+  async upsertProductOption(
+    data: UpsertProductOptionValidation,
   ): Promise<MutationResult> {
-    const query = supabase.from(this.menuItemsOptions).insert(data);
+    const query = supabase.from(this.menuItemsOptions).upsert(data);
 
     const { error } = await query;
 
@@ -319,7 +321,10 @@ class MenuService {
         *,
         menu_items_options!inner(
             *,
-            components!inner(
+            components(
+              *
+            ),
+            ingredients(
               *
             )
         )

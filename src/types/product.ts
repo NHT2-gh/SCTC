@@ -49,9 +49,10 @@ export interface ProductRecipeVersion {
   product_id: string;
   version_number: number;
   is_actice: boolean;
-  note: boolean;
+  note: string;
   products: Product;
   cost: number;
+  recipe_text: string;
 }
 
 export enum ItemType {

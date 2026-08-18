@@ -5,7 +5,7 @@ import { GetWithFilterParams } from "@/types/common";
 import { menuService } from "@/services/menu.service";
 import { ProductInfoValidation } from "@/schemas/validation/menu.validation";
 import { mutationKeys } from "@/config/mutation-keys";
-import { AddProductOptionValidation } from "@/schemas/validation/product-option.validation";
+import { UpsertProductOptionValidation } from "@/schemas/validation/product-option.validation";
 import { ProductRecipeItemValidationSchema } from "@/schemas/validation/recipe.validation";
 import { Product } from "@/types/product";
 
@@ -31,14 +31,20 @@ export function useGetProductOptions(menuItemId: string) {
   });
 }
 
-export function useAddProductOption() {
+export function useUpsertProductOption() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: mutationKeys.menuItems.addOption,
-    mutationFn: (payload: AddProductOptionValidation) =>
-      menuService.addProductOption(payload),
+    mutationFn: (payload: UpsertProductOptionValidation) =>
+      menuService.upsertProductOption(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.options() });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.options({
+          filters: {
+            type: "custom",
+          },
+        }),
+      });
     },
   });
 }

@@ -1,22 +1,21 @@
 import { ProductType } from "@/types/product";
 import { OrderStatus } from "@/types/order";
+import { OptionType } from "@/types/menu";
 
-type OptionFixedType = "sweet" | "ice" | "alcoholic";
-
-export const allOptionFixedType: OptionFixedType[] = [
-  "sweet",
-  "ice",
-  "alcoholic",
+export const allOptionFixedType: OptionType[] = [
+  OptionType.sweet,
+  OptionType.ice,
+  OptionType.alcoholic,
 ];
 
-const fixedOptionType: Record<keyof typeof ProductType, OptionFixedType[]> = {
+const fixedOptionType: Record<keyof typeof ProductType, OptionType[]> = {
   food: [],
-  coffee: ["sweet", "ice"],
-  cocktail: ["alcoholic"],
-  matcha: ["sweet", "ice"],
-  houjicha: ["sweet", "ice"],
-  tea: ["sweet", "ice"],
-  cacao: ["sweet", "ice"],
+  coffee: [OptionType.sweet, OptionType.ice],
+  cocktail: [OptionType.alcoholic],
+  matcha: [OptionType.sweet, OptionType.ice],
+  houjicha: [OptionType.sweet, OptionType.ice],
+  tea: [OptionType.sweet, OptionType.ice],
+  cacao: [OptionType.sweet, OptionType.ice],
 };
 
 export const _product_setting = {

@@ -94,7 +94,6 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
       <CurrentOrders />
 
       <FloatingCartButton />
-      <FloatingHelpButton />
     </section>
   );
 }

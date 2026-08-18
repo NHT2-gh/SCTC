@@ -2,15 +2,17 @@ import { MenuItem, OptionType } from "./menu";
 
 export interface SelectedOption {
   id: string;
-  component_id: string;
-  component_name: string;
+  component_id?: string;
+  ingredient_id?: string;
+  ingredient_name?: string;
+  component_name?: string;
   price: number;
-  option_type: keyof typeof OptionType;
+  option_type: OptionType;
   option_id: string;
   is_default?: boolean;
   menu_item_id?: string;
   description?: string;
-  limit?: number;
+  limit?: number | null;
 }
 
 export interface CartItem {

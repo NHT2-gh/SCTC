@@ -55,7 +55,7 @@ export default function Modal({
     <div
       slot="modal"
       className={cn(
-        "fixed inset-0 md:bg-[unset] md:top-10 flex items-center justify-center modal z-[100] lg:pl-[4rem] dark:bg-gray-900 ",
+        "fixed inset-0 flex items-center justify-center modal z-[100] md:bg-[unset] md:top-10 lg:pl-[4rem] dark:bg-gray-900 ",
         { "z-[200] md:top-0": isFullScreen },
       )}
     >
@@ -67,7 +67,7 @@ export default function Modal({
       {showCloseButton && (
         <button
           onClick={onClose}
-          className="fixed right-3 top-18 md:absolute md:top-[12vh] md:right-[7.5vw] lg:top-[12vh] lg:right-[5vw] z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:right-6 sm:top-6 sm:h-11 sm:w-11"
+          className="fixed right-3 top-20 md:absolute md:top-[12vh] md:right-[7.5vw] lg:top-[12vh] lg:right-[5vw] z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:right-6 sm:top-6 sm:h-11 sm:w-11"
         >
           <svg
             width="24"

@@ -137,7 +137,7 @@ export default function OrdersPageView() {
               onClick={() => {
                 setFiltersOpen(!filtersOpen);
               }}
-              className="grow md:grow-0"
+              className="grow max-w-[100px] md:grow-0"
             >
               <FilterIcon /> Filter
             </Button>

@@ -1,10 +1,10 @@
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import ModalAlert from "@/components/modal/alerts/modal-alert";
 import { Button } from "@/components/ui/button";
-import { useUpdateOrderStatus } from "@/hooks/queries/use-order";
+import {} from "@/hooks/queries/use-order";
 import { useModal } from "@/hooks/useModal";
 import { cn } from "@/lib/utils";
-import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
+import { DeliveryMethodMapText } from "@/types/checkout";
 import { MapTextPaymentMethod, Order, OrderStatus } from "@/types/order";
 import {
   formatCurrency,
@@ -37,7 +37,7 @@ export default function OrderItemCard({
         })}
       >
         <ul
-          className="cursor-pointer text-sm text-muted-foreground grow"
+          className="cursor-pointer text-sm text-muted-foreground grow [&_li]:flex [&_li]:items-center [&_li]:gap-2"
           onClick={() => {
             onSelected(order.id);
           }}
@@ -64,13 +64,18 @@ export default function OrderItemCard({
               <span className="capitalize">{order.tables?.name}</span>
             </li>
           )}
-          <li className="flex items-center gap-2">
+          <li>
             <p>Customer Name:</p> <span>{order.customer_name}</span>
           </li>
+
           <li>
-            Delivery method: {DeliveryMethodMapText[order.delivery_method]}
+            <p>Delivery method:</p>
+            <span> {DeliveryMethodMapText[order.delivery_method]}</span>
           </li>
-          <li>Payment method: {MapTextPaymentMethod[order.payment_method]}</li>
+          <li>
+            <p>Payment method:</p>
+            <span> {MapTextPaymentMethod[order.payment_method]}</span>
+          </li>
           <li>
             Created at: {formatDateTime(order.created_at, { withTime: true })}
           </li>
@@ -85,11 +90,15 @@ export default function OrderItemCard({
           )}
         </ul>
 
-        <div className="flex gap-1 justify-end font-semibold text-brand-500 text-base">
-          {formatCurrency(order.subtotal)} {" ("}
-          <span className="capitalize">{order.order_items_count || 0}</span>
-          {" items )"}
-        </div>
+        <ul className="flex  gap-1 items-center justify-between font-semibold text-brand-500 text-base">
+          <li className="text-green-600">
+            + {formatCurrency(order.total - (order.cost_snapshot || 0))}
+          </li>
+          <li className="capitalize">
+            $ {formatCurrency(order.total)} {" ("}
+            {order.order_items_count || 0} {" )"}
+          </li>
+        </ul>
 
         {order.status === OrderStatus.PENDING && (
           <div className="flex justify-between">

@@ -13,7 +13,6 @@ import { diffArray } from "@/utils/diff-array";
 import Form from "@/components/form/Form";
 import { ProductRecipeVersion } from "@/types/product";
 import {
-  useCalculateProductCost,
   useDeleteProductRecipeItem,
   useGetProductDetail,
   useGetProductRecipeDetail,
@@ -21,6 +20,8 @@ import {
 } from "@/hooks/queries/use-product";
 import { AddProductRecipeItemsForm, ProductRecipeItemsList } from "..";
 import { formatCurrency } from "@/utils/format-data";
+import InputText from "@/components/ui/input/input-text";
+import Label from "@/components/form/label/label";
 
 export default function ModalProductRecipeEdit({
   isOpen,
@@ -30,7 +31,6 @@ export default function ModalProductRecipeEdit({
   currentRecipe: ProductRecipeVersion;
 }) {
   const [currentId, setCurrentId] = useState(currentRecipe.id);
-  const { data: productInfo } = useGetProductDetail(currentRecipe.product_id);
   const { data: recipeItems, refetch } = useGetProductRecipeDetail(currentId);
   const upsertRecipeItems = useUpsertProductRecipeItem();
   const deleteRecipeItems = useDeleteProductRecipeItem();
@@ -113,6 +113,7 @@ export default function ModalProductRecipeEdit({
       </h3>
       <FormProvider {...productRecipeItems}>
         <Form
+          className="block space-y-4"
           onSubmit={handleSubmit(onSubmit, (err) => {
             console.log("VALIDATION ERROR", err);
           })}
@@ -131,6 +132,15 @@ export default function ModalProductRecipeEdit({
               </p>
             </>
           )}
+
+          <div className="space-y-2">
+            <Label htmlFor="product_recipe_note">Mô tả công thức</Label>
+            <InputText
+              type={"text"}
+              name="product_recipe_note"
+              defaultValue={currentRecipe.recipe_text}
+            />
+          </div>
 
           <p className="mt-4 mb-4 font-semibold">
             Giá vốn: {formatCurrency(currentRecipe.cost)}

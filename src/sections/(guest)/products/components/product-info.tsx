@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
-import { OptionType } from "@/types/menu";
+import { OptionType, OptionTypeMapText } from "@/types/menu";
 import { useCart } from "@/hooks/use-cart";
 import { SelectedOption } from "@/types/cart";
 import { useFilter } from "@/hooks/use-filter";
@@ -87,38 +87,32 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
 
   useEffect(() => {
     if (options.custom && options.custom.length > 0) {
+      console.log(options.custom);
       const productOptionsSchema: FilterItemConfig[] = Object.entries(
         OptionType,
       ).map(([key, value]) => ({
         key: key,
         type: "checkbox",
-        label: value,
+        label: OptionTypeMapText[value],
         isMultiple: true,
         options: options.custom
           .filter((option) => option.option_type == key)
           .map((option) => ({
-            label: `${option.component_name}\t[+${formatCurrency(option.price)}]`,
+            label: `${option.component_name || option.ingredient_name}\t[+${formatCurrency(option.price)}]`,
             value: String(option.option_id),
-            count: option.limit,
+            count: option.limit || 0,
           })),
       }));
 
       setProductOptionSchame(productOptionsSchema);
     }
-    if (options.fixed && options.fixed.length > 0) {
-      const fixedOpt = info.products.product_type
-        ? _product_setting.fixedOptions[info.products.product_type]
-        : [];
-
-      if (!fixedOpt) return;
-
-      const normalOptions = options.fixed.reduce(
+    if (options) {
+      const normalOptions = [...options.fixed, ...options.custom].reduce(
         (acc, option) => {
-          fixedOpt.map((type) => {
-            if (option.option_type === type && option.is_default) {
-              acc[type] = String(option.option_id);
-            }
-          });
+          if (option.is_default) {
+            acc[option.option_type] = String(option.option_id);
+          }
+
           return acc;
         },
         {} as Record<string, string>,

@@ -23,6 +23,7 @@ import { FormField } from "@/components/form";
 import Form from "@/components/form/Form";
 import { categories } from "@/schemas/form-schemas/ingredient-form-schema";
 import { showToast } from "@/lib/toast";
+import { cn } from "@/lib/utils";
 
 const columns: ColumnDefinition[] = [
   { key: "code", title: "Mã" },
@@ -122,7 +123,10 @@ export default function IngredientsTable() {
             {ingredientsData?.data.map((ingredient, index) => (
               <TableRow
                 key={ingredient.id}
-                className={index === editIngredientIndex ? "bg-blue-50" : ""}
+                className={cn(
+                  " ",
+                  index === editIngredientIndex ? "bg-blue-50" : "",
+                )}
               >
                 <TableCell>
                   {index === editIngredientIndex ? (
@@ -237,6 +241,7 @@ export default function IngredientsTable() {
                     ingredient.notes
                   )}
                 </TableCell>
+
                 <TableCell>
                   {index === editIngredientIndex ? (
                     <Button

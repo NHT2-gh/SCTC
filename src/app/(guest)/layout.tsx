@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { itim } from "@/lib/fonts";
+import { FloatingHelpButton } from "@/components/floading-help-button";
 
 export default function GuestLayout({
   children,
@@ -18,6 +19,7 @@ export default function GuestLayout({
           className={`max-w-[31.25rem] relative mx-auto h-fit min-h-[100dvh] overflow-y-scroll ${itim.className}`}
         >
           {children}
+          <FloatingHelpButton />
         </main>
       </div>
     </div>

@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { OptionType } from "@/types/menu";
-import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
+import React from "react";
+import { cn } from "@/lib/utils";
 import { delagothic } from "@/lib/fonts";
 import { SelectedOption } from "@/types/cart";
-import { cn } from "@/lib/utils";
+import { ProductType } from "@/types/product";
+import { OptionTypeMapText } from "@/types/menu";
 import Label from "@/components/form/label/label";
 import { FilterValue } from "@/components/filter/filter-box-render/type";
-import { ProductType } from "@/types/product";
+import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 
 export interface FixedOptionProps {
   productType: ProductType;
@@ -35,7 +35,7 @@ export default function FixedOption({
     <div key={type} className={cn("space-y-4")}>
       <div className="space-y-2">
         <Label className={cn("text-black", delagothic.className)}>
-          {OptionType[type as keyof typeof OptionType]}
+          {OptionTypeMapText[type]}
         </Label>
         <div className="flex flex-wrap gap-2.5">
           {fixedOptions

@@ -21,7 +21,7 @@ export const productInfoValidation = z.object({
 });
 
 export const productOptionValidation = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   option_id: z.string(),
   price: z.number(),
   option_name: z.string().optional(),
@@ -30,8 +30,10 @@ export const productOptionValidation = z.object({
     .optional(),
   menuItemId: z.string().optional(),
   component_id: z.string().optional(),
+  ingredient_id: z.string().optional(),
   description: z.string().optional(),
-  limit: z.number().optional(),
+  is_default: z.boolean().optional(),
+  limit: z.number().nullable().optional(),
 });
 
 export const menuItemEditValidation = z.object({

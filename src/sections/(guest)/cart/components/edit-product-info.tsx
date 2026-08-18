@@ -11,7 +11,7 @@ import { useFilter } from "@/hooks/use-filter";
 import { delagothic, itim } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { CartItem, SelectedOption } from "@/types/cart";
-import { OptionType } from "@/types/menu";
+import { OptionType, OptionTypeMapText } from "@/types/menu";
 import { formatCurrency } from "@/utils/format-data";
 import React, { useEffect, useMemo, useState } from "react";
 import CustomNumberInput from "../../products/components/custom-number-input";
@@ -92,26 +92,43 @@ export default function EditProductInfo({
   const product = cartItem.menu_item.products;
 
   useEffect(() => {
-    if (productOptions?.data.custom && productOptions.data.custom.length > 0) {
+    if (productOptions?.data.custom && productOptions?.data.custom.length > 0) {
       const productOptionsSchema: FilterItemConfig[] = Object.entries(
         OptionType,
       ).map(([key, value]) => ({
         key: key,
         type: "checkbox",
-        label: value,
+        label: OptionTypeMapText[value],
         isMultiple: true,
-        options: productOptions.data.custom
+        options: productOptions?.data.custom
           .filter((option) => option.option_type == key)
           .map((option) => ({
-            label: `${option.component_name} (+${formatCurrency(option.price)})`,
+            label: `${option.component_name || option.ingredient_name}\t[+${formatCurrency(option.price)}]`,
             value: String(option.option_id),
-            count: option.limit,
+            count: option.limit || 0,
           })),
       }));
 
       setProductOptionSchame(productOptionsSchema);
     }
-  }, [productOptions]);
+    if (productOptions?.data) {
+      const normalOptions = [
+        ...productOptions?.data.fixed,
+        ...productOptions?.data.custom,
+      ].reduce(
+        (acc, option) => {
+          if (option.is_default) {
+            acc[option.option_type] = String(option.option_id);
+          }
+
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+
+      setFilterValue(normalOptions);
+    }
+  }, [productOptions?.data.custom, productOptions?.data.fixed]);
 
   useEffect(() => {
     const { selected_options } = cartItem;

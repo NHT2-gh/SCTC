@@ -16,12 +16,10 @@ export default function Select({
   handleOnChange,
   ...props
 }: SelectFieldConfig) {
-  const [valueSelected, setValueSelected] = React.useState(
-    defaultValue || value || "",
-  );
+  const [valueSelected, setValueSelected] = React.useState(value || "");
 
   React.useEffect(() => {
-    setValueSelected(defaultValue || value || "");
+    if (value && String(value).trim()) setValueSelected(value);
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -41,6 +39,7 @@ export default function Select({
             : "text-gray-400 dark:text-gray-400"
         } ${className}`}
         value={valueSelected}
+        defaultValue={defaultValue}
         onChange={handleChange}
         disabled={disabled || readOnly}
       >

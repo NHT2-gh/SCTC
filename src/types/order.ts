@@ -61,6 +61,7 @@ export interface Order {
   customer_name: string;
   customer_phone: string;
   notes: string | null;
+  total: number;
   subtotal: number;
   status: OrderStatus;
   pick_up_time: string;
@@ -69,6 +70,7 @@ export interface Order {
   tracking_order: string;
   payment_method: PaymentMethod;
   order_type: OrderType;
+  cost_snapshot?: number;
   created_at: string;
   updated_at: string;
   table_id?: number | null;

@@ -14,19 +14,13 @@ export const APP_ROUTES = {
     INGREDIENTS: {
       LIST: () => `${APP_ROUTES.ADMIN.BASE}/ingredients`,
       ADD: () => `${APP_ROUTES.ADMIN.BASE}/ingredients/add`,
-      // ID: {
-      //   DETAIL: (id: string) =>
-      //     `${APP_ROUTES.ADMIN.INGREDIENTS.LIST()}/${id}/detail`,
-      //   EDIT: (id: string) =>
-      //     `${APP_ROUTES.ADMIN.INGREDIENTS.LIST()}/${id}/edit`,
-      // },
     },
     RECIPES: {
       BASE: "/admin/recipes",
-      COMPONENTS_RECIPES: () => `${APP_ROUTES.ADMIN.RECIPES.BASE}/components`,
-      PRODUCT_RECIPES: () => `${APP_ROUTES.ADMIN.RECIPES.BASE}/product-recipes`,
+      COMPONENTS_RECIPES: (componentId?: string) =>
+        `${APP_ROUTES.ADMIN.RECIPES.BASE}/components${componentId ? `?component_id=${componentId}` : ""}`,
+      PRODUCT_RECIPES: () => `${APP_ROUTES.ADMIN.RECIPES.BASE}/products`,
     },
-
     MENUS: {
       BASE: "/admin/menus",
       DETAIL: (id: string) => `${APP_ROUTES.ADMIN.MENUS.BASE}/${id}`,
@@ -39,24 +33,20 @@ export const APP_ROUTES = {
           `${APP_ROUTES.ADMIN.MENUS.DETAIL(menuId)}/${itemId}`,
       },
     },
-
     PRODUCTS: {
       BASE: "/admin/products",
       ADD: () => `${APP_ROUTES.ADMIN.PRODUCTS.BASE}/add`,
     },
-
     ORDER: {
       BASE: "/admin/orders",
       ADD: () => `${APP_ROUTES.ADMIN.BASE}/orders/add`,
     },
-
     PROMOTIONS: {
       BASE: "/admin/promotions",
       ADD: () => `${APP_ROUTES.ADMIN.PROMOTIONS.BASE}/add`,
       UPDATE: (id: string) => `${APP_ROUTES.ADMIN.PROMOTIONS.BASE}/${id}`,
     },
   },
-
   GUEST: {
     ROOT: "/",
     PRODUCT: {

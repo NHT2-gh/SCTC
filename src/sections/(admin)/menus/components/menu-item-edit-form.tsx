@@ -33,6 +33,8 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { v4 } from "uuid";
 import { AddProductOptionForm } from ".";
 import { DataEmpty } from "@/components/common/table/state";
+import { Edit2Icon, Trash2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
   const [isUploading, setIsUploading] = useState(false);
@@ -52,9 +54,12 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
       type: "custom",
     },
   });
+  const [edittingOption, setEdittingOption] =
+    useState<ProductOptionValidation | null>(null);
   const updateInfo = useUpdateProductInfo(data.info.menu_id);
   const upsertProductOptions = useUpsertProductOption();
   const deleteProductOptions = useDeleteMenuItemOption();
+
   const editForm = useForm<MenuItemEditValidation>({
     resolver: zodResolver(menuItemEditValidation),
     mode: "onChange",
@@ -74,17 +79,22 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
           option_id: String(option.option_id),
           option_name: option.component_name,
           component_id: option.component_id,
+          ingredient_id: option.ingredient_id,
+          ingredient_name: option.ingredient_name,
           price: option.price,
           option_type: option.option_type,
           description: option.description || "",
-          limit: option.limit || 0,
+          limit: option.limit || null,
+          is_default: option.is_default || false,
         };
       }),
     },
   });
+
   const {
     handleSubmit,
     setValue,
+    reset,
     formState: { dirtyFields, isLoading },
   } = editForm;
 
@@ -160,7 +170,13 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
           menuItemId: data.info.id,
           option_name: optionInfo.option_name,
           option_id: String(optionInfo.id),
+          ingredient_id: optionInfo.ingredients?.id,
+          component_id: optionInfo.components?.id,
           price: optionInfo.price,
+          limit: optionInfo.limit || null,
+          option_type: optionInfo.option_type,
+          is_default: optionInfo.is_default || false,
+          description: optionInfo.description || "",
         },
       ];
     });
@@ -176,7 +192,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
       if (!reult.success) {
         throw new Error("Update failed");
       }
-
+      reset();
       showToast.success({ title: "Update info success" });
     } catch (error) {
       showToast.error({
@@ -200,6 +216,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
             showToast.success({ title: "Thành công" });
         } catch {}
       }
+
       if (deleted) {
         try {
           const deleteProductOptionResult =
@@ -284,6 +301,14 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
                   title: "Limit",
                   key: "limit",
                 },
+                {
+                  title: "Is Default",
+                  key: "is_default",
+                },
+                {
+                  title: "",
+                  key: "actions",
+                },
               ]}
             />
 
@@ -311,16 +336,65 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
                       handleOnChange={(value: number) =>
                         setValue(`options.${index}.limit`, value)
                       }
-                      type="number"
-                      value={option.limit}
+                      type={"number"}
+                      value={option?.limit ?? 9999}
                     />
+                  </TableCell>
+
+                  <TableCell>
+                    <Switch
+                      value={option.is_default}
+                      onChange={(checked) =>
+                        setValue(`options.${index}.is_default`, checked)
+                      }
+                    />
+                  </TableCell>
+
+                  <TableCell className="flex gap-2 items-center h-full">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEdittingOption(option)}
+                    >
+                      <Edit2Icon size={16} />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        handleChangeItems(
+                          currentOptions
+                            .filter(
+                              (item) => item.option_id !== option.option_id,
+                            )
+                            .map((item) => String(item.option_id)),
+                        )
+                      }
+                    >
+                      <Trash2 size={16} />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
 
-          <AddProductOptionForm />
+          <AddProductOptionForm
+            defaultValue={
+              edittingOption
+                ? {
+                    id: Number(edittingOption.option_id),
+                    option_name: edittingOption.option_name!,
+                    option_type: edittingOption.option_type!,
+                    price: edittingOption.price,
+                    component_id: edittingOption.component_id,
+                    ingredient_id: edittingOption.ingredient_id,
+                    description: edittingOption.description ?? "",
+                    is_default: edittingOption.is_default ?? false,
+                  }
+                : undefined
+            }
+          />
         </ComponentCard>
       )}
 

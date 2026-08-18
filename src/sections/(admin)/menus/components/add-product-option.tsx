@@ -1,44 +1,57 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import Form from "@/components/form/Form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  AddProductOptionValidation,
-  addProductOptionValidation,
+  UpsertProductOptionValidation,
+  upsertProductOptionValidation,
 } from "@/schemas/validation/product-option.validation";
 import { FormField } from "@/components/form";
-import { OptionType } from "@/types/menu";
+import { OptionType, OptionTypeMapText } from "@/types/menu";
 import { useComponents } from "@/hooks/queries/use-component";
 import { useIngredients } from "@/hooks/queries/use-ingredient";
-import { useAddProductOption } from "@/hooks/queries/use-product";
+import { useUpsertProductOption } from "@/hooks/queries/use-product";
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 
-export default function AddProductOption() {
+interface AddProductOptionProps {
+  defaultValue?: UpsertProductOptionValidation;
+}
+
+export default function AddProductOption({
+  defaultValue,
+}: AddProductOptionProps) {
   const { data: components } = useComponents();
   const { data: ingredients } = useIngredients();
-  const addOption = useAddProductOption();
-  const addProductOptionForm = useForm<AddProductOptionValidation>({
-    resolver: zodResolver(addProductOptionValidation),
+  const upsertProductOption = useUpsertProductOption();
+  const addProductOptionForm = useForm<UpsertProductOptionValidation>({
+    resolver: zodResolver(upsertProductOptionValidation),
     mode: "onChange",
-    defaultValues: {
+    defaultValues: defaultValue ?? {
       option_name: "",
       price: 0,
       description: "",
-
       option_type: "",
     },
   });
 
-  const { handleSubmit } = addProductOptionForm;
-  const onSubmit = async (data: AddProductOptionValidation) => {
+  const { handleSubmit, reset } = addProductOptionForm;
+
+  useEffect(() => {
+    if (defaultValue) {
+      reset(defaultValue);
+    }
+  }, [defaultValue]);
+
+  const onSubmit = async (data: UpsertProductOptionValidation) => {
     try {
-      const result = await addOption.mutateAsync(data);
+      const result = await upsertProductOption.mutateAsync(data);
 
       if (result.success) {
         showToast.success({ title: "Thêm option thành công" });
+        reset();
       }
     } catch (error) {
       showToast.error({ title: "Thêm option thất bại" });
@@ -56,6 +69,7 @@ export default function AddProductOption() {
             name: "option_name",
             label: "Name",
             placeholder: "Name",
+            required: true,
           }}
         />
         <FormField
@@ -66,6 +80,7 @@ export default function AddProductOption() {
             label: "Price",
             placeholder: "Price",
             formatCurrency: true,
+            required: true,
           }}
         />
 
@@ -78,10 +93,11 @@ export default function AddProductOption() {
             placeholder: "Option Type",
             options: Object.entries(OptionType).map(([key, value]) => {
               return {
-                label: value,
+                label: OptionTypeMapText[value],
                 value: key,
               };
             }),
+            required: true,
           }}
         />
         {components?.data && (
@@ -106,11 +122,11 @@ export default function AddProductOption() {
             field={{
               type: "select",
               name: "ingredient_id",
-              label: "Ingredient ID",
-              placeholder: "Ingredient ID",
+              label: "Ingredient",
+              placeholder: "Ingredient",
               options: ingredients?.data.map((item) => ({
                 value: item.id,
-                label: item.name,
+                label: `${item.name} ${item.notes ? `(${item.notes})` : ""}`,
               })),
             }}
           />
@@ -126,13 +142,25 @@ export default function AddProductOption() {
             placeholder: "Description",
           }}
         />
+
+        <FormField
+          form={addProductOptionForm}
+          field={{
+            type: "switch",
+            name: "is_default",
+            label: "Đặt làm lựa chọn mặc định",
+            description: "Option này có là option mặc định không",
+          }}
+        />
       </Form>
+
       <Button
+        className="mt-5"
         onClick={handleSubmit(onSubmit, (err) => {
           console.log("VALIDATION ERROR", err);
         })}
       >
-        Add
+        Save
       </Button>
     </div>
   );

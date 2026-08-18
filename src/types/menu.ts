@@ -1,4 +1,5 @@
 import { Component } from "./component";
+import { Ingredient } from "./ingredient";
 import { Product } from "./product";
 
 export enum MenuEnumType {
@@ -8,14 +9,24 @@ export enum MenuEnumType {
 }
 
 export enum OptionType {
-  topping = "Topping",
-  extra = "Extra",
-  upgrade = "Upgrade",
-  replace = "Replace",
-  ice = "Đá",
-  sweet = "Độ ngọt",
-  alcoholic = "Độ cồn",
+  topping = "topping",
+  extra = "extra",
+  upgrade = "upgrade",
+  replace = "replace",
+  ice = "ice",
+  sweet = "sweet",
+  alcoholic = "alcoholic",
 }
+
+export const OptionTypeMapText: Record<OptionType, string> = {
+  [OptionType.topping]: "Topping",
+  [OptionType.extra]: "Extra",
+  [OptionType.upgrade]: "Upgrade",
+  [OptionType.replace]: "Replace",
+  [OptionType.ice]: "Đá",
+  [OptionType.sweet]: "Độ ngọt",
+  [OptionType.alcoholic]: "Độ cồn",
+};
 
 export type MenuType = keyof typeof MenuEnumType;
 
@@ -47,10 +58,12 @@ export interface MenuLayoutItem {
 export interface MenuItemOption {
   id: string;
   price: number;
-  components: Component;
-  option_type: keyof typeof OptionType;
+  components?: Component;
+  ingredients?: Ingredient;
+  option_type: OptionType;
   option_name: string;
   description?: string;
+  limit: number | null;
   is_default?: boolean;
 }
 
@@ -60,5 +73,5 @@ export interface ItemOptionDetail {
   menu_item_id: string;
   menu_items_options: MenuItemOption;
   menu_items: MenuItem;
-  limit: number;
+  limit: number | null;
 }
