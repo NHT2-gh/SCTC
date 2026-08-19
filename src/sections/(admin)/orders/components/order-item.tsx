@@ -130,6 +130,7 @@ export default function OrderItemCard({
           description={"This action cannot be undone"}
           onConfirm={() => {
             onCancel(order.id);
+            modalAlert.closeModal();
           }}
           confirmText={"Cancel order"}
         />

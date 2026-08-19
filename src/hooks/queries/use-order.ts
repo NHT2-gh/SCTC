@@ -77,13 +77,6 @@ export function useUpdateOrderStatus() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.order.detail(variables.ids[0]),
       });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.order.getAll({
-          filters: {
-            status: variables.status!,
-          },
-        }),
-      });
     },
   });
 }

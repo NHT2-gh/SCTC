@@ -74,8 +74,6 @@ export default function OrdersPageView() {
       });
 
       if (result.success) {
-        refetchOrders();
-
         showToast.success({ title: "Order updated successfully" });
       }
     } catch (error) {
@@ -224,9 +222,11 @@ export default function OrdersPageView() {
                   }}
                   onConfirm={(orderId) => {
                     handleUpdateStatus([orderId], OrderStatus.CONFIRMED);
+                    refetchOrders();
                   }}
                   onCancel={(orderId) => {
                     handleUpdateStatus([orderId], OrderStatus.CANCELLED);
+                    refetchOrders();
                   }}
                 />
               </div>
@@ -295,6 +295,7 @@ export default function OrdersPageView() {
           isOpen={modalViewOrder.isOpen}
           onClose={() => {
             modalViewOrder.closeModal();
+            refetchOrders();
             setOrderView(undefined);
           }}
           trackingCode={orderView}

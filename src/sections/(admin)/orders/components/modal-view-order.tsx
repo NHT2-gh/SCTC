@@ -94,12 +94,36 @@ export default function ModalViewOrder({
         dropdownContent={
           <>
             <DropdownItem
-              onItemClick={() => {
-                onUpdateStatus([order.data.order.id], OrderStatus.CANCELLED);
-                refetch();
+              onItemClick={async () => {
+                await onUpdateStatus(
+                  [order.data.order.id],
+                  OrderStatus.CANCELLED,
+                );
+                await refetch();
               }}
             >
               Cancel Order
+            </DropdownItem>
+
+            <DropdownItem
+              onItemClick={async () => {
+                await onUpdateStatus(
+                  [order.data.order.id],
+                  Object.keys(_product_setting.processOrder)[
+                    _product_setting.processOrder[order.data.order.status]
+                      .value - 1
+                  ] as OrderStatus,
+                );
+                await refetch();
+              }}
+            >
+              Previous Step{" "}
+              {
+                Object.values(_product_setting.processOrder)[
+                  _product_setting.processOrder[order.data.order.status].value -
+                    1
+                ]?.label
+              }
             </DropdownItem>
           </>
         }

@@ -8,7 +8,7 @@ export const allOptionFixedType: OptionType[] = [
   OptionType.alcoholic,
 ];
 
-const fixedOptionType: Record<keyof typeof ProductType, OptionType[]> = {
+export const fixedOptionType: Record<ProductType, OptionType[]> = {
   food: [],
   coffee: [OptionType.sweet, OptionType.ice],
   cocktail: [OptionType.alcoholic],

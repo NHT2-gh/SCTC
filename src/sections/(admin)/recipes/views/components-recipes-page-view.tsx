@@ -23,7 +23,7 @@ export default function ComponentsRecipesPageView() {
   );
   const modalViewComponentItems = useModal();
   const [viewComponentRecipe, setViewComponentRecipe] =
-    useUrlState<string>("component_view");
+    useUrlState<string>("component_id ");
   const { data: componentsData, error, isLoading } = useComponents(searchText);
   const { data: componentRecipeItems } = useGetComponentRecipeItems(
     componentSelected?.id!,

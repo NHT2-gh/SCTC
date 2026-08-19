@@ -17,11 +17,9 @@ import {
   useUpsertComponentRecipeItems,
 } from "@/hooks/queries/use-component";
 import Form from "@/components/form/Form";
-import { Alert } from "@/components/alert";
 import { FormField } from "@/components/form";
 import { componentService } from "@/services/component.service";
 import { showToast } from "@/lib/toast";
-import { useCalculateProductCost } from "@/hooks/queries/use-product";
 
 interface ModalComponentRecipeItemsProps {
   component: Component;

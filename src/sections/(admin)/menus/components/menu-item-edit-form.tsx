@@ -24,7 +24,7 @@ import {
   ProductOptionValidation,
 } from "@/schemas/validation/menu.validation";
 import { uploadImage } from "@/supabase/storage/storageClinets";
-import { ProductDetail } from "@/types/product";
+import { ProductDetail, ProductType } from "@/types/product";
 import { diffArray } from "@/utils/diff-array";
 import { formatCurrency } from "@/utils/format-data";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -65,29 +65,36 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
     mode: "onChange",
     defaultValues: {
       info: {
-        id: data.info.products.id,
-        name: data.info.products.name,
-        description: data.info.products.description,
-        selling_price: data.info.products.selling_price,
-        image_url: data.info.products.image_url,
-        is_active: data.info.products.is_active,
+        id: data.info.products.id || "",
+        name: data.info.products.name || "",
+        description: data.info.products.description || "",
+        selling_price: data.info.products.selling_price || 0,
+        image_url: data.info.products.image_url || [],
+        is_active: data.info.products.is_active || false,
+        cost: data.info.products.cost || 0,
+        product_type: data.info.products.product_type || ProductType.coffee,
       },
-      options: [...data.options.custom].map((option) => {
-        return {
-          id: option.id,
-          menuItemId: option.menu_item_id,
-          option_id: String(option.option_id),
-          option_name: option.component_name,
-          component_id: option.component_id,
-          ingredient_id: option.ingredient_id,
-          ingredient_name: option.ingredient_name,
-          price: option.price,
-          option_type: option.option_type,
-          description: option.description || "",
-          limit: option.limit || null,
-          is_default: option.is_default || false,
-        };
-      }),
+      options: [...data.options.custom]
+        .filter((option) => {
+          if (!option.id) return false;
+          return true;
+        })
+        .map((option) => {
+          return {
+            id: option.id || "",
+            menuItemId: option.menu_item_id,
+            option_id: String(option.option_id),
+            option_name: option.component_name,
+            component_id: option.component_id,
+            ingredient_id: option.ingredient_id,
+            ingredient_name: option.ingredient_name,
+            price: option.price,
+            option_type: option.option_type,
+            description: option.description || "",
+            limit: option.limit || null,
+            is_default: option.is_default || false,
+          };
+        }),
     },
   });
 
@@ -241,7 +248,36 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
       >
         <FormField
           form={editForm}
-          field={{ name: "info.name", type: "text", label: "Tên sản phẩm" }}
+          field={{
+            name: "info.name",
+            type: "text",
+            label: "Tên sản phẩm",
+            required: true,
+          }}
+        />
+
+        <FormField
+          form={editForm}
+          field={{
+            name: "info.product_type",
+            type: "select",
+            label: "Loại sản phẩm",
+            required: true,
+            options: Object.entries(ProductType).map(([key, value]) => ({
+              value: value,
+              label: key,
+            })),
+          }}
+        />
+
+        <FormField
+          form={editForm}
+          field={{
+            name: "info.cost",
+            type: "number",
+            label: "Giá vốn",
+            formatCurrency: true,
+          }}
         />
 
         <FormField

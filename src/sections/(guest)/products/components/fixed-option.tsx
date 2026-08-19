@@ -39,14 +39,14 @@ export default function FixedOption({
         </Label>
         <div className="flex flex-wrap gap-2.5">
           {fixedOptions
-            .filter((item) => item.option_type === type)
+            .filter((option) => option.option_type === type)
             .map((option) => (
               <button
                 key={option.option_id}
                 onClick={() => {
                   value[option.option_type] === String(option.option_id) &&
                   !option.is_default
-                    ? remove(type)
+                    ? remove(option.option_type)
                     : update(option.option_type, String(option.option_id));
                 }}
                 className={cn(

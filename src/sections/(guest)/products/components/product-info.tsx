@@ -87,7 +87,6 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
 
   useEffect(() => {
     if (options.custom && options.custom.length > 0) {
-      console.log(options.custom);
       const productOptionsSchema: FilterItemConfig[] = Object.entries(
         OptionType,
       ).map(([key, value]) => ({
@@ -106,6 +105,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
 
       setProductOptionSchame(productOptionsSchema);
     }
+
     if (options) {
       const normalOptions = [...options.fixed, ...options.custom].reduce(
         (acc, option) => {

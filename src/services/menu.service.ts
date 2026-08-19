@@ -23,7 +23,9 @@ import { UpsertProductOptionValidation } from "@/schemas/validation/product-opti
 import {
   _product_setting,
   allOptionFixedType,
+  fixedOptionType,
 } from "@/_mocks/_setting/_product_detal_setting";
+import { ProductType } from "@/types/product";
 
 class MenuService {
   private baseTable: string;
@@ -372,11 +374,16 @@ class MenuService {
     };
   }
 
-  async getFixedOptions(): Promise<ResponseStandard<SelectedOption[]>> {
-    const query = supabase
-      .from("menu_items_options")
-      .select(`*`)
-      .in("option_type", allOptionFixedType);
+  async getFixedOptions(
+    productType?: ProductType,
+  ): Promise<ResponseStandard<SelectedOption[]>> {
+    const query = supabase.from("menu_items_options").select(`*`);
+
+    if (productType) {
+      query.in("option_type", fixedOptionType[productType]);
+    } else {
+      query.in("option_type", allOptionFixedType);
+    }
 
     const { data: fixedOptions, error } = await query;
 
@@ -396,12 +403,13 @@ class MenuService {
 
   async getProductOptions(
     menuItemId: string,
+    productType?: ProductType,
   ): Promise<
     ResponseStandard<{ custom: SelectedOption[]; fixed: SelectedOption[] }>
   > {
     const [customOptions, fiexedOptions] = await Promise.all([
       this.getMenuItemOptionsDetail(menuItemId),
-      this.getFixedOptions(),
+      this.getFixedOptions(productType),
     ]);
 
     return {

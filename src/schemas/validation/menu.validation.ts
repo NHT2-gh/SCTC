@@ -1,4 +1,5 @@
 import { OptionType } from "@/types/menu";
+import { ProductType } from "@/types/product";
 import * as z from "zod";
 
 export const MenuLayoutItemEditValidation = z.object({
@@ -16,6 +17,8 @@ export const productInfoValidation = z.object({
   name: z.string().optional(),
   selling_price: z.number().optional(),
   description: z.string().nullable().optional(),
+  cost: z.number().optional(),
+  product_type: z.enum(ProductType).optional(),
   image_url: z.array(z.string()).nullable().optional(),
   is_active: z.boolean().optional(),
 });

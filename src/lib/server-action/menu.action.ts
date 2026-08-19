@@ -21,20 +21,20 @@ export async function serverActionGetMenuLayoutPublic(): Promise<
 export async function serverActionGetMenuItemInfo(
   menuItemId: string,
 ): Promise<ServerActionResponse<ProductDetail | null>> {
-  const [info, options] = await Promise.all([
-    menuService.getMenuItem(menuItemId),
-    menuService.getProductOptions(menuItemId),
-  ]).catch(() => {
-    return [null, null];
-  });
+  const info = await menuService.getMenuItem(menuItemId);
 
-  if (!info || !options) {
+  if (!info.success || !info.data) {
     return {
       data: null,
       success: false,
       error: "Lỗi truy cập thông tin sản phẩm",
     };
   }
+
+  const productOptions = await menuService.getProductOptions(
+    menuItemId,
+    info.data.products.product_type,
+  );
 
   const tableInfo = await getCurrentTable();
 
@@ -49,7 +49,10 @@ export async function serverActionGetMenuItemInfo(
   return {
     data: {
       info: info.data,
-      options: options.data,
+      options: {
+        custom: productOptions.data.custom || [],
+        fixed: productOptions.data.fixed || [],
+      },
       isAllowOrder,
     },
     success: true,
