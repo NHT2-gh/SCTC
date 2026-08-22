@@ -26,7 +26,7 @@ export default function ComponentsRecipesPageView() {
     useUrlState<string>("component_id ");
   const { data: componentsData, error, isLoading } = useComponents(searchText);
   const { data: componentRecipeItems } = useGetComponentRecipeItems(
-    componentSelected?.id!,
+    componentSelected?.id,
   );
 
   useEffect(() => {
@@ -34,9 +34,12 @@ export default function ComponentsRecipesPageView() {
     const component = componentsData?.data.find(
       (item) => item.id === viewComponentRecipe,
     );
+
     if (component) {
       setComponentSelected(component);
       modalViewComponentItems.openModal();
+    } else {
+      modalViewComponentItems.closeModal();
     }
   }, [viewComponentRecipe, componentsData]);
   return (
@@ -61,7 +64,7 @@ export default function ComponentsRecipesPageView() {
                   key={item.id}
                   data={item}
                   onSelect={(id) => {
-                    setViewComponentRecipe(item.id);
+                    setViewComponentRecipe(id);
                   }}
                 />
               ))
@@ -80,7 +83,7 @@ export default function ComponentsRecipesPageView() {
       {modalViewComponentItems.isOpen && (
         <ModalComponentRecipeItems
           component={componentSelected!}
-          items={componentRecipeItems?.data!}
+          items={componentRecipeItems?.data || []}
           isOpen={modalViewComponentItems.isOpen}
           onClose={modalViewComponentItems.closeModal}
         />

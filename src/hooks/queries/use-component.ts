@@ -11,9 +11,9 @@ export function useComponents(searchName?: string) {
     queryFn: () => componentService.getAllComponents(searchName),
   });
 }
-export function useGetComponentRecipeItems(id: string | null) {
+export function useGetComponentRecipeItems(id?: string) {
   return useQuery({
-    queryKey: queryKeys.component.getById(id),
+    queryKey: queryKeys.component.getById(id!),
     queryFn: () => componentService.getComponentRecipeItems(id!),
   });
 }

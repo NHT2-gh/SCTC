@@ -1,6 +1,6 @@
 import Modal, { type ModalProps } from "@/components/ui/modal/modal";
 import { Component, ComponentRecipeItem } from "@/types/component";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AddComponentRecipeItemsForm } from "..";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -60,6 +60,15 @@ export default function ModalComponentRecipeItems({
     handleSubmit,
   } = componentRecipeItems;
 
+  useEffect(() => {
+    if (items.length > 0) {
+      componentRecipeItems.reset({
+        recipe_items: items,
+        yield_quantity: component.yield_quantity,
+      });
+    }
+  }, [items]);
+
   const onSubmit = async (data: ComponentRecipeItemsValidationSchema) => {
     if (dirtyFields.recipe_items) {
       const diffComponentItems = diffArray<RecipeItemValidationSchema>({
@@ -114,15 +123,17 @@ export default function ModalComponentRecipeItems({
       </h3>
       <FormProvider {...componentRecipeItems}>
         <Form
+          className="grid !grid-cols-1 gap-4"
           onSubmit={handleSubmit(onSubmit, (err) => {
             console.log("VALIDATION ERROR", err);
           })}
         >
-          {items.length === 0 && !dirtyFields.recipe_items && (
+          {items && items.length === 0 && !dirtyFields.recipe_items && (
             <p className="italic text-gray-500 dark:text-gray-400">
               Chưa có nguyên liệu nào được thêm
             </p>
           )}
+
           <ComponentRecipeItemsList />
 
           <FormField
@@ -131,7 +142,7 @@ export default function ModalComponentRecipeItems({
               label: "Khối lượng thành phẩm (g)",
               name: "yield_quantity",
             }}
-            className="w-full max-w-[300px]"
+            className="w-full"
             form={componentRecipeItems}
           />
           {result && (
