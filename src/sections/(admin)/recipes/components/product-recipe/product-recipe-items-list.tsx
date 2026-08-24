@@ -34,7 +34,7 @@ export default function ProductRecipeItemsList() {
   const [viewComponent, setViewComponent] = useState<Component | null>(null);
 
   const { data: componentRecipeItems } = useGetComponentRecipeItems(
-    viewComponent?.id || null,
+    viewComponent?.id,
   );
 
   return (
