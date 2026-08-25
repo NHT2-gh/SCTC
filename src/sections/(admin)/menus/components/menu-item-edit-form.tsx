@@ -276,6 +276,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
             name: "info.cost",
             type: "number",
             label: "Giá vốn",
+            readOnly: true,
             formatCurrency: true,
           }}
         />

@@ -14,7 +14,6 @@ import Form from "@/components/form/Form";
 import { ProductRecipeVersion } from "@/types/product";
 import {
   useDeleteProductRecipeItem,
-  useGetProductDetail,
   useGetProductRecipeDetail,
   useUpsertProductRecipeItem,
 } from "@/hooks/queries/use-product";

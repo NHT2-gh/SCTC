@@ -34,7 +34,11 @@ export default function AddProductRecipeItemsForm({
 
   const addProductRecipeItemForm = useForm<ProductRecipeItemValidationSchema>({
     resolver: zodResolver(productRecipeItemValidationSchema),
-    defaultValues: {},
+    defaultValues: {
+      quantity: 0,
+      ingredient_id: undefined,
+      component_id: undefined,
+    },
   });
 
   const { handleSubmit, reset } = addProductRecipeItemForm;
@@ -48,7 +52,12 @@ export default function AddProductRecipeItemsForm({
       recipe_version_id: productRecipeVersionId,
       item_type: data.component_id ? ItemType.COMPONENT : ItemType.INGREDIENT,
     });
-    reset();
+
+    reset({
+      quantity: 0,
+      ingredient_id: undefined,
+      component_id: undefined,
+    });
   };
 
   return (
@@ -79,6 +88,7 @@ export default function AddProductRecipeItemsForm({
           field={{
             name: "component_id",
             type: "select",
+
             label: "Thành phần",
             placeholder: "Chọn thành phần",
             options:

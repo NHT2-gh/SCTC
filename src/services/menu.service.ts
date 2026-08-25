@@ -172,6 +172,7 @@ class MenuService {
         description: data.description,
         image_url: data.image_url,
         is_active: data.is_active,
+        product_type: data.product_type,
       })
       .eq("id", data.id);
 
