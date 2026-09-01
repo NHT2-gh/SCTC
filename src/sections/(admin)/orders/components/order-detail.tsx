@@ -27,6 +27,7 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
             <p>No:</p>{" "}
             <Link
               className="font-bold text-blue-400"
+              target="_blank"
               href={APP_ROUTES.GUEST.ORDER.VIEW(data.order.tracking_order)}
             >
               {data.order.tracking_order}

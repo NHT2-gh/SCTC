@@ -1,3 +1,5 @@
+import { Ingredient } from "./ingredient";
+
 export enum ComponentType {
   concentrate = "Thành phần cơ bản",
   syrup = "Syrup",
@@ -24,4 +26,5 @@ export interface ComponentRecipeItem {
   ingredient_id: string;
   quantity: number;
   component_id: string;
+  ingredients?: Ingredient;
 }

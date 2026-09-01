@@ -1,15 +1,14 @@
 import React from "react";
-import Image from "next/image";
-import { Product } from "@/types/product";
-import { formatCurrency } from "@/utils/format-data";
-import { cn } from "@/lib/utils";
-import { Switch } from "@/components/ui/switch";
-import { useUpdateProductInfo } from "@/hooks/queries/use-menu";
-import { MenuItem } from "@/types/menu";
-import { mapErrorToMessage } from "@/lib/error/app-error";
-import { showToast } from "@/lib/toast";
 import Link from "next/link";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { MenuItem } from "@/types/menu";
+import { showToast } from "@/lib/toast";
+import { Switch } from "@/components/ui/switch";
 import { APP_ROUTES } from "@/config/app-routes";
+import { formatCurrency } from "@/utils/format-data";
+import { mapErrorToMessage } from "@/lib/error/app-error";
+import { useUpdateProductInfo } from "@/hooks/queries/use-menu";
 
 interface DrinkCardProps {
   item: MenuItem;
@@ -22,7 +21,7 @@ export default function ProductCard({ item, className }: DrinkCardProps) {
   const handleUpdate = async (value: boolean) => {
     try {
       const result = await updateMenuItem.mutateAsync({
-        id: item.id,
+        id: item.products.id,
         is_active: value,
       });
 

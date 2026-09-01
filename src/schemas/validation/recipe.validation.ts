@@ -12,6 +12,7 @@ export const productRecipeItemValidationSchema = z.object({
 
 export const productRecipeItemsValidationSchema = z.object({
   recipe_items: z.array(productRecipeItemValidationSchema),
+  note: z.string().optional(),
 });
 
 export type ProductRecipeItemValidationSchema = z.infer<

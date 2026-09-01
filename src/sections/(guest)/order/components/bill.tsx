@@ -1,22 +1,24 @@
 "use client";
 import React, { useRef, useState } from "react";
-import Image from "next/image";
+
+import Link from "next/link";
 import {
   MapTextPaymentMethod,
   MapTextStatusOrder,
   OrderDetail,
   OrderStatus,
 } from "@/types/order";
-import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 import {
   formatCurrency,
   formatDateTime,
   formatDateTimev2,
 } from "@/utils/format-data";
-import { CheckCircle, CopyIcon } from "lucide-react";
-import GenerateBankQr from "./generate-bank-qr";
-import { useCopyImage } from "@/hooks/use-copy-image";
 import { showToast } from "@/lib/toast";
+import GenerateBankQr from "./generate-bank-qr";
+import { APP_ROUTES } from "@/config/app-routes";
+import { CheckCircle, CopyIcon } from "lucide-react";
+import { useCopyImage } from "@/hooks/use-copy-image";
+import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 
 interface BillComponentProps {
   data: OrderDetail;
@@ -68,12 +70,12 @@ export default function Bill({
         className="text-sm [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2] px-3.5 py-8 space-y-4"
       >
         <div className="w-full flex items-center justify-between text-center">
-          <Image
-            width={100}
-            height={100}
-            src={"/images/logo/logo-text-1.webp"}
-            alt={"logo"}
+          <Link
+            href={APP_ROUTES.GUEST.ROOT}
+            className="size-[100px] bg-[url('/images/logo/logo-text-1.webp')] bg-center bg-no-repeat bg-contain"
+            aria-label="logo"
           />
+
           <div className="text-left">
             <p className="mt-3 font-bold">No: {data.order.tracking_order}</p>
             <p className="w-fit">

@@ -10,8 +10,9 @@ import {
   useGetComponentRecipeItems,
 } from "@/hooks/queries/use-component";
 import { Select } from "@/components/ui/select";
-import { NumberInput } from "@/components/ui/input";
+import { NumberInput, TextInput } from "@/components/ui/input";
 import { Component } from "@/types/component";
+import { formatCurrency } from "@/utils/format-data";
 
 export default function ProductRecipeItemsList() {
   const productRecipeForm =
@@ -26,7 +27,6 @@ export default function ProductRecipeItemsList() {
   const productRecipeItems = productRecipeForm.watch("recipe_items");
 
   const {
-    watch,
     getValues,
     formState: { errors, isLoading },
   } = productRecipeForm;
@@ -46,33 +46,37 @@ export default function ProductRecipeItemsList() {
         productRecipeItems.map((field, index) => (
           <div key={field.id} className="">
             <div className="flex gap-4 items-center">
-              <FormField
-                form={productRecipeForm}
-                field={{
-                  name: `recipe_items.${index}.ingredient_id`,
-                  type: "select",
-                  placeholder: "Chọn nguyên liệu",
-                  options:
-                    ingredients?.data.map((item) => ({
-                      label: `${item.name} ${item.notes ? `(${item.notes})` : ""}`,
-                      value: item.id,
-                    })) || [],
-                }}
-              />
+              {field.ingredient_id && (
+                <FormField
+                  form={productRecipeForm}
+                  field={{
+                    name: `recipe_items.${index}.ingredient_id`,
+                    type: "select",
+                    placeholder: "Chọn nguyên liệu",
+                    options:
+                      ingredients?.data.map((item) => ({
+                        label: `${item.name} ${item.notes ? `(${item.notes})` : ""}`,
+                        value: item.id,
+                      })) || [],
+                  }}
+                />
+              )}
 
-              <FormField
-                form={productRecipeForm}
-                field={{
-                  name: `recipe_items.${index}.component_id`,
-                  type: "select",
-                  placeholder: "Chọn thành phần",
-                  options:
-                    components?.data.map((item) => ({
-                      label: `${item.name} ${item.description ? `(${item.description})` : ""}`,
-                      value: item.id,
-                    })) || [],
-                }}
-              />
+              {field.component_id && (
+                <FormField
+                  form={productRecipeForm}
+                  field={{
+                    name: `recipe_items.${index}.component_id`,
+                    type: "select",
+                    placeholder: "Chọn thành phần",
+                    options:
+                      components?.data.map((item) => ({
+                        label: `${item.name} ${item.description ? `(${item.description})` : ""}`,
+                        value: item.id,
+                      })) || [],
+                  }}
+                />
+              )}
 
               <FormField
                 form={productRecipeForm}
@@ -84,6 +88,7 @@ export default function ProductRecipeItemsList() {
               <Button
                 size="icon"
                 variant="outline"
+                disabled={!field.component_id}
                 onClick={() => {
                   const component = components?.data.find(
                     (item) =>
@@ -106,13 +111,13 @@ export default function ProductRecipeItemsList() {
             </div>
 
             {viewComponent?.id === field.component_id && viewComponent && (
-              <ul className="space-y-2 mt-3 list-inside list-decimal ml-3">
+              <ul className="space-y-5 mt-4 list-inside bg-gray-100 p-4 rounded-lg">
                 {componentRecipeItems?.data?.map((item, idx) => {
                   return (
                     <li key={item.id} className="flex items-center gap-3">
-                      <span>{idx + 1}.</span>
                       <Select
                         type={"select"}
+                        readOnly
                         value={item.ingredient_id}
                         options={
                           ingredients?.data.map((item) => ({
@@ -123,14 +128,34 @@ export default function ProductRecipeItemsList() {
                       />
 
                       {viewComponent && (
-                        <NumberInput
-                          className="w-fit"
-                          type={"number"}
-                          value={Math.floor(
-                            (item.quantity / viewComponent.yield_quantity) *
-                              getValues(`recipe_items.${index}.quantity`),
+                        <>
+                          <NumberInput
+                            className="w-fit"
+                            type={"number"}
+                            readOnly
+                            value={Math.floor(
+                              (item.quantity / viewComponent.yield_quantity) *
+                                getValues(`recipe_items.${index}.quantity`),
+                            )}
+                          />
+                          {item.ingredients?.cost_per_unit && (
+                            <TextInput
+                              className="w-fit"
+                              type={"text"}
+                              readOnly
+                              value={formatCurrency(
+                                Math.floor(
+                                  (item.quantity /
+                                    viewComponent.yield_quantity) *
+                                    getValues(
+                                      `recipe_items.${index}.quantity`,
+                                    ) *
+                                    item.ingredients?.cost_per_unit,
+                                ),
+                              )}
+                            />
                           )}
-                        />
+                        </>
                       )}
                     </li>
                   );

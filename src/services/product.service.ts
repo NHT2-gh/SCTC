@@ -76,10 +76,10 @@ class ProductService {
     };
   }
 
-  async addProductRecipeVersion(
-    data: ProductRecipeVersion,
+  async upsertProductRecipeVersion(
+    data: Partial<ProductRecipeVersion>,
   ): Promise<MutationResult> {
-    const query = supabase.from(this.productRecipesTableName).insert(data);
+    const query = supabase.from(this.productRecipesTableName).upsert(data);
 
     const { error } = await query;
 
@@ -156,20 +156,6 @@ class ProductService {
     return {
       success: true,
       message: "Calculate product cost successfully",
-    };
-  }
-
-  async createNewRecipe(productId: string) {
-    const query = supabase.from(this.productRecipesTableName).insert({
-      product_id: productId,
-    });
-
-    const { error } = await query;
-
-    if (error) handlePostgresError(error);
-    return {
-      success: true,
-      message: "Create new recipe successfully",
     };
   }
 

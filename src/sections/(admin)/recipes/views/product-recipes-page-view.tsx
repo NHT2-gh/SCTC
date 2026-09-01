@@ -5,7 +5,7 @@ import { SearchBar } from "@/components/search-bar";
 import { useEffect, useState } from "react";
 import { useModal } from "@/hooks/useModal";
 import {
-  useCreateNewRecipeVersion,
+  useUpsertProductRecipeVersion,
   useGetAllProduct,
   useGetProductRecipe,
 } from "@/hooks/queries/use-product";
@@ -17,6 +17,7 @@ import ModalAlert from "@/components/modal/alerts/modal-alert";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { showToast } from "@/lib/toast";
+import { v4 } from "uuid";
 
 export default function ComponentsRecipesPageView() {
   const [searchText, setSearchText] = useState<string>();
@@ -26,7 +27,7 @@ export default function ComponentsRecipesPageView() {
   );
   const modalEditRecipe = useModal();
   const modalAlertCreateRecipe = useModal();
-  const createNewRecipe = useCreateNewRecipeVersion();
+  const upsertProductRecipeVersion = useUpsertProductRecipeVersion();
   const {
     data: products,
     error,
@@ -42,9 +43,15 @@ export default function ComponentsRecipesPageView() {
   } = useGetProductRecipe(productSelected);
 
   const handleCreateNewRecipe = async () => {
+    let versionNumber = 1;
+    if (recipes?.data?.length) {
+      versionNumber = recipes.data[recipes.data.length - 1].version_number + 1;
+    }
     try {
-      const result = await createNewRecipe.mutateAsync({
-        productId: productSelected!,
+      const result = await upsertProductRecipeVersion.mutateAsync({
+        id: v4(),
+        product_id: productSelected!,
+        version_number: versionNumber,
       });
       if (result.success) {
         if (modalAlertCreateRecipe.isOpen) {
@@ -120,7 +127,7 @@ export default function ComponentsRecipesPageView() {
           title={`Công thức của ${recipes.data[0].products.name}`}
         >
           <div className="flex items-center gap-4">
-            <Button onClick={() => handleCreateNewRecipe()}>
+            <Button onClick={() => modalAlertCreateRecipe.openModal()}>
               Add Recipe Version
             </Button>
             <Button variant="outline" onClick={() => refetchRecipes()}>
@@ -167,8 +174,8 @@ export default function ComponentsRecipesPageView() {
           isOpen={modalAlertCreateRecipe.isOpen}
           onClose={modalAlertCreateRecipe.closeModal}
           type="success"
-          title="Hiện tại chưa có công thức nào cho đồ uống này"
-          description="Bạn có muốn tạo mới một công thức không?"
+          title="Thêm công thức mới"
+          description={`Bạn có muốn tạo thêm một công thức mới cho ${recipes?.data[0].products.name} không?`}
           onConfirm={() => handleCreateNewRecipe()}
           confirmText="Thêm mới"
         />

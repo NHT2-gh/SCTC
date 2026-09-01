@@ -44,7 +44,11 @@ class ComponentService {
       };
     const query = supabase
       .from(this.tableDetail)
-      .select(`*`)
+      .select(
+        `*,
+          ingredients(cost_per_unit)
+        `,
+      )
       .eq("component_id", id);
 
     const { data: recipeItems, error } = await query;

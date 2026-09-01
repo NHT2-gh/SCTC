@@ -25,13 +25,6 @@ export default function OrderDetailPageView({
       }}
       className="bg-no-repeat bg-center bg-cover max-w-screen h-screen overflow-y-scroll scrollbar-hidden flex flex-col justify-center items-center gap-2"
     >
-      <div className="self-start w-[87%] mx-auto ml-10 sticky top-4 left-4 flex items-center justify-between gap-5">
-        <Link href={APP_ROUTES.GUEST.ROOT}>
-          <Button>
-            <ArrowLeftIcon /> Quay về menu
-          </Button>
-        </Link>
-      </div>
       <Bill data={orderDetail} />
     </section>
   );

@@ -99,7 +99,7 @@ export default function FormField({
                   disabled={disabled}
                   onChange={onChange}
                   onBlur={onBlur}
-                  value={value}
+                  value={String(value)}
                   name={name}
                   ref={ref}
                 >

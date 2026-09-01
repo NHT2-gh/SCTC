@@ -21,6 +21,7 @@ import { AddProductRecipeItemsForm, ProductRecipeItemsList } from "..";
 import { formatCurrency } from "@/utils/format-data";
 import InputText from "@/components/ui/input/input-text";
 import Label from "@/components/form/label/label";
+import { FormField } from "@/components/form";
 
 export default function ModalProductRecipeEdit({
   isOpen,
@@ -48,6 +49,7 @@ export default function ModalProductRecipeEdit({
     resolver: zodResolver(productRecipeItemsValidationSchema),
     defaultValues: {
       recipe_items: recipeItems?.data || [],
+      note: currentRecipe.note || "",
     },
     mode: "onChange",
   });
@@ -108,7 +110,7 @@ export default function ModalProductRecipeEdit({
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="md:max-w-[60rem]">
       <h3 className="text-xl font-bold text-brand-700 mb-4">
-        Công thức {currentRecipe.products.name}
+        Công thức {currentRecipe.products.name} v{currentRecipe.version_number}
       </h3>
       <FormProvider {...productRecipeItems}>
         <Form
@@ -133,11 +135,14 @@ export default function ModalProductRecipeEdit({
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="product_recipe_note">Mô tả công thức</Label>
-            <InputText
-              type={"text"}
-              name="product_recipe_note"
-              defaultValue={currentRecipe.recipe_text}
+            <FormField
+              form={productRecipeItems}
+              field={{
+                name: "note",
+                label: "Ghi chú",
+                type: "textarea",
+                placeholder: "Nhập ghi chú...",
+              }}
             />
           </div>
 

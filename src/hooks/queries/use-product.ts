@@ -7,7 +7,7 @@ import { ProductInfoValidation } from "@/schemas/validation/menu.validation";
 import { mutationKeys } from "@/config/mutation-keys";
 import { UpsertProductOptionValidation } from "@/schemas/validation/product-option.validation";
 import { ProductRecipeItemValidationSchema } from "@/schemas/validation/recipe.validation";
-import { Product } from "@/types/product";
+import { Product, ProductRecipeVersion } from "@/types/product";
 
 export function useGetAllProduct(params: GetWithFilterParams<Product>) {
   return useQuery({
@@ -71,15 +71,17 @@ export function useGetProductRecipe(productId: string | null) {
   });
 }
 
-export function useCreateNewRecipeVersion() {
+export function useUpsertProductRecipeVersion() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: mutationKeys.product.newRecipe,
-    mutationFn: (payload: { productId: string }) =>
-      productService.createNewRecipe(payload.productId),
-    onSuccess: (_, { productId }) => {
+    mutationFn: (payload: Partial<ProductRecipeVersion>) =>
+      productService.upsertProductRecipeVersion(payload),
+    onSuccess: (_, payload) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.product.detail.getProductRecipes(productId),
+        queryKey: queryKeys.product.detail.getProductRecipes(
+          payload.product_id!,
+        ),
       });
     },
   });
