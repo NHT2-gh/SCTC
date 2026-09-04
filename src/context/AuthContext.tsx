@@ -1,7 +1,5 @@
 "use client";
-import { useProfile } from "@/hooks/queries/use-profile";
 import { supabase } from "@/supabase/supabaseClients";
-import { Profile } from "@/types/profile";
 import { User } from "@supabase/supabase-js";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -20,7 +18,7 @@ export default function AuthProvider({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  // const { data: profileUser } = useProfile(user?.id || "");
+
   useEffect(() => {
     const getUser = async () => {
       const {

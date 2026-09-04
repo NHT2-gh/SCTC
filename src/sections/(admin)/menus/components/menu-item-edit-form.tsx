@@ -33,10 +33,12 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { v4 } from "uuid";
 import { AddProductOptionForm } from ".";
 import { DataEmpty } from "@/components/common/table/state";
-import { Edit2Icon, Trash2 } from "lucide-react";
+import { Edit2Icon, RefreshCcw, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { useGetProductOptions } from "@/hooks/queries/use-product";
 
 export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
+  const { refetch } = useGetProductOptions(data.info.id);
   const [isUploading, setIsUploading] = useState(false);
   const [images, setImages] = useState<ImageItem[]>(
     data.info.products.image_url?.map((item) => {
@@ -101,7 +103,6 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
   const {
     handleSubmit,
     setValue,
-    reset,
     formState: { dirtyFields, isLoading },
   } = editForm;
 
@@ -196,11 +197,9 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
     try {
       const reult = await updateInfo.mutateAsync(formData.info);
 
-      if (!reult.success) {
-        throw new Error("Update failed");
+      if (reult.success) {
+        showToast.success({ title: "Update info success" });
       }
-      reset();
-      showToast.success({ title: "Update info success" });
     } catch (error) {
       showToast.error({
         title: "Update failed",
@@ -316,12 +315,24 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
 
       {currentOptions && (
         <ComponentCard title={"Options"}>
-          <SearchSelecter
-            onChange={(ids) => handleChangeItems(ids)}
-            defaultSelectedOption={currentOptions.map(
-              (item) => String(item.option_id)!,
-            )}
-          />
+          <div className="flex items-center justify-between">
+            <SearchSelecter
+              onChange={(ids) => handleChangeItems(ids)}
+              defaultSelectedOption={currentOptions.map(
+                (item) => String(item.option_id)!,
+              )}
+            />
+
+            <Button
+              onClick={() => {
+                refetch();
+              }}
+              disabled={currentOptions.length === 0}
+              variant="outline"
+            >
+              <RefreshCcw /> Refetch
+            </Button>
+          </div>
           <Table>
             <TableHeader
               columns={[

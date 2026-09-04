@@ -37,7 +37,7 @@ export function useUpsertProductOption() {
     mutationKey: mutationKeys.menuItems.addOption,
     mutationFn: (payload: UpsertProductOptionValidation) =>
       menuService.upsertProductOption(payload),
-    onSuccess: () => {
+    onSuccess: (_, payload) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.options({
           filters: {

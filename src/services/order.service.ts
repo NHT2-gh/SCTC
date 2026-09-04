@@ -81,11 +81,13 @@ class OrderService {
         name
       )
       `,
+      { count: "exact" },
     );
-    if (!params?.filters?.["status"]) {
-      query.order("created_at", {
-        ascending: false,
-      });
+
+    if (params?.searchText) {
+      query.or(
+        `tracking_order.ilike.%${params.searchText}%,customer_name.ilike.%${params.searchText}%,customer_phone.ilike.%${params.searchText}%`,
+      );
     }
 
     if (params?.filters) {
@@ -119,13 +121,24 @@ class OrderService {
       );
     }
 
-    const { data: orders, error } = await query;
+    const {
+      data: orders,
+      error,
+      count,
+    } = await query.order("created_at", {
+      ascending: false,
+    });
 
     if (error) handlePostgresError(error);
 
     return {
       success: true,
       data: orders || [],
+      pagination: {
+        page: params?.page,
+        limit: params?.limit,
+        total: count ?? 0,
+      },
     };
   }
 

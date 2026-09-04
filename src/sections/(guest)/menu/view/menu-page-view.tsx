@@ -11,7 +11,6 @@ import { useUrlState } from "@/hooks/use-url-state";
 import CategoryTabs from "../components/category-tabs";
 import CurrentOrders from "../components/current-orders";
 import FloatingCartButton from "@/components/cart/floaing-cart-button";
-import { FloatingHelpButton } from "@/components/floading-help-button";
 
 interface MenuPageViewProps {
   menuLayout: MenuLayoutItem[];

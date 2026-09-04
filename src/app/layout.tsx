@@ -29,6 +29,7 @@ export default function RootLayout({
         <AppProviders>
           <SidebarProvider>
             {children}
+            <div id="portal-root" />
             <ToastProvider />
           </SidebarProvider>
         </AppProviders>

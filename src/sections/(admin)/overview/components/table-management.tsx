@@ -86,7 +86,7 @@ export default function TableManagement() {
 
       <div className="mx-auto space-y-5 p-3 border w-fit rounded-2xl mt-10">
         <p>QR Code for takeaway order</p>
-        <Link target="_blank" href={window.location.origin}>
+        <Link target="_blank" href={`${window.location.origin}/tables/*`}>
           <QRCode
             size={200}
             style={{
@@ -96,7 +96,7 @@ export default function TableManagement() {
 
               marginTop: "30px",
             }}
-            value={`${window.location.origin}`}
+            value={`${window.location.origin}/tables/*`}
             viewBox={`0 0 200 200`}
           />
         </Link>

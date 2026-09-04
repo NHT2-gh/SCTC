@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import Backdrop from "@/layout/Backdrop";
 import AppHeader from "@/layout/AppHeader";
@@ -10,7 +9,6 @@ import { OrderRealtimeListener } from "@/sections/(admin)/orders/components";
 import AuthProvider from "@/context/AuthContext";
 import { AudioProvider } from "@/sections/(admin)/orders/components/audio-init";
 import { ThemeProvider } from "@/context/ThemeContext";
-import { FloatingHelpButton } from "@/components/floading-help-button";
 
 export default function AdminLayout({
   children,

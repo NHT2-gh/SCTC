@@ -21,10 +21,13 @@ import { useGetTable } from "@/hooks/queries/use-overview";
 import { FilterStatus, ModalViewOrder } from "../components";
 import { MainContainer } from "@/components/common/page-layout";
 import ModalAlert from "@/components/modal/alerts/modal-alert";
-import { OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
+import { Order, OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
 import { FilterBoxRender } from "@/components/filter/filter-box-render";
 import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
+import InputText from "@/components/ui/input/input-text";
+
+const limit = 24;
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
@@ -32,35 +35,51 @@ export default function OrdersPageView() {
   const updateOrderStatus = useUpdateOrderStatus();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [orderView, setOrderView] = useUrlState("view_order", "");
+  const [searchText, setSearchText] = useState<string>();
   const { filterValues, updateFilter, removeFilter, clearFilters } = useFilter({
     filterConfigs: orderFilterConfig,
     initSubmit: true,
   });
   const [qrUrl, setQrUrl] = useState<string | null>(null);
-  const { data: orders, refetch: refetchOrders } = useGetAllOrder({
+  const {
+    data: orders,
+    refetch: refetchOrders,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetAllOrder({
     filters: filterValues,
+    searchText: searchText,
     page: 1,
-    limit: 100,
+    limit: limit,
   });
   const [orderIdsSelected, setIdsOrderSelected] = useState<string[]>([]);
-  const modalConfirm = useModal();
+  const modalConfirmPayment = useModal();
+  const modalConfirmCancelOrder = useModal();
+
+  const allOrders: Order[] = React.useMemo(() => {
+    // If we only have initial data and haven't fetched more pages yet
+    if (!orders?.pages) {
+      return [];
+    }
+    return orders.pages.flatMap((page) => page.data);
+  }, [orders]);
 
   const totalAmount = useMemo(() => {
     setQrUrl(null);
 
     return orderIdsSelected.reduce((acc, orderId) => {
-      const orderData = orders?.data.find((order) => order.id === orderId);
+      const orderData = allOrders.find((order) => order.id === orderId);
       return acc + (orderData?.subtotal || 0);
     }, 0);
-  }, [orderIdsSelected, orders]);
+  }, [orderIdsSelected, allOrders]);
 
   useEffect(() => {
     setIdsOrderSelected(
       filterValues["status"] === OrderStatus.DONE && filterValues["table_id"]
-        ? orders?.data.map((oder) => oder.id) || []
+        ? allOrders.map((oder) => oder.id) || []
         : [],
     );
-  }, [filterValues["status"]]);
+  }, [filterValues["status"], allOrders]);
 
   useEffect(() => {
     if (orderView) modalViewOrder.openModal();
@@ -74,6 +93,7 @@ export default function OrdersPageView() {
       });
 
       if (result.success) {
+        refetchOrders();
         showToast.success({ title: "Order updated successfully" });
       }
     } catch (error) {
@@ -127,10 +147,18 @@ export default function OrdersPageView() {
             filterValues={filterValues}
             updateFilter={updateFilter}
             removeFilter={removeFilter}
-            countOrder={orders?.data.length}
+            countOrder={allOrders.length}
           />
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
+            <InputText
+              type={"text"}
+              placeholder="Search by order code, customer name"
+              value={searchText}
+              handleOnChange={(value) => {
+                setSearchText(String(value));
+              }}
+            />
             <Button
               onClick={() => {
                 setFiltersOpen(!filtersOpen);
@@ -196,46 +224,57 @@ export default function OrdersPageView() {
               )}
             </FilterBoxRender>
           )}
+          <section className="max-h-[60vh] max-w-full overflow-auto">
+            <div className="w-fit h-fit columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6">
+              {allOrders?.map((order) => (
+                <div
+                  key={order.id}
+                  className={cn(
+                    "w-[250px] break-inside-avoid mb-4",
+                    orderIdsSelected.includes(order.id) &&
+                      "rounded-lg bg-green-50",
+                  )}
+                >
+                  <OrderItemCard
+                    order={order}
+                    onSelected={(orderId) => {
+                      setIdsOrderSelected((prev) => {
+                        if (prev.includes(orderId)) {
+                          return prev.filter((id) => id !== orderId);
+                        }
+                        return [...prev, orderId];
+                      });
+                    }}
+                    onViewed={(trackingCode) => {
+                      setOrderView(trackingCode);
+                    }}
+                    onConfirm={(orderId) => {
+                      handleUpdateStatus([orderId], OrderStatus.CONFIRMED);
+                    }}
+                    onCancel={() => {
+                      modalConfirmCancelOrder.openModal();
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
 
-          <div className="w-full grow p-2 pb-[4.75rem] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[63vh] overflow-y-scroll">
-            {orders?.data.map((order) => (
-              <div
-                key={order.id}
-                className={cn(
-                  "bg-white",
-                  orderIdsSelected.includes(order.id) &&
-                    "rounded-lg bg-green-50",
-                )}
+          {hasNextPage &&
+            orderIdsSelected.length === 0 &&
+            allOrders.length >= limit && (
+              <Button
+                variant="outline"
+                className="w-fit mx-auto"
+                onClick={() => fetchNextPage()}
               >
-                <OrderItemCard
-                  order={order}
-                  onSelected={(orderId) => {
-                    setIdsOrderSelected((prev) => {
-                      if (prev.includes(orderId)) {
-                        return prev.filter((id) => id !== orderId);
-                      }
-                      return [...prev, orderId];
-                    });
-                  }}
-                  onViewed={(trackingCode) => {
-                    setOrderView(trackingCode);
-                  }}
-                  onConfirm={(orderId) => {
-                    handleUpdateStatus([orderId], OrderStatus.CONFIRMED);
-                    refetchOrders();
-                  }}
-                  onCancel={(orderId) => {
-                    handleUpdateStatus([orderId], OrderStatus.CANCELLED);
-                    refetchOrders();
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+                Xem thêm
+              </Button>
+            )}
         </div>
 
-        {orders?.data && (
-          <div className="p-2 bg-white absolute bottom-10 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
+        {allOrders && orderIdsSelected.length > 0 && (
+          <div className="p-2 bg-white absolute bottom-5 sm:bottom-10 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
             <h3 className="font-bold">
               Total Amount:
               <span className="ml-2 text-brand-500">
@@ -246,7 +285,7 @@ export default function OrdersPageView() {
             {orderIdsSelected.length > 0 && (
               <h3 className="font-bold">
                 Selected: {orderIdsSelected.length} orders ({" "}
-                {orders.data
+                {allOrders
                   .filter((order) => orderIdsSelected.includes(order.id))
                   .reduce((acc, order) => {
                     return acc + order.order_items_count;
@@ -278,7 +317,7 @@ export default function OrdersPageView() {
                   disabled={!qrUrl}
                   className="w-full mt-2 bg-lime-200 rounded-lg px-2 py-1"
                   onClick={() => {
-                    modalConfirm.openModal();
+                    modalConfirmPayment.openModal();
                   }}
                 >
                   Đã nhận tiền.
@@ -303,10 +342,10 @@ export default function OrdersPageView() {
         />
       )}
 
-      {modalConfirm.isOpen && qrUrl && (
+      {modalConfirmPayment.isOpen && qrUrl && (
         <ModalAlert
-          isOpen={modalConfirm.isOpen}
-          onClose={modalConfirm.closeModal}
+          isOpen={modalConfirmPayment.isOpen}
+          onClose={modalConfirmPayment.closeModal}
           type={"success"}
           title={"Bạn chắc chắn đã nhận tiền từ khách hàng?"}
           onConfirm={() => {
@@ -314,6 +353,22 @@ export default function OrdersPageView() {
             setQrUrl(null);
           }}
           confirmText={"Đã nhận"}
+        />
+      )}
+
+      {modalConfirmCancelOrder.isOpen && (
+        <ModalAlert
+          isOpen={modalConfirmCancelOrder.isOpen}
+          onClose={modalConfirmCancelOrder.closeModal}
+          type={"warning"}
+          title={`Bạn có chắc chắn muốn hủy ${orderIdsSelected.length} đơn hàng này?`}
+          description={"Hành động này không thể hoàn tác"}
+          onConfirm={() => {
+            handleUpdateStatus(orderIdsSelected, OrderStatus.CANCELLED);
+            modalConfirmCancelOrder.closeModal();
+            setIdsOrderSelected([]);
+          }}
+          confirmText={"Hủy đơn hàng"}
         />
       )}
     </>

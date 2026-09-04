@@ -11,7 +11,12 @@ import {
   OrderStatus,
   UpdateOrderDTO,
 } from "@/types/order";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useEffect } from "react";
 
 export function useCreateOrder() {
@@ -22,9 +27,22 @@ export function useCreateOrder() {
 }
 
 export function useGetAllOrder(params?: GetWithFilterParams<Order>) {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: queryKeys.order.getAll(params),
-    queryFn: () => orderService.getAllOrder(params),
+    initialPageParam: 1,
+    queryFn: ({ pageParam = 1 }) => {
+      return orderService.getAllOrder({ ...params, page: pageParam });
+    },
+    getNextPageParam: (lastPage) => {
+      if (
+        lastPage.pagination?.page &&
+        lastPage.pagination?.total &&
+        lastPage.pagination?.page < lastPage.pagination?.total
+      ) {
+        return lastPage.pagination.page + 1;
+      }
+      return undefined;
+    },
   });
 }
 
