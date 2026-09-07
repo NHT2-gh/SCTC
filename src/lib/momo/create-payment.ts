@@ -1,12 +1,10 @@
 import { orderService } from "@/services/order.service";
-import { createCollectionLink } from "./client";
 import { momoConfig } from "./config";
 import { createSignature } from "./signature";
 import { v4 } from "uuid";
 import { MOMO_REQUEST_TYPE } from "./constants";
 import { PaymentMethod, PaymentType } from "@/types/order";
-import { QrVietQuickLinkResponse } from "../paymentQR/type";
-import { createQuickQR } from "../paymentQR/create-quick-qr";
+import { createQuickQR } from "../payment-qr/create-quick-qr";
 
 // src/lib/payment/momo/build-create-payment-payload.ts
 

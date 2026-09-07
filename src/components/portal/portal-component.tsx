@@ -1,24 +1,35 @@
 "use client";
-
-import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface PortalProps {
   children: React.ReactNode;
+  containerId: string;
 }
 
-export default function Portal({ children }: PortalProps) {
-  const [mounted, setMounted] = useState(false);
+export default function Portal({ children, containerId }: PortalProps) {
+  const [container, setContainer] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    let element = document.getElementById(containerId);
 
-  if (!mounted) return null;
+    if (!element) {
+      element = document.createElement("div");
+      element.id = containerId;
+      document.body.appendChild(element);
+    }
 
-  const portalRoot = document.getElementById("portal-root");
+    setContainer(element);
 
-  if (!portalRoot) return null;
+    return () => {
+      // Chỉ remove nếu Portal tự tạo node
+      // Có thể bỏ phần này nếu root được tạo ở layout.
+    };
+  }, [containerId]);
 
-  return createPortal(children, portalRoot);
+  if (!container) {
+    return null;
+  }
+
+  return createPortal(children, container);
 }

@@ -17,11 +17,14 @@ import {
   IngredientValidationSchema,
 } from "@/schemas/validation/ingredient.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UnitType } from "@/types/ingredient";
+import {
+  IngredientCategoryType,
+  MapTextIngredientCategoryType,
+  UnitType,
+} from "@/types/ingredient";
 import { Edit2Icon } from "lucide-react";
 import { FormField } from "@/components/form";
 import Form from "@/components/form/Form";
-import { categories } from "@/schemas/form-schemas/ingredient-form-schema";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
@@ -149,7 +152,12 @@ export default function IngredientsTable() {
                         type: "select",
                         placeholder: "Danh mục",
                         name: "category_code",
-                        options: categories,
+                        options: Object.values(IngredientCategoryType).map(
+                          (category) => ({
+                            value: category,
+                            label: MapTextIngredientCategoryType[category],
+                          }),
+                        ),
                       }}
                       form={editForm}
                     />

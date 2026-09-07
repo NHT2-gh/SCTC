@@ -111,7 +111,7 @@ export default function ProductRecipeItemsList() {
             </div>
 
             {viewComponent?.id === field.component_id && viewComponent && (
-              <ul className="space-y-5 mt-4 list-inside bg-gray-100 p-4 rounded-lg">
+              <ul className="space-y-5 mt-4 list-inside  bg-gray-100 p-4 rounded-lg">
                 {componentRecipeItems?.data?.map((item, idx) => {
                   return (
                     <li key={item.id} className="flex items-center gap-3">

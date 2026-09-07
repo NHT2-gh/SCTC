@@ -36,17 +36,8 @@ export default function FormRenderer({
     formState: { errors, isDirty },
   } = form;
 
-  // Reset form with new default values when they change
-  useEffect(() => {
-    if (defaultValues) {
-      form.reset(defaultValues);
-    }
-  }, [defaultValues, form]);
-
   const handleSubmit = form.handleSubmit(
     async (data) => {
-      console.log("ping");
-      console.log(errors);
       try {
         await onSubmit(data, form);
         reset();

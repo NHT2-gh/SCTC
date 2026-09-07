@@ -63,10 +63,10 @@ export default function ComponentsRecipesPageView() {
   };
 
   useEffect(() => {
-    if (recipes && !recipes.data[0] && productSelected) {
+    if (recipes && recipes.data && recipes.data.length === 0) {
       modalAlertCreateRecipe.openModal();
     }
-  }, [recipes, productSelected]);
+  }, [recipes]);
   return (
     <MainContainer title="Công thức đồ uống">
       <ComponentCard title={"Tìm kiếm công thức đồ uống"}>
@@ -169,13 +169,13 @@ export default function ComponentsRecipesPageView() {
         />
       )}
 
-      {modalAlertCreateRecipe.isOpen && (
+      {modalAlertCreateRecipe.isOpen && recipes && (
         <ModalAlert
           isOpen={modalAlertCreateRecipe.isOpen}
           onClose={modalAlertCreateRecipe.closeModal}
           type="success"
           title="Thêm công thức mới"
-          description={`Bạn có muốn tạo thêm một công thức mới cho ${recipes?.data[0].products.name} không?`}
+          description={`Bạn có muốn tạo thêm một công thức mới cho ${products?.data.find((item) => item.id === productSelected)?.name} không?`}
           onConfirm={() => handleCreateNewRecipe()}
           confirmText="Thêm mới"
         />

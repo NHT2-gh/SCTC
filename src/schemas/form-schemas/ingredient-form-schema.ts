@@ -1,24 +1,25 @@
 import { FormSchema } from "@/components/form/type";
 import { ingredientValidationSchema } from "../validation/ingredient.validation";
+import {
+  IngredientCategoryType,
+  MapTextIngredientCategoryType,
+} from "@/types/ingredient";
 
 export const units = [
   { value: "gram", label: "Gram" },
   { value: "ml", label: "Mililit" },
 ];
 
-export const categories = [
-  { value: "DAIRY", label: "Kem" },
-  { value: "TEA", label: "Trà" },
-  { value: "POWDER", label: "Bột" },
-  { value: "SYRUP", label: "Siro" },
-  { value: "COFFEE", label: "Cà phê" },
-  { value: "CHOCOLATE", label: "Socola" },
-  { value: "FRUIT", label: "Trái cây" },
-  { value: "MILK", label: "Sữa tươi" },
-  { value: "MATCHA", label: "Matcha" },
-  { value: "HOUJICHA", label: "Houjicha" },
-  { value: "OTHER", label: "Khác" },
-];
+const defaultValues = {
+  name: "",
+  category_code: "OTHER",
+  purchase_price: 0,
+  purchase_quantity: 0,
+  code: "",
+  unit: "gram",
+  yield_percentage: 100,
+  notes: "",
+};
 
 export const ingredientFormSchema: FormSchema = {
   title: "Thêm nguyên liệu",
@@ -27,8 +28,10 @@ export const ingredientFormSchema: FormSchema = {
       name: "category_code",
       type: "select",
       label: "Danh mục",
-      defaultValue: "OTHER",
-      options: categories,
+      options: Object.values(IngredientCategoryType).map((category) => ({
+        value: category,
+        label: MapTextIngredientCategoryType[category],
+      })),
     },
     {
       name: "name",
@@ -53,7 +56,7 @@ export const ingredientFormSchema: FormSchema = {
       type: "select",
       label: "Đơn vị",
       placeholder: "Chọn đơn vị",
-      defaultValue: "gram",
+
       options: units,
     },
     {
@@ -75,4 +78,5 @@ export const ingredientFormSchema: FormSchema = {
   layout: {
     type: "grid",
   },
+  defaultValues: defaultValues,
 };
