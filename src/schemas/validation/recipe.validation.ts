@@ -11,7 +11,9 @@ export const productRecipeItemValidationSchema = z.object({
 });
 
 export const productRecipeItemsValidationSchema = z.object({
-  recipe_items: z.array(productRecipeItemValidationSchema),
+  recipe_items: z
+    .array(productRecipeItemValidationSchema)
+    .min(1, "Phải có ít nhất 1 thành phần"),
   note: z.string().optional(),
 });
 

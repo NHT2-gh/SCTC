@@ -52,6 +52,7 @@ export default function ComponentsRecipesPageView() {
         id: v4(),
         product_id: productSelected!,
         version_number: versionNumber,
+        is_active: true,
       });
       if (result.success) {
         if (modalAlertCreateRecipe.isOpen) {

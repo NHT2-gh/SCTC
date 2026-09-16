@@ -19,8 +19,6 @@ import {
 } from "@/hooks/queries/use-product";
 import { AddProductRecipeItemsForm, ProductRecipeItemsList } from "..";
 import { formatCurrency } from "@/utils/format-data";
-import InputText from "@/components/ui/input/input-text";
-import Label from "@/components/form/label/label";
 import { FormField } from "@/components/form";
 
 export default function ModalProductRecipeEdit({
@@ -54,12 +52,8 @@ export default function ModalProductRecipeEdit({
     mode: "onChange",
   });
 
-  useEffect(() => {
-    if (!currentRecipe) return;
-  });
-
   const {
-    formState: { isDirty, dirtyFields },
+    formState: { isDirty, dirtyFields, errors },
     setValue,
     handleSubmit,
   } = productRecipeItems;
@@ -73,6 +67,7 @@ export default function ModalProductRecipeEdit({
   }, [recipeItems]);
 
   const onSubmit = async (data: ProductRecipeItemsValidationSchema) => {
+    console.log(data.recipe_items);
     if (dirtyFields.recipe_items && recipeItems?.data) {
       const diffComponentItems = diffArray<ProductRecipeItemValidationSchema>({
         initial: recipeItems?.data,
@@ -113,12 +108,7 @@ export default function ModalProductRecipeEdit({
         Công thức {currentRecipe.products.name} v{currentRecipe.version_number}
       </h3>
       <FormProvider {...productRecipeItems}>
-        <Form
-          className="block space-y-4"
-          onSubmit={handleSubmit(onSubmit, (err) => {
-            console.log("VALIDATION ERROR", err);
-          })}
-        >
+        <Form className="block space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <ProductRecipeItemsList />
 
           {result && (
