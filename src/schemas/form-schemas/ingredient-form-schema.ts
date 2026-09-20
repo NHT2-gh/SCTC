@@ -73,6 +73,13 @@ export const ingredientFormSchema: FormSchema = {
       label: "% Thu hồi",
       placeholder: "Nhập % thu hồi",
     },
+    {
+      name: "notes",
+      type: "textarea",
+      label: "Ghi chú",
+      placeholder: "Nhập ghi chú nguyên liệu",
+      className: "col-span-2",
+    },
   ],
   validation: ingredientValidationSchema,
   layout: {

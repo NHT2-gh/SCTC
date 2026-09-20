@@ -62,7 +62,9 @@ export default function IngredientsTable() {
     defaultValues: {
       id: editIngredient?.id || "",
       name: editIngredient?.name || "",
-      category_code: editIngredient?.category_code || "",
+      category_code:
+        (editIngredient?.category_code as IngredientCategoryType) ||
+        IngredientCategoryType.OTHER,
       purchase_price: editIngredient?.purchase_price || 0,
       yield_percentage: editIngredient?.yield_percentage || 0,
       unit: editIngredient?.unit || UnitType.gram,

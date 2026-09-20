@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 export function diffArray<T extends { id?: string }>({
   initial,
   current,
@@ -17,7 +19,10 @@ export function diffArray<T extends { id?: string }>({
     const isDirty = dirtyFields?.[index];
     const hasChanged = isDirty && Object.values(isDirty).some(Boolean);
     if (hasChanged) {
-      upsert.push(item);
+      upsert.push({
+        ...item,
+        id: item?.id || v4(),
+      });
     }
   });
 

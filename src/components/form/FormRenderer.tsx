@@ -13,6 +13,7 @@ import AccordionLayout from "./layouts/AccordionLayout";
 import { useForm, UseFormReturn, FieldValues } from "react-hook-form";
 import Form from "./Form";
 import { cn } from "@/lib/utils";
+import { MainContainer } from "../common/page-layout";
 
 export default function FormRenderer({
   schema,
@@ -123,45 +124,34 @@ export default function FormRenderer({
   };
 
   return (
-    <Form onSubmit={handleSubmit} className={cn("block w-full", className)}>
-      {schema.title && (
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {schema.title}
-          </h2>
-          {schema.description && (
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              {schema.description}
-            </p>
-          )}
-        </div>
-      )}
+    <MainContainer title={schema.title || ""}>
+      <Form onSubmit={handleSubmit} className={cn("block w-full", className)}>
+        {renderLayout()}
 
-      {renderLayout()}
-
-      {showSubmitButton && schema.layout?.type !== "stepper" && (
-        <div className="mt-8 flex justify-end gap-4">
-          <Button
-            variant="outline"
-            onClick={() => {
-              onCancel;
-              reset();
-            }}
-            disabled={form.formState.isSubmitting}
-            startIcon={<XIcon className="size-4" />}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            disabled={disabled || form.formState.isSubmitting || !isDirty}
-            loading={form.formState.isSubmitting}
-          >
-            {submitButtonText}
-          </Button>
-        </div>
-      )}
-    </Form>
+        {showSubmitButton && schema.layout?.type !== "stepper" && (
+          <div className="mt-8 flex justify-end gap-4">
+            <Button
+              variant="outline"
+              onClick={() => {
+                onCancel;
+                reset();
+              }}
+              disabled={form.formState.isSubmitting}
+              startIcon={<XIcon className="size-4" />}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={disabled || form.formState.isSubmitting || !isDirty}
+              loading={form.formState.isSubmitting}
+            >
+              {submitButtonText}
+            </Button>
+          </div>
+        )}
+      </Form>
+    </MainContainer>
   );
 }
 

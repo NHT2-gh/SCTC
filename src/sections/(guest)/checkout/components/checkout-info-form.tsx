@@ -38,6 +38,7 @@ export default function CheckoutInfoForm() {
       delivery_method:
         checkoutInfo.delivery_method || DeliveryMethod.pickup_now,
       payment_method: checkoutInfo.payment_method || PaymentMethod.QR,
+      note: "",
     },
   );
   const deliveryMethodValue = useWatch({

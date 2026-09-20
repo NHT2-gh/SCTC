@@ -2,6 +2,8 @@
 import React from "react";
 import { itim } from "@/lib/fonts";
 import { FloatingHelpButton } from "@/components/floading-help-button";
+import { StoreStatusProvider } from "@/context/StoreStatusContext";
+import StoreStatusModal from "@/components/modal/modal-store-status";
 
 export default function GuestLayout({
   children,
@@ -18,8 +20,11 @@ export default function GuestLayout({
         <main
           className={`max-w-[31.25rem] relative mx-auto h-fit min-h-[100dvh] overflow-y-scroll ${itim.className}`}
         >
-          {children}
-          <FloatingHelpButton />
+          <StoreStatusProvider>
+            {children}
+            <FloatingHelpButton />
+            <StoreStatusModal />
+          </StoreStatusProvider>
         </main>
       </div>
     </div>

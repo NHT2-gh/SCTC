@@ -16,8 +16,8 @@ export const componentRecipeItemsValidationSchema = z.object({
 
 export const componentValidationSchema = z.object({
   name: z.string().min(1, "Tên thành phần là bắt buộc"),
-  description: z.string().optional(),
   component_type: z.string().min(1, "Loại thành phần là bắt buộc"),
+  description: z.string().optional(),
 });
 
 export type ComponentValidationSchema = z.infer<

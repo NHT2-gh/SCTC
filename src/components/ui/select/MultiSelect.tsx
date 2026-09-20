@@ -171,7 +171,7 @@ export default function MultiSelect({
                           : ""
                       }`}
                     >
-                      <div className="mx-2 leading-6 text-gray-800 dark:text-white/90">
+                      <div className="mx-2 leading-6 capitalize text-gray-800 dark:text-white/90">
                         {option.label}
                       </div>
                     </div>

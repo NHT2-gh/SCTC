@@ -1,11 +1,6 @@
+import { ComponentType } from "@/types/component";
 import { FormSchema } from "@/components/form/type";
 import { componentValidationSchema } from "../validation/component.validation";
-import { ComponentType } from "@/types/component";
-
-export const units = [
-  { value: "g", label: "Gram" },
-  { value: "ml", label: "Mililit" },
-];
 
 export const componentFormSchema: FormSchema = {
   fields: [
@@ -36,6 +31,11 @@ export const componentFormSchema: FormSchema = {
     },
   ],
   validation: componentValidationSchema,
+  defaultValues: {
+    name: "",
+    component_type: "",
+    description: "",
+  },
   layout: {
     type: "grid",
   },

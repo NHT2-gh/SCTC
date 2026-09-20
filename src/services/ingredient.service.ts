@@ -26,9 +26,7 @@ class IngredientService {
     );
 
     if (params?.searchText && params.searchText !== null) {
-      query.or(
-        `name.ilike.%${params.searchText}%, category_code.ilike.%${params.searchText}%, code.ilike.%${params.searchText}%`,
-      );
+      query.or(`name.ilike.%${params.searchText}%`);
     }
 
     if (params?.page && params?.limit) {
@@ -38,7 +36,9 @@ class IngredientService {
       );
     }
 
-    const { data, error } = await query.order("code", { ascending: true });
+    const { data, error } = await query.order("category_code", {
+      ascending: true,
+    });
     if (error) handlePostgresError(error);
 
     return {

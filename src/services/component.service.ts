@@ -72,7 +72,6 @@ class ComponentService {
     }
 
     const query = supabase.from(this.tableDetail).upsert(recipe_items, {
-      onConflict: "id",
       ignoreDuplicates: false,
     });
 

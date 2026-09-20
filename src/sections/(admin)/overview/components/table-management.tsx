@@ -9,13 +9,18 @@ import { APP_ROUTES } from "@/config/app-routes";
 import { useGetTable } from "@/hooks/queries/use-overview";
 import { TableHeader, TableTitle } from "@/components/table";
 import { ColumnDefinition } from "@/components/table/table-header";
-import { ScanQrCode, SquareArrowOutUpRightIcon } from "lucide-react";
+import {
+  CheckCircle2Icon,
+  ScanQrCode,
+  SquareArrowOutUpRightIcon,
+  XCircleIcon,
+} from "lucide-react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 const colums: ColumnDefinition[] = [
   {
-    key: "table_number",
-    title: "Table Number",
+    key: "name",
+    title: "Name",
   },
   {
     key: "status",
@@ -36,14 +41,44 @@ export default function TableManagement() {
 
   return (
     <section>
-      <TableTitle title="Table Management" />
+      <TableTitle title="QR Code" />
       <Table>
         <TableHeader columns={colums} />
         <TableBody>
+          <TableRow>
+            <TableCell>Takeaway</TableCell>
+            <TableCell className="">
+              <CheckCircle2Icon fill="green" stroke="white" />
+            </TableCell>
+            <TableCell className="flex items-center gap-10">
+              <button
+                onClick={() => {
+                  modalViewQRCode.openModal();
+                  setTableSelected("*");
+                }}
+              >
+                <ScanQrCode />
+              </button>
+              <Link target="_blank" href={`${window.location.origin}/tables/*`}>
+                <button>
+                  <SquareArrowOutUpRightIcon
+                    className="text-blue-500"
+                    strokeWidth={2}
+                  />
+                </button>
+              </Link>
+            </TableCell>
+          </TableRow>
           {tables?.data.map((table) => (
             <TableRow key={table.id}>
               <TableCell>{table.name}</TableCell>
-              <TableCell>{table.is_active ? "Active" : "Inactive"}</TableCell>
+              <TableCell>
+                {table.is_active ? (
+                  <CheckCircle2Icon fill="green" stroke="white" />
+                ) : (
+                  <XCircleIcon fill="red" stroke="white" />
+                )}
+              </TableCell>
               <TableCell className="flex items-center gap-10">
                 <button
                   onClick={() => {
@@ -84,24 +119,6 @@ export default function TableManagement() {
           />
         </Modal>
       )}
-
-      <div className="mx-auto space-y-5 p-3 border w-fit rounded-2xl mt-10">
-        <p>QR Code for takeaway order</p>
-        <Link target="_blank" href={`${window.location.origin}/tables/*`}>
-          <QRCode
-            size={200}
-            style={{
-              height: "auto",
-              maxWidth: "200",
-              width: "100%",
-
-              marginTop: "30px",
-            }}
-            value={`${window.location.origin}/tables/*`}
-            viewBox={`0 0 200 200`}
-          />
-        </Link>
-      </div>
     </section>
   );
 }

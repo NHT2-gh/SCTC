@@ -52,7 +52,7 @@ export default function ComponentsRecipesPageView() {
         id: v4(),
         product_id: productSelected!,
         version_number: versionNumber,
-        is_active: true,
+        is_active: recipes?.data.length === 0 ? true : false,
       });
       if (result.success) {
         if (modalAlertCreateRecipe.isOpen) {

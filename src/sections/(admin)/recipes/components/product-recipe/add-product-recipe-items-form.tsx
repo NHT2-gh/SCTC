@@ -105,13 +105,7 @@ export default function AddProductRecipeItemsForm({
         field={{ name: "quantity", type: "number", label: "Khối lượng" }}
       />
 
-      <Button
-        type="submit"
-        className="ml-auto block"
-        onClick={handleSubmit(onSubmit, (err) => {
-          console.log("VALIDATION ERROR", err);
-        })}
-      >
+      <Button type="submit" className="ml-auto block">
         Thêm
       </Button>
     </Form>
