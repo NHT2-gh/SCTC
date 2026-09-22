@@ -5,5 +5,7 @@ export default function SwitchFilter({
   value,
   onChange,
 }: FilterItemProp<SwitchFilter, boolean>) {
-  return <Switch defaultValue={value} onChange={onChange} />;
+  return (
+    <Switch defaultValue={value} handleOnChange={onChange} type={"switch"} />
+  );
 }

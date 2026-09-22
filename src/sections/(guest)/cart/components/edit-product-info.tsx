@@ -89,7 +89,7 @@ export default function EditProductInfo({
       onClose();
     },
   });
-  const product = cartItem.menu_item.products;
+  const product = cartItem.menu_item.product;
 
   useEffect(() => {
     if (productOptions?.data.custom && productOptions?.data.custom.length > 0) {

@@ -145,12 +145,12 @@ export default function CheckoutInfoForm() {
       <ApplyPromotion
         subtotal={items.reduce(
           (acc, item) =>
-            acc + item.menu_item.products.selling_price * item.quantity,
+            acc + item.menu_item.product.selling_price * item.quantity,
           0,
         )}
         products_type={items.map((item) => {
           return {
-            product_type: item.menu_item.products.product_type,
+            product_type: item.menu_item.product.product_type,
           };
         })}
         cart_items={items}

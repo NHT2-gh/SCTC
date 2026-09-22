@@ -123,7 +123,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
   }, [options.custom, options.fixed]);
 
   const totalPrice = useMemo(() => {
-    const basePrice = product.info.products.selling_price;
+    const basePrice = product.info.product.selling_price;
 
     const optionPrice = Object.entries(filterValues).flatMap(([_, value]) =>
       Array.isArray(value)
@@ -141,7 +141,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
       basePrice * quantity +
       optionPrice.reduce((total, option) => total + (option?.price ?? 0), 0)
     );
-  }, [filterValues, options, product.info.products.selling_price, quantity]);
+  }, [filterValues, options, product.info.product.selling_price, quantity]);
 
   return (
     <>
@@ -152,11 +152,11 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
           height={160}
           quality={100}
           src={
-            info.products.image_url
-              ? info.products.image_url[0]
+            info.product.image_url
+              ? info.product.image_url[0]
               : "/images/logo/logo-text-1.webp"
           }
-          alt={info.products.name}
+          alt={info.product.name}
           className="mx-auto object-contain"
         />
       </div>
@@ -170,16 +170,16 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
                   delagothic.className,
                 )}
               >
-                {info.products.name}
+                {info.product.name}
               </h1>
               <span className={cn("text-[#FEA806]", delagothic.className)}>
-                {formatCurrency(info.products.selling_price)}
+                {formatCurrency(info.product.selling_price)}
               </span>
             </div>
 
-            {info.products.description && (
+            {info.product.description && (
               <p className={cn("text-black text-sm")}>
-                {info.products.description}
+                {info.product.description}
               </p>
             )}
           </div>
@@ -188,7 +188,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
             value={filterValues}
             update={updateFilter}
             remove={removeFilter}
-            productType={info.products.product_type}
+            productType={info.product.product_type}
             fixedOptions={options.fixed}
           />
 
@@ -243,7 +243,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
                   {" -"} {formatCurrency(totalPrice)}
                 </span>
               </span>
-            ) : !isAllowOrder && product.info.products.is_only_allow_dinein ? (
+            ) : !isAllowOrder && product.info.product.is_only_allow_dinein ? (
               <span className=" text-sm text-white ">
                 Hiện tại sản phẩm này chỉ phục vụ tại chỗ
               </span>

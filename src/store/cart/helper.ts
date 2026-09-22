@@ -58,7 +58,7 @@ export function mergeDuplicatedItems(items: CartItem[]): CartItem[] {
 }
 
 export function getCartItemPricing(item: CartItem): CartItemPricing {
-  const basePrice = item.menu_item.products.selling_price;
+  const basePrice = item.menu_item.product.selling_price;
 
   const optionsPrice = item.selected_options.reduce(
     (total: number, option: SelectedOption) => total + option.price,

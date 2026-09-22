@@ -117,7 +117,7 @@ export default function MenuLayoutPageView({
                 {itemSelected && (
                   <section className="flex-1  bg-neutral-50 rounded-xl h-fit p-3">
                     <div className="">
-                      {itemSelected.menu_items.products.name}
+                      {itemSelected.menu_items.product.name}
                     </div>
                     <Form
                       className="grid !grid-cols-2 gap-y-5  h-fit"

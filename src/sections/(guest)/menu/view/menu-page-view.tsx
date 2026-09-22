@@ -59,7 +59,7 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
                   "w-full overflow-hidden z-1 rounded-xl flex flex-col items-center hover:opacity-80",
                   {
                     "pointer-events-none opacity-30":
-                      !item.menu_items.products.is_active,
+                      !item.menu_items.product.is_active,
                   },
                 )}
                 style={{
@@ -79,7 +79,7 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
                   )}
                 >
                   <MenuItemCard
-                    item={item.menu_items.products}
+                    item={item.menu_items.product}
                     className={cn("bg-transparent", {
                       "flex-row-reverse text-right": item.x > 1,
                     })}

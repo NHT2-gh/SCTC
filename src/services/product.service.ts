@@ -26,7 +26,6 @@ class ProductService {
     const query = supabase.from(this.tableName).select(`*`);
 
     if (params?.searchText === "/all") {
-      console.log("ping");
       query;
     } else if (params?.searchText) {
       query.ilike("name", `%${params.searchText}%`);

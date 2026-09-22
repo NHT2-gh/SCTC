@@ -52,12 +52,12 @@ export default function MenuLayoutItems({
                 onSelect(item);
               }}
             >
-              <TableCell>{item.menu_items.products.name}</TableCell>
+              <TableCell>{item.menu_items.product.name}</TableCell>
               <TableCell>
-                {item.menu_items.products.description || "///"}
+                {item.menu_items.product.description || "///"}
               </TableCell>
               <TableCell>
-                {formatCurrency(item.menu_items.products.selling_price)}
+                {formatCurrency(item.menu_items.product.selling_price)}
               </TableCell>
               <TableCell>{`x: ${item.x}, y: ${item.y}, w: ${item.w}, h: ${item.h}`}</TableCell>
             </TableRow>

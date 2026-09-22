@@ -193,7 +193,6 @@ class MenuService {
       "menuItemId" | "id" | "limit" | "option_id"
     >[],
   ): Promise<MutationResult> {
-    console.log(data);
     const query = supabase.from(this.itemOptionsDetailTable).upsert(
       data.map((option) => ({
         id: option.id,
@@ -392,12 +391,6 @@ class MenuService {
     const { data: fixedOptions, error } = await query;
 
     if (error) handlePostgresError(error);
-
-    try {
-      FixedOptionAdapter(fixedOptions as MenuItemOption[]);
-    } catch (error) {
-      console.log(error);
-    }
 
     return {
       success: true,

@@ -37,7 +37,7 @@ export default function ApplyPromotion({
     ),
     selectedPromotion,
     products: cart_items.map((item) => {
-      return item.menu_item.products;
+      return item.menu_item.product;
     }),
   });
   return (

@@ -238,8 +238,6 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
     }
   };
 
-  // console.log(editForm.watch("info.is_active"));
-
   return (
     <section className="space-y-4">
       <Form

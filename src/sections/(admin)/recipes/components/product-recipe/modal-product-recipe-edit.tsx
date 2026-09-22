@@ -67,7 +67,6 @@ export default function ModalProductRecipeEdit({
   }, [recipeItems]);
 
   const onSubmit = async (data: ProductRecipeItemsValidationSchema) => {
-    console.log(data.recipe_items);
     if (dirtyFields.recipe_items && recipeItems?.data) {
       const diffComponentItems = diffArray<ProductRecipeItemValidationSchema>({
         initial: recipeItems?.data,

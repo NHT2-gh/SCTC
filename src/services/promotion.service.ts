@@ -42,7 +42,6 @@ class PromotionService {
   }
 
   async getDetail(id?: string): Promise<ResponseStandard<Promotion>> {
-    console.log(id);
     if (!id) {
       return {
         success: false,

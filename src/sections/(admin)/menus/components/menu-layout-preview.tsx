@@ -23,10 +23,11 @@ export default function MenuLayoutPreview({
   return (
     <div className="flex-2 p-10 max-w-full rounded-xl items-center overflow-auto border-2 border-brand-200 space-y-10">
       <Switch
+        type="switch"
         name="preview-mode"
         value={mode === "editing"}
         label="Edit Mode"
-        onChange={(value) => setMode(value ? "editing" : "preview")}
+        handleOnChange={(value) => setMode(value ? "editing" : "preview")}
       />
 
       <div
@@ -61,7 +62,7 @@ export default function MenuLayoutPreview({
                 }}
               >
                 <MenuItemCard
-                  item={item.menu_items.products}
+                  item={item.menu_items.product}
                   className={cn("bg-transparent", {
                     "flex-row-reverse text-right":
                       dataEditing.id === item.id && dataEditing?.x

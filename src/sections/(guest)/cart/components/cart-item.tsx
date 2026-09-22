@@ -11,7 +11,7 @@ export default function CartItem({ item }: { item: CartItem }) {
   const { updateQuantity } = useCart();
   const [_, setEditCartItem] = useUrlState("edit");
   const itemPrice =
-    item.menu_item.products.selling_price +
+    item.menu_item.product.selling_price +
     item.selected_options.reduce(
       (total: number, option: SelectedOption) => total + option.price,
       0,
@@ -23,11 +23,11 @@ export default function CartItem({ item }: { item: CartItem }) {
         onClick={() => setEditCartItem(item.id)}
         className="size-[3.75rem] cursor-pointer aspect-square flex justify-center items-center rounded-lg"
       >
-        {item.menu_item.products.image_url ? (
+        {item.menu_item.product.image_url ? (
           <Image
             unoptimized
-            src={item.menu_item.products.image_url[0]}
-            alt={item.menu_item.products.name}
+            src={item.menu_item.product.image_url[0]}
+            alt={item.menu_item.product.name}
             width={50}
             height={50}
           />
@@ -41,7 +41,7 @@ export default function CartItem({ item }: { item: CartItem }) {
           onClick={() => setEditCartItem(item.id)}
           className="text-xs text-left cursor-pointer space-y-1 grow"
         >
-          <h2 className="text-base">{item.menu_item.products.name}</h2>
+          <h2 className="text-base">{item.menu_item.product.name}</h2>
 
           {item.selected_options && item.selected_options.length > 0 && (
             <p className="overflow-hidden space-x-0.5 text-nowrap max-w-[10.5625rem] text-ellipsis">

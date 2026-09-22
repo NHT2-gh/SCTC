@@ -83,8 +83,6 @@ export default function AddProductPageView() {
     setIsUploading(false);
   };
 
-  console.log(watch("is_active"));
-
   const onSubmit = async (data: ProductInfoValidation) => {
     try {
       const result = await addProduct.mutateAsync(data);
