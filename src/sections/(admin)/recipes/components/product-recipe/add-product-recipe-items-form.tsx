@@ -35,9 +35,9 @@ export default function AddProductRecipeItemsForm({
   const addProductRecipeItemForm = useForm<ProductRecipeItemValidationSchema>({
     resolver: zodResolver(productRecipeItemValidationSchema),
     defaultValues: {
-      quantity: 0,
-      ingredient_id: undefined,
-      component_id: undefined,
+      quantity: 1,
+      ingredient_id: "",
+      component_id: "",
     },
   });
 
@@ -46,17 +46,17 @@ export default function AddProductRecipeItemsForm({
   const onSubmit = (data: ProductRecipeItemValidationSchema) => {
     append({
       id: v4(),
-      component_id: data.component_id,
-      ingredient_id: data.ingredient_id,
+      component_id: String(data.component_id).trim() || undefined,
+      ingredient_id: String(data.ingredient_id).trim() || undefined,
       quantity: data.quantity,
       recipe_version_id: productRecipeVersionId,
       item_type: data.component_id ? ItemType.COMPONENT : ItemType.INGREDIENT,
     });
 
     reset({
-      quantity: 0,
-      ingredient_id: undefined,
-      component_id: undefined,
+      quantity: 1,
+      ingredient_id: "",
+      component_id: "",
     });
   };
 

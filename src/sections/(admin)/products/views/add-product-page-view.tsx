@@ -31,10 +31,11 @@ export default function AddProductPageView() {
       name: "",
       description: "",
       selling_price: 0,
+      is_active: false,
     },
   });
 
-  const { handleSubmit, setValue, reset } = addForm;
+  const { handleSubmit, setValue, reset, watch } = addForm;
 
   useEffect(() => {
     if (images && images.length > 0) {
@@ -82,6 +83,8 @@ export default function AddProductPageView() {
     setIsUploading(false);
   };
 
+  console.log(watch("is_active"));
+
   const onSubmit = async (data: ProductInfoValidation) => {
     try {
       const result = await addProduct.mutateAsync(data);
@@ -107,7 +110,13 @@ export default function AddProductPageView() {
       >
         <FormField
           form={addForm}
-          field={{ name: "name", type: "text", label: "Tên sản phẩm" }}
+          field={{
+            name: "name",
+            type: "text",
+            label: "Tên sản phẩm",
+            placeholder: "Nhập tên sản phẩm",
+            required: true,
+          }}
         />
 
         <FormField
@@ -117,13 +126,19 @@ export default function AddProductPageView() {
             type: "number",
             formatCurrency: true,
             label: "Giá bán",
+            required: true,
           }}
         />
 
         <FormField
           form={addForm}
           className="col-span-2"
-          field={{ name: "description", type: "textarea", label: "Mô tả" }}
+          field={{
+            name: "description",
+            type: "textarea",
+            label: "Mô tả",
+            placeholder: "Nhập mô tả sản phẩm",
+          }}
         />
 
         <FormField

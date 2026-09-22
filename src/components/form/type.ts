@@ -43,9 +43,11 @@ export interface BaseFieldConfig extends Omit<
   InputHTMLAttributes<
     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
   >,
-  "type"
+  "type" | "value" | "defaultValue"
 > {
   type: FieldType;
+  value?: any;
+  defaultValue?: any;
   ref?: React.RefObject<HTMLInputElement | null>;
   variant?: "default" | "error" | "success";
   description?: string;
@@ -94,6 +96,13 @@ export interface SelectFieldConfig extends BaseFieldConfig {
   handleOnChange?: (value: string) => void;
 }
 
+export interface SwitchFieldConfig extends BaseFieldConfig {
+  type: "switch" | "checkbox";
+  value?: boolean;
+  color?: "primary" | "secondary";
+  defaultValue?: boolean;
+  handleOnChange?: (value: boolean) => void;
+}
 export default interface DateFieldConfig extends Omit<
   BaseFieldConfig,
   "onChange"
@@ -109,10 +118,6 @@ export default interface DateFieldConfig extends Omit<
   defaultDate?: DateOption;
   placeholder?: string;
   disabled?: boolean;
-}
-
-export interface SwitchFieldConfig extends BaseFieldConfig {
-  type: "switch" | "checkbox";
 }
 
 export interface FileFieldConfig extends BaseFieldConfig {

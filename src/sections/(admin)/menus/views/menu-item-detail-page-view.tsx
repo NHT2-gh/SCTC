@@ -17,7 +17,7 @@ export default function MenuItemDetailPageView({
           label: "Quản lý menu",
           href: APP_ROUTES.ADMIN.MENUS.DETAIL(data.info.menu_id),
         },
-        { label: data.info.products.name },
+        { label: data.info.product.name },
       ]}
     >
       <MenuItemEditForm data={data} />

@@ -20,7 +20,8 @@ export default function Select({
 
   React.useEffect(() => {
     if (value && String(value).trim()) setValueSelected(value);
-  }, [value]);
+    else setValueSelected(defaultValue || "");
+  }, [value, defaultValue]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;

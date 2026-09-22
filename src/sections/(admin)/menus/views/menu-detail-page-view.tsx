@@ -4,6 +4,7 @@ import {
   useAddMenuItems,
   useDeleteMenuItems,
   useGetMenuDetail,
+  useUpdateProductInfo,
 } from "@/hooks/queries/use-menu";
 import { MainContainer } from "@/components/common/page-layout";
 import { ProductCard, DrinksSearchBox } from "../components";
@@ -20,14 +21,16 @@ interface MenuDetailProps {
 }
 
 export default function MenuDetailPageView({ id }: MenuDetailProps) {
-  const { data: menuItems, isLoading } = useGetMenuDetail(id);
+  const { data: menuItems, isLoading, refetch } = useGetMenuDetail(id);
   const addMenuItems = useAddMenuItems();
   const deleteMenuItems = useDeleteMenuItems();
+  const updateMenuItem = useUpdateProductInfo(id);
+
   const handleAddItems = useCallback(async (ids: string[]) => {
     const originalArray =
       menuItems?.data && menuItems?.data?.length > 0
         ? menuItems?.data.map((item) => {
-            return item.products.id;
+            return item.product.id;
           })
         : undefined;
 
@@ -41,6 +44,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
           });
 
           if (resultAdd.success) {
+            refetch();
             showToast.success({ title: "Thành công cập nhật menu" });
           }
         } catch (error) {
@@ -72,6 +76,23 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
       }
     }
   }, []);
+
+  const handleUpdateStatus = async (productId: string, value: boolean) => {
+    try {
+      const result = await updateMenuItem.mutateAsync({
+        id: productId,
+        is_active: value,
+      });
+
+      if (result.success) {
+        showToast.success({ title: "Cập nhật thành công" });
+        refetch();
+      }
+    } catch (error) {
+      showToast.error({ title: "Lỗi", description: mapErrorToMessage(error) });
+    }
+  };
+
   return (
     <MainContainer
       title={"Thiết lập Menu"}
@@ -86,7 +107,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
         {!isLoading && menuItems?.data && (
           <DrinksSearchBox
             itemsIds={menuItems?.data.map((item) => {
-              return item.products.id;
+              return item.product.id;
             })}
             onChange={(ids) => handleAddItems(ids)}
           />
@@ -98,12 +119,18 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
           </Button>
         </Link>
       </div>
-      <section className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,300px)] gap-3">
+      <section className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,280px)] gap-3">
         {menuItems?.data.length === 0 && (
           <span className="italic">Chưa có item nào được thêm</span>
         )}
         {menuItems?.data.map((item) => (
-          <ProductCard key={item.id} item={item} />
+          <ProductCard
+            key={item.id}
+            item={item}
+            onChangeStatus={(id, is_active) =>
+              handleUpdateStatus(id, is_active)
+            }
+          />
         ))}
       </section>
     </MainContainer>

@@ -10,8 +10,9 @@ interface FormProps {
 export default function Form({ onSubmit, children, className }: FormProps) {
   return (
     <form
+      slot="form-root"
       onSubmit={(event) => {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault();
         onSubmit(event);
       }}
       className={cn(

@@ -1,5 +1,10 @@
+import { Switch } from "@/components/ui/switch";
 import React from "react";
 
 export default function StatusManagement() {
-  return <div>StatusManagement</div>;
+  return (
+    <div>
+      <Switch label="      " />
+    </div>
+  );
 }

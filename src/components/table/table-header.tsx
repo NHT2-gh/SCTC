@@ -35,10 +35,9 @@ export default function TableHeader({
         {handleSelectAll ? (
           <TableCell
             isHeader
-            className={cn(
-              "font-medium text-gray-500 px-2 sm:px-6 text-theme-xs dark:text-gray-400 text-start",
-              { "hidden md:table-cell": columns[0].isHiddenOnMobile },
-            )}
+            className={cn("font-medium px-2 sm:px-6 text-theme-xs text-start", {
+              "hidden md:table-cell": columns[0].isHiddenOnMobile,
+            })}
           >
             <Checkbox
               id={columns[0].key}
@@ -50,10 +49,9 @@ export default function TableHeader({
         ) : (
           <TableCell
             isHeader
-            className={cn(
-              "font-medium text-gray-500 px-2 sm:px-6 text-theme-xs dark:text-gray-400 text-start",
-              { "hidden md:table-cell": columns[0].isHiddenOnMobile },
-            )}
+            className={cn("font-medium px-2 sm:px-6 text-theme-xs text-start", {
+              "hidden md:table-cell": columns[0].isHiddenOnMobile,
+            })}
           >
             {columns[0].title}
           </TableCell>
@@ -64,9 +62,10 @@ export default function TableHeader({
             key={index}
             isHeader
             className={cn(
-              cell.className,
+              "font-medium px-2 sm:px-6 text-theme-xs text-start",
               { "text-center": cell.description },
               { "hidden md:table-cell": cell.isHiddenOnMobile },
+              cell.className,
             )}
           >
             {cell.title}

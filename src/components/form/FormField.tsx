@@ -1,5 +1,7 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 import Label from "./label/label";
+import { Switch } from "../ui/switch";
 import { Controller } from "react-hook-form";
 import DatePicker from "../date-picker/DatePicker";
 import { MultiSelect, Select } from "../ui/select";
@@ -13,9 +15,7 @@ import {
   TextInput,
   UrlPrefixInput,
 } from "../ui/input";
-import { Switch } from "../ui/switch";
 import { FieldRendererProps, FieldType } from "./type";
-import { cn } from "@/lib/utils";
 
 const fieldComponents: Record<FieldType, React.ComponentType<any>> = {
   text: TextInput,
@@ -41,7 +41,14 @@ const fieldComponents: Record<FieldType, React.ComponentType<any>> = {
   },
 };
 
-const customField = ["select", "multiselect", "date", "text", "number"];
+const customField = [
+  "select",
+  "multiselect",
+  "date",
+  "text",
+  "number",
+  "switch",
+];
 
 export default function FormField({
   field,

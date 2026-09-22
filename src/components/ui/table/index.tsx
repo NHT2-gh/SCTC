@@ -85,7 +85,7 @@ const TableCell: React.FC<TableCellProps> = ({
     <td
       colSpan={colSpan}
       className={cn(
-        "table-cell min-w-fit font-medium text-gray-500 px-3 py-2 md:px-6 md:py-3 text-theme-xs dark:text-gray-400 text-start",
+        "table-cell min-w-fit font-medium text-xs dark:text-gray-400 text-start text-gray-800 px-3 py-2 md:px-6 md:py-3 ",
         className,
       )}
     >

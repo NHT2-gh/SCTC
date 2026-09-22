@@ -13,25 +13,16 @@ import { useUpdateProductInfo } from "@/hooks/queries/use-menu";
 interface DrinkCardProps {
   item: MenuItem;
   className?: string;
+  onChangeStatus: (id: string, value: boolean) => void;
 }
 
-export default function ProductCard({ item, className }: DrinkCardProps) {
-  const updateMenuItem = useUpdateProductInfo(item.id);
-  const productInfo = item.products;
-  const handleUpdate = async (value: boolean) => {
-    try {
-      const result = await updateMenuItem.mutateAsync({
-        id: item.products.id,
-        is_active: value,
-      });
+export default function ProductCard({
+  item,
+  className,
+  onChangeStatus,
+}: DrinkCardProps) {
+  const productInfo = item.product;
 
-      if (result.success) {
-        showToast.success({ title: "Cập nhật thành công" });
-      }
-    } catch (error) {
-      showToast.error({ title: "Lỗi", description: mapErrorToMessage(error) });
-    }
-  };
   return (
     <article
       className={cn(
@@ -42,20 +33,20 @@ export default function ProductCard({ item, className }: DrinkCardProps) {
       <Link
         href={APP_ROUTES.ADMIN.MENUS.ITEMS.DETAIL(item.menu_id, item.id)}
         className={cn("w-full ", {
-          "opacity-50": !item.products.is_active,
+          "opacity-50": !productInfo.is_active,
         })}
       >
         <div className="w-full flex items-center gap-3">
           <Image
             src={
-              productInfo.image_url
+              productInfo.image_url && productInfo.image_url.length > 0
                 ? productInfo.image_url[0]
                 : "/images/logo/logo-text-1.webp"
             }
             alt="Drink"
             width={40}
             height={40}
-            className="aspect-square object-cover rounded-xl size-[3.125rem]"
+            className="aspect-square object-contain rounded-xl size-[3.125rem]"
           />
           <div className="space-y-2">
             <h5 className="font-medium leading-tight line-clamp-2">
@@ -64,18 +55,25 @@ export default function ProductCard({ item, className }: DrinkCardProps) {
             <p className="text-xs text-gray-600 line-clamp-1">
               {productInfo.description || "Chưa có mô tả"}
             </p>
-
-            <p className="text-sm text-brand-600">
-              Profit:
-              {formatCurrency(productInfo.selling_price - productInfo.cost)}
-            </p>
+            <span className="text-sm text-brand-600">
+              {formatCurrency(productInfo.selling_price)}
+            </span>
           </div>
         </div>
       </Link>
-      <Switch
-        onChange={(value: boolean) => handleUpdate(value)}
-        value={productInfo.is_active}
-      />
+      <div className="w-full flex items-center justify-between">
+        <p className="text-sm text-emerald-600">
+          Profit:
+          {formatCurrency(productInfo.selling_price - productInfo.cost)}
+        </p>
+        <Switch
+          type="switch"
+          handleOnChange={() =>
+            onChangeStatus(productInfo.id, !productInfo.is_active)
+          }
+          value={productInfo.is_active}
+        />
+      </div>
     </article>
   );
 }

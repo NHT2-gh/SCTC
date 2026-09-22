@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { showToast } from "@/lib/toast";
 import { v4 } from "uuid";
+import { AddProductPageView } from "../../products/views";
 
 export default function ComponentsRecipesPageView() {
   const [searchText, setSearchText] = useState<string>();
@@ -83,7 +84,7 @@ export default function ComponentsRecipesPageView() {
         />
 
         {searchText && (
-          <div className="border absolute bg-white z-[10] top-[7.5rem] left-6 right-6 rounded-lg mt-3 h-fit max-h-[40vh] overflow-y-scroll">
+          <div className="border absolute z-[10] bg-white top-[7.5rem] left-6 right-6 rounded-lg mt-3 h-fit max-h-[40vh] overflow-y-scroll">
             {products?.data && products?.data?.length > 0 ? (
               products?.data?.map((item) => (
                 <article
@@ -181,6 +182,8 @@ export default function ComponentsRecipesPageView() {
           confirmText="Thêm mới"
         />
       )}
+
+      <AddProductPageView />
     </MainContainer>
   );
 }

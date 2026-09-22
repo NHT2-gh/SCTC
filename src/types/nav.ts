@@ -1,4 +1,4 @@
-import { IconKey } from "@/utils/iconMap";
+import { IconKey } from "@/utils/icon-map";
 import { SystemRole } from "./common";
 
 // Navigation

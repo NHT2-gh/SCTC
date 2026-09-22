@@ -59,14 +59,17 @@ class MenuService {
     const query = supabase
       .from(this.menuItemsTable)
       .select(
-        `
+        ` 
           *,
-          products!inner(
+          product:products!inner(
             *
           ) 
         `,
       )
-      .eq("menu_id", id);
+      .eq("menu_id", id)
+      .order("product(product_type)", {
+        ascending: true,
+      });
 
     const { data: items, error } = await query;
 
@@ -74,7 +77,7 @@ class MenuService {
 
     return {
       success: true,
-      data: items || [],
+      data: (items as unknown as MenuItem[]) || [],
     };
   }
 
@@ -162,7 +165,7 @@ class MenuService {
   }
 
   async updateProductInfo(
-    data: ProductInfoValidation,
+    data: Partial<ProductInfoValidation>,
   ): Promise<MutationResult> {
     const query = supabase
       .from("products")
@@ -296,10 +299,10 @@ class MenuService {
       `
         *,
         menu_items!inner(
-        *,
-            products!inner(
-                    *
-                )
+          *,
+          product:products!inner(
+            *
+          )
         )
         `,
     );
@@ -309,7 +312,7 @@ class MenuService {
     if (error) handlePostgresError(error);
 
     return {
-      data: menuLayoutItems || [],
+      data: (menuLayoutItems as unknown as MenuLayoutItem[]) || [],
       success: true,
     };
   }
@@ -356,10 +359,10 @@ class MenuService {
       .from(this.menuItemsTable)
       .select(
         `
-            *,
-            products!inner(
-                *
-            )
+          *,
+          product:products!inner(
+            *
+          )
         `,
       )
       .eq("id", menuItemId)

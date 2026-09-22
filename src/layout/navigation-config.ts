@@ -7,10 +7,16 @@ import { Menu, NavItem } from "@/types/nav";
 // Main navigation items for CMS
 const NavItems: NavItem[] = [
   {
-    icon: "grid",
-    name: "Overview",
-    path: APP_ROUTES.ADMIN.BASE,
-    role: ["super_admin"],
+    icon: "receipt",
+    name: "Orders",
+    path: APP_ROUTES.ADMIN.ORDER.BASE,
+    subItems: [
+      {
+        name: "Order List",
+        path: APP_ROUTES.ADMIN.ORDER.BASE,
+      },
+    ],
+    role: ["admin"],
   },
   {
     icon: "package",
@@ -38,39 +44,19 @@ const NavItems: NavItem[] = [
     ],
     role: ["admin"],
   },
-  {
-    icon: "coffee",
-    name: "Product",
-    path: APP_ROUTES.ADMIN.PRODUCTS.ADD(),
-    role: ["admin"],
-    subItems: [{ name: "Add Product", path: APP_ROUTES.ADMIN.PRODUCTS.ADD() }],
-  },
+  // {
+  //   icon: "coffee",
+  //   name: "Product",
+  //   path: APP_ROUTES.ADMIN.PRODUCTS.ADD(),
+  //   role: ["admin"],
+  //   subItems: [{ name: "Add Product", path: APP_ROUTES.ADMIN.PRODUCTS.ADD() }],
+  // },
   {
     icon: "task",
     name: "Menu",
     path: APP_ROUTES.ADMIN.MENUS.BASE,
-    subItems: [
-      {
-        name: "Menus",
-        path: APP_ROUTES.ADMIN.MENUS.BASE,
-      },
-    ],
     role: ["admin"],
   },
-
-  {
-    icon: "receipt",
-    name: "Orders",
-    path: APP_ROUTES.ADMIN.ORDER.BASE,
-    subItems: [
-      {
-        name: "Order List",
-        path: APP_ROUTES.ADMIN.ORDER.BASE,
-      },
-    ],
-    role: ["admin"],
-  },
-
   {
     icon: "coupon",
     name: "Promotions",
@@ -86,6 +72,13 @@ const NavItems: NavItem[] = [
       },
     ],
     role: ["admin"],
+  },
+
+  {
+    icon: "setting",
+    name: "Setting",
+    path: APP_ROUTES.ADMIN.BASE,
+    role: ["admin", "super_admin"],
   },
 ];
 

@@ -142,7 +142,7 @@ export function useUpdateProductInfo(menuId: string) {
 
   return useMutation({
     mutationKey: mutationKeys.product.update,
-    mutationFn: (payload: ProductInfoValidation) =>
+    mutationFn: (payload: Partial<ProductInfoValidation>) =>
       menuService.updateProductInfo(payload),
 
     onSuccess: (_, payload) => {

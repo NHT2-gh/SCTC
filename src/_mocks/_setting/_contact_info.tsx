@@ -1,4 +1,4 @@
-import { IconKey } from "@/utils/iconMap";
+import { IconKey } from "@/utils/icon-map";
 
 export const _contact_info = {
   hotline: "0845002405",

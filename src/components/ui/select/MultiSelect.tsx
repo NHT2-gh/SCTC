@@ -33,6 +33,17 @@ export default function MultiSelect({
     setIsOpen((prev) => !prev);
   };
 
+  React.useEffect(() => {
+    if (options) {
+      const selectedValues = options
+        .filter((option) => option.selected)
+        .map((option) => option.value);
+      setSelectedOptions(selectedValues.length > 0 ? selectedValues : []);
+    } else {
+      setSelectedOptions([]);
+    }
+  }, [options, defaultSelected]);
+
   const handleSelect = (optionValue: string) => {
     const newSelectedOptions = selectedOptions.includes(optionValue)
       ? selectedOptions.filter((value) => value !== optionValue)

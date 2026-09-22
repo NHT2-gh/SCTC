@@ -14,13 +14,14 @@ export const MenuLayoutItemEditValidation = z.object({
 
 export const productInfoValidation = z.object({
   id: z.string(),
-  name: z.string().optional(),
-  selling_price: z.number().optional(),
+  name: z.string(),
+  selling_price: z.number(),
   description: z.string().nullable().optional(),
   cost: z.number().optional(),
   product_type: z.enum(ProductType).optional(),
   image_url: z.array(z.string()).nullable().optional(),
   is_active: z.boolean().optional(),
+  is_only_allow_dinein: z.boolean().optional(),
 });
 
 export const productOptionValidation = z.object({

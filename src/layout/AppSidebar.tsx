@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import { NavItem } from "@/types/nav";
-import { getIcon } from "@/utils/iconMap";
+import { getIcon } from "@/utils/icon-map";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { SystemRole } from "@/types/common";

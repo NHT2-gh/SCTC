@@ -129,7 +129,7 @@ export default function IngredientsTable() {
               <TableRow
                 key={ingredient.id}
                 className={cn(
-                  " ",
+                  "[&_td]:min-w-[120px] ",
                   index === editIngredientIndex ? "bg-blue-50" : "",
                 )}
               >

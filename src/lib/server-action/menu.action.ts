@@ -33,16 +33,16 @@ export async function serverActionGetMenuItemInfo(
 
   const productOptions = await menuService.getProductOptions(
     menuItemId,
-    info.data.products.product_type,
+    info.data.product.product_type,
   );
 
   const tableInfo = await getCurrentTable();
 
   let isAllowOrder = true;
 
-  if (!tableInfo?.tableId && info.data.products.is_only_allow_dinein) {
+  if (!tableInfo?.tableId && info.data.product.is_only_allow_dinein) {
     isAllowOrder = false;
-  } else if (!info.data.products.is_active) {
+  } else if (!info.data.product.is_active) {
     isAllowOrder = false;
   }
 

@@ -41,7 +41,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
   const { refetch } = useGetProductOptions(data.info.id);
   const [isUploading, setIsUploading] = useState(false);
   const [images, setImages] = useState<ImageItem[]>(
-    data.info.products.image_url?.map((item) => {
+    data.info.product.image_url?.map((item) => {
       return {
         id: v4(),
         file: new File([], item),
@@ -67,14 +67,15 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
     mode: "onChange",
     defaultValues: {
       info: {
-        id: data.info.products.id || "",
-        name: data.info.products.name || "",
-        description: data.info.products.description || "",
-        selling_price: data.info.products.selling_price || 0,
-        image_url: data.info.products.image_url || [],
-        is_active: data.info.products.is_active || false,
-        cost: data.info.products.cost || 0,
-        product_type: data.info.products.product_type || ProductType.coffee,
+        id: data.info.product.id || "",
+        name: data.info.product.name || "",
+        description: data.info.product.description || "",
+        selling_price: data.info.product.selling_price || 0,
+        image_url: data.info.product.image_url || [],
+        is_active: data.info.product.is_active || false,
+        cost: data.info.product.cost || 0,
+        is_only_allow_dinein: !!data.info.product.is_only_allow_dinein,
+        product_type: data.info.product.product_type || ProductType.coffee,
       },
       options: [...data.options.custom]
         .filter((option) => {
@@ -237,6 +238,8 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
     }
   };
 
+  // console.log(editForm.watch("info.is_active"));
+
   return (
     <section className="space-y-4">
       <Form
@@ -295,13 +298,21 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
           className="col-span-2"
           field={{ name: "info.description", type: "textarea", label: "Mô tả" }}
         />
-
         <FormField
           form={editForm}
           field={{
             name: "info.is_active",
             type: "switch",
             label: "Publish",
+          }}
+        />
+
+        <FormField
+          form={editForm}
+          field={{
+            name: "info.is_only_allow_dinein",
+            type: "switch",
+            label: "Chỉ cho phép dùng tại quán",
           }}
         />
       </Form>
@@ -391,8 +402,9 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
 
                   <TableCell>
                     <Switch
+                      type="switch"
                       value={option.is_default}
-                      onChange={(checked) =>
+                      handleOnChange={(checked) =>
                         setValue(`options.${index}.is_default`, checked)
                       }
                     />

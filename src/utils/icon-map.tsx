@@ -28,6 +28,7 @@ export const iconMap = {
   listOrdered: ListOrderedIcon,
   setting: SettingsIcon,
   coupon: Ticket,
+
   "modal-alert-success": IcModalAlertSuccessIcon,
   "modal-alert-info": IcModalAlertInfoIcon,
   "modal-alert-warning": IcModalAlertWarningIcon,

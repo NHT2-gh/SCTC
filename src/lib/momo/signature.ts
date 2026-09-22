@@ -1,4 +1,4 @@
-import { hmacSHA256 } from "@/utils/create_hmacSHA256";
+import { hmacSHA256 } from "@/utils/create_hmac";
 import { SignatureInput } from "./type";
 
 export function buildRawSignature(data: SignatureInput) {

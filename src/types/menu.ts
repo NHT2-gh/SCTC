@@ -42,7 +42,7 @@ export interface Menu {
 export interface MenuItem {
   id: string;
   menu_id: string;
-  products: Product;
+  product: Product;
 }
 
 export interface MenuLayoutItem {

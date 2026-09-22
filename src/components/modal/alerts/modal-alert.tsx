@@ -1,6 +1,6 @@
 import Modal from "@/components/ui/modal/modal";
 import { cn } from "@/lib/utils";
-import { iconMap } from "@/utils/iconMap";
+import { iconMap } from "@/utils/icon-map";
 import React from "react";
 
 export type AlertType = "success" | "info" | "warning" | "danger";
