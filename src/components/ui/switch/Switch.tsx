@@ -10,7 +10,7 @@ const switchColors = {
       knob: "translate-x-full bg-white",
     },
     normal: {
-      background: "bg-gray-200 dark:bg-white/10",
+      background: "bg-gray-100 dark:bg-white/10",
       knob: "translate-x-0 bg-white",
     },
   },

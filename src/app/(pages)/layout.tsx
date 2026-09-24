@@ -9,6 +9,7 @@ import { OrderRealtimeListener } from "@/sections/(admin)/orders/components";
 import AuthProvider from "@/context/AuthContext";
 import { AudioProvider } from "@/sections/(admin)/orders/components/audio-init";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { outfit } from "@/lib/fonts";
 
 export default function AdminLayout({
   children,
@@ -24,7 +25,7 @@ export default function AdminLayout({
       : "xl:ml-[90px]";
   return (
     <AuthProvider>
-      <div className="min-h-screen xl:flex">
+      <div className={`${outfit.className} min-h-screen xl:flex`}>
         {/* Sidebar and Backdrop */}
         <AppSidebar
           topSidebar={{
@@ -37,7 +38,7 @@ export default function AdminLayout({
         <Backdrop />
         {/* Main Content Area */}
         <div
-          className={`flex-1 transition-all  duration-300 ease-in-out ${mainContentMargin}`}
+          className={`flex-1 transition-all duration-300 ease-in-out ${mainContentMargin}`}
         >
           <ThemeProvider>
             {/* Header */}

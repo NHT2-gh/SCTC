@@ -36,4 +36,8 @@ export const mutationKeys = {
     update: ["promotion", "update"],
     apply: ["promotion", "apply"],
   },
+
+  historyStatus: {
+    upsert: ["historyStatus", "upsert"],
+  },
 };

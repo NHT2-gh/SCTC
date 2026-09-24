@@ -15,7 +15,11 @@ export default function MainContentProductPage({
   return (
     <section className="bg-[#8D1111] [&_hr]:border-[#E2DDCD] relative flex flex-col h-dvh">
       <NavigationBar backHref={APP_ROUTES.GUEST.ROOT} />
-      <ProductInfo product={product} />
+      <ProductInfo
+        info={product.info}
+        options={product.options}
+        isAllowOrder={product.isAllowOrder}
+      />
       <FloatingCartButton />
     </section>
   );

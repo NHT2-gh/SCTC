@@ -80,5 +80,6 @@ export const queryKeys = {
 
   store: {
     getAnnouncement: () => ["store", "announcements"],
+    getHistoryStoreStatus: () => ["store", "history-store-status"],
   },
 };

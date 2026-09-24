@@ -34,7 +34,7 @@ export const ROUTES = {
  */
 export const DEFAULT_LOGIN_REDIRECT = APP_ROUTES.ADMIN.BASE;
 export const DEFAULT_AUTH_REDIRECT = APP_ROUTES.AUTH.SIGN_IN;
-
+export const DEFAULT_GUEST_REDIRECT = APP_ROUTES.GUEST.ROOT;
 /**
  * Check exact match
  */

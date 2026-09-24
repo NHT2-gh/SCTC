@@ -7,7 +7,7 @@ import { useModal } from "@/hooks/useModal";
 import Modal from "@/components/ui/modal/modal";
 import { APP_ROUTES } from "@/config/app-routes";
 import { useGetTable } from "@/hooks/queries/use-overview";
-import { TableHeader, TableTitle } from "@/components/table";
+import { TableHeader } from "@/components/table";
 import { ColumnDefinition } from "@/components/table/table-header";
 import {
   CheckCircle2Icon,
@@ -41,8 +41,7 @@ export default function TableManagement() {
 
   return (
     <section>
-      <TableTitle title="QR Code" />
-      <Table>
+      <Table title="QR Order">
         <TableHeader columns={colums} />
         <TableBody>
           <TableRow>

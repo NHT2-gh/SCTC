@@ -19,14 +19,18 @@ import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { FilterItemConfig } from "@/components/filter/filter-box-render/type";
 import { FixedOption } from ".";
 
-export default function ProductInfo({ product }: { product: ProductDetail }) {
-  const { info, options, isAllowOrder } = product;
+export default function ProductInfo({
+  info,
+  options,
+  isAllowOrder,
+}: ProductDetail) {
   const { add } = useCart();
   const [lineNote, setLineNote] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [productOptionSchame, setProductOptionSchame] = useState<
     FilterItemConfig[]
   >([]);
+
   const {
     updateFilter,
     clearFilters,
@@ -75,7 +79,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
       });
 
       add({
-        menu_item: product.info,
+        menu_item: info,
         quantity: quantity,
         line_note: lineNote,
         selected_options: selectedOptions,
@@ -123,7 +127,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
   }, [options.custom, options.fixed]);
 
   const totalPrice = useMemo(() => {
-    const basePrice = product.info.product.selling_price;
+    const basePrice = info.product.selling_price;
 
     const optionPrice = Object.entries(filterValues).flatMap(([_, value]) =>
       Array.isArray(value)
@@ -141,7 +145,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
       basePrice * quantity +
       optionPrice.reduce((total, option) => total + (option?.price ?? 0), 0)
     );
-  }, [filterValues, options, product.info.product.selling_price, quantity]);
+  }, [filterValues, options, info.product.selling_price, quantity]);
 
   return (
     <>
@@ -243,7 +247,7 @@ export default function ProductInfo({ product }: { product: ProductDetail }) {
                   {" -"} {formatCurrency(totalPrice)}
                 </span>
               </span>
-            ) : !isAllowOrder && product.info.product.is_only_allow_dinein ? (
+            ) : !isAllowOrder && info.product.is_only_allow_dinein ? (
               <span className=" text-sm text-white ">
                 Hiện tại sản phẩm này chỉ phục vụ tại chỗ
               </span>

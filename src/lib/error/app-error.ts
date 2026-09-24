@@ -1,11 +1,21 @@
 import { ErrorCode } from "./error-codes";
 
-export const errorMessageMap: Record<ErrorCode, string> = {
-  [ErrorCode.DUPLICATE_DATA]: "Dữ liệu đã tồn tại",
-  [ErrorCode.FOREIGN_KEY_INVALID]: "Dữ liệu liên kết không hợp lệ",
-  [ErrorCode.MISSING_REQUIRED_FIELD]: "Vui lòng nhập đầy đủ thông tin",
-  [ErrorCode.INVALID_INPUT]: "Dữ liệu không hợp lệ",
-  [ErrorCode.NOT_FOUND]: "Không tìm thấy dữ liệu",
+export const errorMessageMap: Record<
+  ErrorCode,
+  { title: string; detailMessage?: string }
+> = {
+  [ErrorCode.DUPLICATE_DATA]: { title: "Dữ liệu đã tồn tại" },
+  [ErrorCode.FOREIGN_KEY_INVALID]: { title: "Dữ liệu liên kết không hợp lệ" },
+  [ErrorCode.MISSING_REQUIRED_FIELD]: {
+    title: "Vui lòng nhập đầy đủ thông tin",
+  },
+  [ErrorCode.INVALID_INPUT]: { title: "Dữ liệu không hợp lệ" },
+  [ErrorCode.NOT_FOUND]: { title: "Không tìm thấy dữ liệu" },
+  [ErrorCode.CONNECTION_EXCEPTION]: {
+    title: "Không thể kết nói",
+    detailMessage:
+      "Có vẻ như kết nối Internet của bạn đang không ổn định.\nVui lòng kiểm tra lại thiết bị mạng và thử lại sau ít phút",
+  },
 };
 
 export const mapErrorToMessage = (error: unknown): string => {
@@ -15,5 +25,5 @@ export const mapErrorToMessage = (error: unknown): string => {
 
   const code = error.message as ErrorCode;
 
-  return errorMessageMap[code] ?? "Đã có lỗi xảy ra, vui lòng thử lại";
+  return errorMessageMap[code].title ?? "Đã có lỗi xảy ra, vui lòng thử lại";
 };

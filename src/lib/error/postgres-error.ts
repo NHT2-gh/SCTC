@@ -17,6 +17,8 @@ export const handlePostgresError = (
       throw new AppError(ErrorCode.MISSING_REQUIRED_FIELD);
     case "PGRST116":
       throw new AppError(ErrorCode.NOT_FOUND);
+    case "08000":
+      throw new AppError(ErrorCode.CONNECTION_EXCEPTION);
 
     default:
       throw new AppError(ErrorCode.INVALID_INPUT);

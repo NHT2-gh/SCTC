@@ -76,7 +76,7 @@ const NavItems: NavItem[] = [
 
   {
     icon: "setting",
-    name: "Setting",
+    name: "Overview",
     path: APP_ROUTES.ADMIN.BASE,
     role: ["admin", "super_admin"],
   },

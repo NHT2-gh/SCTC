@@ -4,9 +4,9 @@
 
 @theme {
   --font-*: initial;
-  --font-outfit: Outfit, sans-serif;
   --font-delagothic: delagothic, sans-serif;
   --font-itim: itim, sans-serif;
+  --font-outfit: oufit, sans-serif;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;

@@ -1,7 +1,7 @@
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import { supabase } from "@/supabase/supabaseClients";
 import { ResponseStandard } from "@/types/common";
-import { Table } from "@/types/overview";
+import { Table } from "@/types/store";
 
 class OverviewService {
   private tableName: string;

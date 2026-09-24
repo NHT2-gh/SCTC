@@ -1,8 +1,10 @@
+import { TableTitle } from "@/components/table";
+import { TableTitleProps } from "@/components/table/table-title";
 import { cn } from "@/lib/utils";
 import React, { ReactNode } from "react";
 
 // Props for Table
-interface TableProps {
+interface TableProps extends Partial<TableTitleProps> {
   children: ReactNode; // Table content (thead, tbody, etc.)
   className?: string; // Optional className for styling
 }
@@ -36,10 +38,13 @@ interface TableCellProps {
 }
 
 // Table Component
-const Table: React.FC<TableProps> = ({ children, className }) => {
+const Table: React.FC<TableProps> = ({ children, className, title }) => {
   return (
-    <div className={cn("max-w-full overflow-x-auto", className)}>
-      <table className={` w-full scrollbar-hidden`}>{children}</table>
+    <div slot="table">
+      {title && <TableTitle title={title} />}
+      <div className={cn("max-w-full overflow-x-auto", className)}>
+        <table className={` w-full scrollbar-hidden`}>{children}</table>
+      </div>
     </div>
   );
 };
@@ -85,7 +90,7 @@ const TableCell: React.FC<TableCellProps> = ({
     <td
       colSpan={colSpan}
       className={cn(
-        "table-cell min-w-fit font-medium text-xs dark:text-gray-400 text-start text-gray-800 px-3 py-2 md:px-6 md:py-3 ",
+        "table-cell min-w-fit text-xs dark:text-gray-400 text-start text-gray-800 px-3 py-2 md:px-6 md:py-3 ",
         className,
       )}
     >

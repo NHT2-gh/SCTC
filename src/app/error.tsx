@@ -10,15 +10,12 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <div className="container min-h-screen flex items-center justify-center">
+    <div className="container min-h-screen flex items-center justify-center font-delagothic">
       <div className="text-center space-y-2">
         <h1 className="text-2xl font-semibold">Oops!</h1>
-        <p className="text-gray-600">
-          Something went wrong. Please try again later or contact support.
-          {error.message}
-        </p>
+        <p className="text-gray-600 font-itim">{error.message}</p>
         <Button className="min-w-[6.25rem]" onClick={() => reset()}>
-          Try again
+          Thử lại
         </Button>
       </div>
     </div>

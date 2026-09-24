@@ -53,7 +53,7 @@ class IngredientService {
     if (!data) {
       return {
         success: false,
-        message: errorMessageMap["INVALID_INPUT"],
+        message: errorMessageMap["INVALID_INPUT"].title,
       };
     }
     const query = supabase.from(this.tableName).insert(data);

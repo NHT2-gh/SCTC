@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-interface TableTitleProps {
+export interface TableTitleProps {
   title: string;
   subTitle?: string;
   children?: ReactNode;
@@ -12,8 +12,8 @@ export default function TableTitle({
   children,
 }: TableTitleProps) {
   return (
-    <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-gray-800">
-      <div className="hidden md:block xl:shrink-0">
+    <div className="w-full flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-gray-800">
+      <div className="w-full">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
           {title}
         </h3>

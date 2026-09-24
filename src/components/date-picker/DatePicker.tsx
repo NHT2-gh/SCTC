@@ -6,18 +6,17 @@ import "flatpickr/dist/flatpickr.css";
 import { Calendar } from "lucide-react";
 import DateFieldConfig from "../form/type";
 import { Instance } from "flatpickr/dist/types/instance";
-import { DateRangeLimit } from "flatpickr/dist/types/options";
 
 export default function DatePicker({
   id,
   mode,
   name,
   handleOnChange,
-  defaultValue,
   placeholder,
   disabled,
   pickerType,
   defaultDate,
+  value,
 }: DateFieldConfig) {
   const inputRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<Instance | null>(null);
@@ -25,11 +24,13 @@ export default function DatePicker({
 
   useEffect(() => {
     if (!inputRef.current) return;
+
     const options: flatpickr.Options.Options = {
       mode: mode ?? "single",
       static: true,
       monthSelectorType: "static",
-      defaultDate: defaultValue || defaultDate,
+      defaultDate: defaultDate,
+
       onChange: (_, dateStr, instance) => {
         if (instance.config.mode === "range") {
           const [start, end] = dateStr.split(" to ");
@@ -58,6 +59,7 @@ export default function DatePicker({
     }
 
     pickerRef.current = flatpickr(inputRef.current, options);
+
     setIsMobile(pickerRef.current.isMobile);
 
     return () => {
@@ -66,8 +68,25 @@ export default function DatePicker({
     };
   }, []);
 
+  // Sync React Hook Form value -> Flatpickr
+  useEffect(() => {
+    if (!pickerRef.current) return;
+
+    if (
+      value === undefined ||
+      value === null ||
+      value === "" ||
+      (Array.isArray(value) && value.length === 0)
+    ) {
+      pickerRef.current.clear();
+      return;
+    }
+
+    pickerRef.current.setDate(new Date(value), false);
+  }, [value]);
+
   return (
-    <div className="relative z-30">
+    <div className="relative z-50">
       <input
         id={id}
         ref={inputRef}

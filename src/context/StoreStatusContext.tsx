@@ -10,10 +10,10 @@ import {
 
 import { storeService } from "@/services/store.service";
 import { supabase } from "@/supabase/supabaseClients";
-import { StoreSetting, StoreStatusType } from "@/types/store";
+import { StoreStatus, StoreStatusType } from "@/types/store";
 
 interface StoreStatusContextValue {
-  setting: StoreSetting | null;
+  setting: StoreStatus | null;
   status: StoreStatusType | null;
   isLoading: boolean;
   isOpening: boolean;
@@ -34,7 +34,7 @@ export function StoreStatusProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [setting, setSetting] = useState<StoreSetting | null>(null);
+  const [setting, setSetting] = useState<StoreStatus | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [now, setNow] = useState(() => new Date());
 
