@@ -1,5 +1,4 @@
 "use client";
-
 import { useStoreStatus } from "@/context/StoreStatusContext";
 import { Portal } from "../portal";
 import ModalAlert from "./alerts/modal-alert";

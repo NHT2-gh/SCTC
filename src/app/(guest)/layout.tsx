@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { itim } from "@/lib/fonts";
 import { FloatingHelpButton } from "@/components/floading-help-button";
@@ -11,7 +10,9 @@ export default function GuestLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen overflow-hidden bg-[#FFFAEA] [&_header]:bg-[#FFFAEACC]">
+    <div
+      className={`${itim.className} min-h-screen overflow-hidden bg-[#FFFAEA] [&_header]:bg-[#FFFAEACC]`}
+    >
       {/* Main Content Area */}
       <div className={`transition-all duration-300 ease-in-out `}>
         {/* Header */}

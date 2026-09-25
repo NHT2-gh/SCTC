@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { ModalView } from "./components";
 import { useModal } from "@/hooks/useModal";

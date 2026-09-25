@@ -24,33 +24,6 @@ export const itim = localFont({
   display: "swap",
 });
 
-export const roboto = localFont({
-  src: [
-    {
-      path: "../assets/fonts/roboto/Roboto-Regular.ttf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/roboto/Roboto-Medium.ttf",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/roboto/Roboto-Bold.ttf",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/roboto/Roboto-Italic.ttf",
-      weight: "400",
-      style: "italic",
-    },
-  ],
-  variable: "--font-roboto",
-  display: "swap",
-});
-
 export const outfit = localFont({
   src: [
     {
