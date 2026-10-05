@@ -47,6 +47,7 @@ export default function FormRenderer({
       }
     },
     (errors) => {
+      console.log(errors);
       onError?.(errors, form);
     },
   );

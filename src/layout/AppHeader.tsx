@@ -1,9 +1,10 @@
 "use client";
-import { ThemeToggleButton } from "@/components/common/theme-toggle-button";
-import NotificationDropdown from "@/components/header/NotificationDropdown";
-import UserDropdown from "@/components/header/UserDropdown";
-import { useSidebar } from "@/context/SidebarContext";
 import React, { useEffect, useRef, useState } from "react";
+
+import { useSidebar } from "@/context/SidebarContext";
+import UserDropdown from "@/components/header/UserDropdown";
+// import { ThemeToggleButton } from "@/components/common/theme-toggle-button";
+// import NotificationDropdown from "@/components/header/NotificationDropdown";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -149,16 +150,16 @@ const AppHeader: React.FC = () => {
         <div
           className={`${
             isApplicationMenuOpen ? "flex" : "hidden"
-          } items-center justify-between w-full gap-4 px-5 py-4 xl:flex shadow-theme-md xl:justify-end xl:px-0 xl:shadow-none`}
+          } items-center justify-end w-full gap-4 px-5 py-4 xl:flex shadow-theme-md xl:justify-end xl:px-0 xl:shadow-none`}
         >
-          <div className="flex items-center gap-2 2xsm:gap-3">
-            {/* <!-- Dark Mode Toggler --> */}
-            <ThemeToggleButton />
-            {/* <!-- Dark Mode Toggler --> */}
+          {/* <div className="flex items-center gap-2 2xsm:gap-3"> */}
+          {/* <!-- Dark Mode Toggler --> */}
+          {/* <ThemeToggleButton /> */}
+          {/* <!-- Dark Mode Toggler --> */}
 
-            <NotificationDropdown />
-            {/* <!-- Notification Menu Area --> */}
-          </div>
+          {/* <NotificationDropdown /> */}
+          {/* <!-- Notification Menu Area --> */}
+          {/* </div> */}
           {/* <!-- User Area --> */}
           <UserDropdown />
         </div>

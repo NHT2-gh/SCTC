@@ -40,16 +40,16 @@ export default function AdminLayout({
         <div
           className={`flex-1 transition-all duration-300 ease-in-out ${mainContentMargin}`}
         >
-          <ThemeProvider>
-            {/* Header */}
-            <AppHeader />
-            {/* Page Content */}
-            <div className="p-4 md:px-5 mx-auto max-w-full h-[calc(100vh-8rem)]">
-              <AudioProvider />
-              <OrderRealtimeListener />
-              {children}
-            </div>
-          </ThemeProvider>
+          {/* <ThemeProvider> */}
+          {/* Header */}
+          <AppHeader />
+          {/* Page Content */}
+          <div className="p-4 md:px-5 mx-auto max-w-full h-[calc(100vh-8rem)]">
+            <AudioProvider />
+            <OrderRealtimeListener />
+            {children}
+          </div>
+          {/* </ThemeProvider> */}
         </div>
       </div>
     </AuthProvider>

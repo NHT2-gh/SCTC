@@ -3,7 +3,7 @@ import { FormField } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useIngredients } from "@/hooks/queries/use-ingredient";
-import { Edit2, Trash } from "lucide-react";
+import { Edit2, Trash, View } from "lucide-react";
 import { ProductRecipeItemsValidationSchema } from "@/schemas/validation/recipe.validation";
 import {
   useComponents,
@@ -23,19 +23,19 @@ export default function ProductRecipeItemsList() {
     control: productRecipeForm.control,
     name: "recipe_items",
   });
+  const [fieldLoadingIds, setFieldLoadingIds] = useState<string[]>();
 
   const productRecipeItems = productRecipeForm.watch("recipe_items");
 
   const {
     getValues,
-    formState: { errors, isLoading },
+    formState: { errors, isLoading, dirtyFields },
   } = productRecipeForm;
 
   const [viewComponent, setViewComponent] = useState<Component | null>(null);
 
-  const { data: componentRecipeItems } = useGetComponentRecipeItems(
-    viewComponent?.id,
-  );
+  const { data: componentRecipeItems, isLoading: componentsLoading } =
+    useGetComponentRecipeItems(viewComponent?.id);
 
   return (
     <div className="space-y-2">
@@ -44,7 +44,7 @@ export default function ProductRecipeItemsList() {
         <p className="text-red-500">{errors?.recipe_items?.message}</p>
       ) : productRecipeItems.length > 0 ? (
         productRecipeItems.map((field, index) => (
-          <div key={field.id} className="">
+          <div key={field.id}>
             <div className="flex gap-4 items-center">
               {field.ingredient_id && (
                 <FormField
@@ -98,7 +98,7 @@ export default function ProductRecipeItemsList() {
                   setViewComponent(component || null);
                 }}
               >
-                <Edit2 className="size-4" />
+                <View className="size-4" />
               </Button>
               <Button
                 size="icon"
@@ -112,7 +112,8 @@ export default function ProductRecipeItemsList() {
 
             {viewComponent?.id === field.component_id && viewComponent && (
               <ul className="space-y-5 mt-4 list-inside  bg-gray-100 p-4 rounded-lg">
-                {componentRecipeItems?.data?.map((item, idx) => {
+                {componentsLoading && <p>Loading ...</p>}
+                {componentRecipeItems?.data?.map((item) => {
                   return (
                     <li key={item.id} className="flex items-center gap-3">
                       <Select
@@ -160,6 +161,22 @@ export default function ProductRecipeItemsList() {
                     </li>
                   );
                 })}
+                {componentRecipeItems && (
+                  <li className="flex items-center justify-end gap-3 font-semibold">
+                    Total Cost Component:{" "}
+                    {formatCurrency(
+                      componentRecipeItems.data?.reduce((total, item) => {
+                        if (item.ingredients?.cost_per_unit) {
+                          return (
+                            total +
+                            item.ingredients.cost_per_unit * item.quantity
+                          );
+                        }
+                        return total;
+                      }, 0) || 0,
+                    )}
+                  </li>
+                )}
               </ul>
             )}
           </div>

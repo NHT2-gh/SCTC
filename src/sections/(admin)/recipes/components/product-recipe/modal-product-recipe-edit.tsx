@@ -16,10 +16,23 @@ import {
   useDeleteProductRecipeItem,
   useGetProductRecipeDetail,
   useUpsertProductRecipeItem,
+  useUpsertProductRecipeVersion,
 } from "@/hooks/queries/use-product";
 import { AddProductRecipeItemsForm, ProductRecipeItemsList } from "..";
 import { formatCurrency } from "@/utils/format-data";
 import { FormField } from "@/components/form";
+import { CheckCircle2, X } from "lucide-react";
+import { mapErrorToMessage } from "@/lib/error/app-error";
+
+type ItemStateMap = Map<
+  string,
+  {
+    isEditting?: boolean;
+    isDeleting?: boolean;
+    isSuccess?: boolean;
+    message?: string;
+  }
+>;
 
 export default function ModalProductRecipeEdit({
   isOpen,
@@ -30,18 +43,10 @@ export default function ModalProductRecipeEdit({
 }) {
   const [currentId, setCurrentId] = useState(currentRecipe.id);
   const { data: recipeItems, refetch } = useGetProductRecipeDetail(currentId);
+  const upsertProductRecipeVersion = useUpsertProductRecipeVersion();
   const upsertRecipeItems = useUpsertProductRecipeItem();
   const deleteRecipeItems = useDeleteProductRecipeItem();
-  const [result, setResult] = useState<{
-    updated?: {
-      items: number;
-      success: boolean;
-    };
-    deleted?: {
-      items: number;
-      success: boolean;
-    };
-  }>();
+  const [itemStateMap, setItemStateMap] = useState<ItemStateMap>(new Map());
 
   const productRecipeItems = useForm<ProductRecipeItemsValidationSchema>({
     resolver: zodResolver(productRecipeItemsValidationSchema),
@@ -74,30 +79,109 @@ export default function ModalProductRecipeEdit({
         dirtyFields: dirtyFields.recipe_items,
       });
       if (diffComponentItems.upsert.length > 0) {
-        const res = await upsertRecipeItems.mutateAsync({
-          id: currentRecipe.id,
-          data: diffComponentItems.upsert,
+        setItemStateMap((prev) => {
+          prev.set("upsert_data", {
+            isEditting: false,
+          });
+          return prev;
         });
-        setResult({
-          updated: {
-            success: res.success,
-            items: diffComponentItems.upsert.length,
-          },
-        });
+
+        try {
+          const res = await upsertRecipeItems.mutateAsync({
+            id: currentRecipe.id,
+            data: diffComponentItems.upsert,
+          });
+
+          setItemStateMap((prev) => {
+            prev.set("upsert_data", {
+              isEditting: false,
+              isSuccess: res.success,
+              message: `Đã cập nhật thành công ${diffComponentItems.upsert.length} thành phần`,
+            });
+            return prev;
+          });
+        } catch (error) {
+          setItemStateMap((prev) => {
+            prev.set("upsert_data", {
+              isEditting: false,
+              isSuccess: false,
+              message: mapErrorToMessage(error),
+            });
+            return prev;
+          });
+        }
       }
       if (diffComponentItems.deleted.length > 0) {
+        setItemStateMap((prev) => {
+          prev.set("delete_data", {
+            isEditting: true,
+            isSuccess: false,
+          });
+          return prev;
+        });
+      }
+      try {
         const res = await deleteRecipeItems.mutateAsync(
           diffComponentItems.deleted,
         );
-        setResult({
-          updated: {
-            success: res.success,
-            items: diffComponentItems.deleted.length,
-          },
+
+        setItemStateMap((prev) => {
+          prev.set("delete_data", {
+            isEditting: true,
+            isSuccess: res.success,
+            message: `Đã xoá thành công ${diffComponentItems.deleted.length} thành phần`,
+          });
+          return prev;
+        });
+      } catch (error) {
+        setItemStateMap((prev) => {
+          prev.set("delete_data", {
+            isEditting: true,
+            isSuccess: false,
+            message: mapErrorToMessage(error),
+          });
+          return prev;
         });
       }
 
       await refetch();
+    }
+
+    if (dirtyFields.note) {
+      setItemStateMap((prev) => {
+        prev.set("note", {
+          isEditting: true,
+        });
+        return prev;
+      });
+      try {
+        const res = await upsertProductRecipeVersion.mutateAsync({
+          id: currentRecipe.id,
+          note: data.note,
+          product_id: currentRecipe.products.id,
+        });
+
+        if (res.success) {
+          setItemStateMap((prev) => {
+            prev.set("note", {
+              isEditting: false,
+              isSuccess: true,
+              message: `Đã cập nhật ghi chú thành "${data.note}"`,
+            });
+            return prev;
+          });
+        }
+      } catch (error) {
+        setItemStateMap((prev) => {
+          prev.set("note", {
+            isEditting: false,
+            isDeleting: false,
+            isSuccess: false,
+            message: mapErrorToMessage(error),
+          });
+          return prev;
+        });
+      }
     }
   };
 
@@ -110,46 +194,50 @@ export default function ModalProductRecipeEdit({
         <Form className="block space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <ProductRecipeItemsList />
 
-          {result && (
-            <>
-              <p>
-                Xoá {result.deleted?.items}{" "}
-                {result.deleted?.success ? "Thành công" : "Thất bại"}
-              </p>
-              <p>
-                Cập nhật {result.updated?.items}{" "}
-                {result.updated?.success ? "Thành công" : "Thất bại"}
-              </p>
-            </>
-          )}
-
           <div className="space-y-2">
             <FormField
               form={productRecipeItems}
               field={{
                 name: "note",
-                label: "Ghi chú",
+                label: "Note",
                 type: "textarea",
-                placeholder: "Nhập ghi chú...",
+                placeholder: "Enter note...",
               }}
             />
           </div>
 
           <p className="mt-4 mb-4 font-semibold">
-            Giá vốn: {formatCurrency(currentRecipe.cost)}
+            Total Cost: {formatCurrency(currentRecipe.cost)}
           </p>
+
+          {Array.from(itemStateMap.entries()).map(([key, value]) => {
+            return (
+              <p
+                key={key}
+                className="inline-flex items-center text-danger italic text-sm"
+              >
+                {value.isSuccess ? (
+                  <CheckCircle2 fill="#16a34a" stroke="white" />
+                ) : (
+                  <X fill="#dc2626" />
+                )}
+
+                {value.message}
+              </p>
+            );
+          })}
 
           <Button
             type="submit"
             disabled={!isDirty}
             className="mt-4 ml-auto block"
           >
-            Lưu thay đổi
+            Save Changes
           </Button>
         </Form>
 
         <div className="rounded mt-10 space-y-4 border border-gray-100 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900">
-          <h4 className="font-bold text-brand-700">Thêm thành phần</h4>
+          <h4 className="font-bold text-brand-700">Add Recipe Items</h4>
           <AddProductRecipeItemsForm
             productRecipeVersionId={currentRecipe.id}
           />

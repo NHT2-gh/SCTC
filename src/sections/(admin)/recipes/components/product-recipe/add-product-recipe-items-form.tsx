@@ -1,5 +1,8 @@
 import React from "react";
+
+import { v4 } from "uuid";
 import Form from "@/components/form/Form";
+import { ItemType } from "@/types/product";
 import { FormField } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "react-hook-form";
@@ -12,8 +15,6 @@ import {
   productRecipeItemValidationSchema,
 } from "@/schemas/validation/recipe.validation";
 import { useComponents } from "@/hooks/queries/use-component";
-import { ItemType } from "@/types/product";
-import { v4 } from "uuid";
 
 interface AddProductRecipeItemsFormProps {
   productRecipeVersionId: string;
@@ -72,8 +73,8 @@ export default function AddProductRecipeItemsForm({
         field={{
           name: "ingredient_id",
           type: "select",
-          label: "Nguyên liệu",
-          placeholder: "Chọn nguyên liệu",
+          label: "Ingredient",
+          placeholder: "Select ingredient",
           options:
             ingredients?.data.map((item) => ({
               label: `${item.name} ${item.notes ? `(${item.notes})` : ""}`,
@@ -89,8 +90,8 @@ export default function AddProductRecipeItemsForm({
             name: "component_id",
             type: "select",
 
-            label: "Thành phần",
-            placeholder: "Chọn thành phần",
+            label: "Component",
+            placeholder: "Select component",
             options:
               components?.data.map((item) => ({
                 label: `${item.name} ${item.description ? `(${item.description})` : ""}`,
@@ -102,11 +103,11 @@ export default function AddProductRecipeItemsForm({
 
       <FormField
         form={addProductRecipeItemForm}
-        field={{ name: "quantity", type: "number", label: "Khối lượng" }}
+        field={{ name: "quantity", type: "number", label: "Quantity" }}
       />
 
       <Button type="submit" className="ml-auto block">
-        Thêm
+        Add
       </Button>
     </Form>
   );

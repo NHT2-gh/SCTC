@@ -1,24 +1,25 @@
 "use client";
-import { ComponentCard } from "@/components/common/component-card";
-import { MainContainer } from "@/components/common/page-layout";
-import { SearchBar } from "@/components/search-bar";
 import { useEffect, useState } from "react";
-import { useModal } from "@/hooks/useModal";
+
+import { v4 } from "uuid";
 import {
   useUpsertProductRecipeVersion,
   useGetAllProduct,
   useGetProductRecipe,
 } from "@/hooks/queries/use-product";
-import { ProductType } from "@/types/product";
-import { ListProductRecipes, ModalProductRecipeEdit } from "../components";
-import { ProductRecipeVersion } from "@/types/product";
-import { formatCurrency } from "@/utils/format-data";
-import ModalAlert from "@/components/modal/alerts/modal-alert";
-import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
 import { showToast } from "@/lib/toast";
-import { v4 } from "uuid";
+import { RefreshCw } from "lucide-react";
+import { useModal } from "@/hooks/useModal";
+import { ProductType } from "@/types/product";
+import { Button } from "@/components/ui/button";
+import { SearchBar } from "@/components/search-bar";
+import { formatCurrency } from "@/utils/format-data";
+import { ProductRecipeVersion } from "@/types/product";
 import { AddProductPageView } from "../../products/views";
+import ModalAlert from "@/components/modal/alerts/modal-alert";
+import { MainContainer } from "@/components/common/page-layout";
+import { ComponentCard } from "@/components/common/component-card";
+import { ListProductRecipes, ModalProductRecipeEdit } from "../components";
 
 export default function ComponentsRecipesPageView() {
   const [searchText, setSearchText] = useState<string>();
@@ -183,7 +184,10 @@ export default function ComponentsRecipesPageView() {
         />
       )}
 
-      <AddProductPageView />
+      <details className="w-full">
+        <summary className="text-blue-400 float-end">New Product</summary>
+        <AddProductPageView />
+      </details>
     </MainContainer>
   );
 }

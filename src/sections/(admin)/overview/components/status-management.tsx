@@ -65,10 +65,10 @@ export default function StatusManagement() {
 
   return (
     <FormProvider {...upsertForm}>
-      <Form onSubmit={handleSubmit(onSubmit)} className="max-w-full block">
+      <Form onSubmit={handleSubmit(onSubmit)} className="overflow-x-scroll">
         <Table title="Store History">
           <TableHeader columns={columns} />
-          <TableBody>
+          <TableBody className="[&_td]:min-w-[150px]">
             {!historyStatus?.success ||
               (historyStatus?.data.length === 0 && (
                 <DataEmpty
