@@ -2,7 +2,7 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { TableHeader } from "@/components/table";
-import { ColumnDefinition } from "@/components/table/table-header";
+import { ColumnDef } from "@/components/table/table-header";
 import { DataEmpty } from "@/components/common/table/state";
 
 import { MenuLayoutItem } from "@/types/menu";
@@ -13,7 +13,7 @@ interface MenuLayoutItemsProps {
   onSelect: (item: MenuLayoutItem) => void;
 }
 
-const columns: ColumnDefinition[] = [
+const columns: ColumnDef[] = [
   {
     key: "product",
     title: "Sản phẩm",

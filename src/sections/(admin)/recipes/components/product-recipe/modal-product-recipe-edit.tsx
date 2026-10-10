@@ -23,16 +23,7 @@ import { formatCurrency } from "@/utils/format-data";
 import { FormField } from "@/components/form";
 import { CheckCircle2, X } from "lucide-react";
 import { mapErrorToMessage } from "@/lib/error/app-error";
-
-type ItemStateMap = Map<
-  string,
-  {
-    isEditting?: boolean;
-    isDeleting?: boolean;
-    isSuccess?: boolean;
-    message?: string;
-  }
->;
+import { ItemStateMap } from "@/types/common";
 
 export default function ModalProductRecipeEdit({
   isOpen,
@@ -42,12 +33,11 @@ export default function ModalProductRecipeEdit({
   currentRecipe: ProductRecipeVersion;
 }) {
   const [currentId, setCurrentId] = useState(currentRecipe.id);
+  const [itemStateMap, setItemStateMap] = useState<ItemStateMap>(new Map());
   const { data: recipeItems, refetch } = useGetProductRecipeDetail(currentId);
   const upsertProductRecipeVersion = useUpsertProductRecipeVersion();
   const upsertRecipeItems = useUpsertProductRecipeItem();
   const deleteRecipeItems = useDeleteProductRecipeItem();
-  const [itemStateMap, setItemStateMap] = useState<ItemStateMap>(new Map());
-
   const productRecipeItems = useForm<ProductRecipeItemsValidationSchema>({
     resolver: zodResolver(productRecipeItemsValidationSchema),
     defaultValues: {
@@ -58,7 +48,7 @@ export default function ModalProductRecipeEdit({
   });
 
   const {
-    formState: { isDirty, dirtyFields, errors },
+    formState: { isDirty, dirtyFields },
     setValue,
     handleSubmit,
   } = productRecipeItems;
@@ -119,29 +109,30 @@ export default function ModalProductRecipeEdit({
           });
           return prev;
         });
-      }
-      try {
-        const res = await deleteRecipeItems.mutateAsync(
-          diffComponentItems.deleted,
-        );
 
-        setItemStateMap((prev) => {
-          prev.set("delete_data", {
-            isEditting: true,
-            isSuccess: res.success,
-            message: `Đã xoá thành công ${diffComponentItems.deleted.length} thành phần`,
+        try {
+          const res = await deleteRecipeItems.mutateAsync(
+            diffComponentItems.deleted,
+          );
+
+          setItemStateMap((prev) => {
+            prev.set("delete_data", {
+              isEditting: true,
+              isSuccess: res.success,
+              message: `Đã xoá thành công ${diffComponentItems.deleted.length} thành phần`,
+            });
+            return prev;
           });
-          return prev;
-        });
-      } catch (error) {
-        setItemStateMap((prev) => {
-          prev.set("delete_data", {
-            isEditting: true,
-            isSuccess: false,
-            message: mapErrorToMessage(error),
+        } catch (error) {
+          setItemStateMap((prev) => {
+            prev.set("delete_data", {
+              isEditting: true,
+              isSuccess: false,
+              message: mapErrorToMessage(error),
+            });
+            return prev;
           });
-          return prev;
-        });
+        }
       }
 
       await refetch();
@@ -214,7 +205,7 @@ export default function ModalProductRecipeEdit({
             return (
               <p
                 key={key}
-                className="inline-flex items-center text-danger italic text-sm"
+                className="flex items-center text-danger italic text-sm"
               >
                 {value.isSuccess ? (
                   <CheckCircle2 fill="#16a34a" stroke="white" />

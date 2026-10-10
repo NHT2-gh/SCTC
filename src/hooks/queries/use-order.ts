@@ -4,7 +4,7 @@ import { queryKeys } from "@/config/query-keys";
 import { orderService } from "@/services/order.service";
 import { subscribeOrders } from "@/supabase/realtime/order.sub";
 
-import { GetWithFilterParams, ResponseStandard } from "@/types/common";
+import { GetParams, ResponseStandard } from "@/types/common";
 import {
   CreateOrderDTO,
   Order,
@@ -26,7 +26,7 @@ export function useCreateOrder() {
   });
 }
 
-export function useGetAllOrder(params?: GetWithFilterParams<Order>) {
+export function useGetAllOrder(params?: GetParams<Order>) {
   return useInfiniteQuery({
     queryKey: queryKeys.order.getAll(params),
     initialPageParam: 1,

@@ -6,7 +6,7 @@ import {
 } from "@/hooks/queries/use-store";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { TableHeader } from "@/components/table";
-import { ColumnDefinition } from "@/components/table/table-header";
+import { ColumnDef } from "@/components/table/table-header";
 import { DataEmpty } from "@/components/common/table/state";
 import { formatDateTime } from "@/utils/format-data";
 import { Switch } from "@/components/ui/switch";
@@ -20,7 +20,7 @@ import { EditIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusStoreValidationType } from "@/schemas/validation/status-store.validation";
 
-const columns: ColumnDefinition[] = [
+const columns: ColumnDef[] = [
   {
     key: "status",
     title: "Status",
@@ -65,7 +65,10 @@ export default function StatusManagement() {
 
   return (
     <FormProvider {...upsertForm}>
-      <Form onSubmit={handleSubmit(onSubmit)} className="overflow-x-scroll">
+      <Form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full block overflow-x-scroll"
+      >
         <Table title="Store History">
           <TableHeader columns={columns} />
           <TableBody className="[&_td]:min-w-[150px]">

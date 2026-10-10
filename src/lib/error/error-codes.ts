@@ -5,6 +5,7 @@ export enum ErrorCode {
   INVALID_INPUT = "INVALID_INPUT",
   NOT_FOUND = "NOT_FOUND",
   CONNECTION_EXCEPTION = "CONNECTION_EXCEPTION",
+  FAILED = "FAILED",
 }
 
 export class AppError extends Error {

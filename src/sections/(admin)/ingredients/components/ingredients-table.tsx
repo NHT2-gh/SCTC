@@ -7,7 +7,7 @@ import {
 } from "@/hooks/queries/use-ingredient";
 import { DataEmpty } from "@/components/common/table/state";
 import { TableHeader, TableTitle } from "@/components/table";
-import { ColumnDefinition } from "@/components/table/table-header";
+import { ColumnDef } from "@/components/table/table-header";
 import { SearchBar } from "@/components/search-bar";
 import { formatCurrency } from "@/utils/format-data";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ import Form from "@/components/form/Form";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
-const columns: ColumnDefinition[] = [
+const columns: ColumnDef[] = [
   { key: "code", title: "Mã" },
   { key: "categoryName", title: "Danh mục" },
   { key: "name", title: "Tên" },

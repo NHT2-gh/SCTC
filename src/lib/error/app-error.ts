@@ -16,6 +16,7 @@ export const errorMessageMap: Record<
     detailMessage:
       "Có vẻ như kết nối Internet của bạn đang không ổn định.\nVui lòng kiểm tra lại thiết bị mạng và thử lại sau ít phút",
   },
+  [ErrorCode.FAILED]: { title: "Đã có lỗi xảy ra, vui lòng thử lại" },
 };
 
 export const mapErrorToMessage = (error: unknown): string => {

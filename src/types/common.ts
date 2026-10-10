@@ -1,5 +1,5 @@
+import { ErrorCode } from "@/lib/error/error-codes";
 import { FilterValue } from "@/components/filter/filter-box-render/type";
-import { ErrorCode } from "react-dropzone";
 
 // Other types used across the application
 export interface Pagination {
@@ -10,6 +10,7 @@ export interface Pagination {
 
 export interface MutationResult {
   success: boolean;
+  code?: string;
   message?: string;
 }
 
@@ -18,7 +19,7 @@ export interface ResponseStandard<T> extends MutationResult {
   pagination?: Pagination;
 }
 
-export interface GetWithFilterParams<T> {
+export interface GetParams<T> {
   page?: number;
   limit?: number;
   searchText?: string;
@@ -26,9 +27,13 @@ export interface GetWithFilterParams<T> {
   orderBy?: { columnName: keyof T; asc: boolean };
 }
 
-export interface ServerActionResponse<T> extends MutationResult {
+export interface ServerActionResponse<T> {
   data: T;
-  error: ErrorCode | string | null;
+  success: boolean;
+  error: {
+    code?: ErrorCode;
+    message: string;
+  } | null;
 }
 
 export enum SystemRole {
@@ -36,3 +41,13 @@ export enum SystemRole {
   admin = "Quản trị viên",
   user = "Người dùng",
 }
+
+export type ItemStateMap = Map<
+  string,
+  {
+    isEditting?: boolean;
+    isDeleting?: boolean;
+    isSuccess?: boolean;
+    message?: string;
+  }
+>;

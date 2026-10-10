@@ -2,11 +2,7 @@ import { handlePostgresError } from "@/lib/error/postgres-error";
 import { ProductInfoValidation } from "@/schemas/validation/menu.validation";
 import { ProductRecipeItemValidationSchema } from "@/schemas/validation/recipe.validation";
 import { supabase } from "@/supabase/supabaseClients";
-import {
-  GetWithFilterParams,
-  MutationResult,
-  ResponseStandard,
-} from "@/types/common";
+import { GetParams, MutationResult, ResponseStandard } from "@/types/common";
 import { Product } from "@/types/product";
 import { ProductRecipeItem, ProductRecipeVersion } from "@/types/product";
 
@@ -21,7 +17,7 @@ class ProductService {
   }
 
   async getAllProduct(
-    params?: GetWithFilterParams<Product>,
+    params?: GetParams<Product>,
   ): Promise<ResponseStandard<Product[]>> {
     const query = supabase.from(this.tableName).select(`*`);
 

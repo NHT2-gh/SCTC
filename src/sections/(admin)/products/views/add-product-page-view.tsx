@@ -14,6 +14,7 @@ import {
   ProductInfoValidation,
 } from "@/schemas/validation/menu.validation";
 import { uploadImage } from "@/supabase/storage/storageClinets";
+import { ProductType } from "@/types/product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -35,7 +36,7 @@ export default function AddProductPageView() {
     },
   });
 
-  const { handleSubmit, setValue, reset, watch } = addForm;
+  const { handleSubmit, setValue, reset } = addForm;
 
   useEffect(() => {
     if (images && images.length > 0) {
@@ -114,6 +115,20 @@ export default function AddProductPageView() {
             label: "Tên sản phẩm",
             placeholder: "Nhập tên sản phẩm",
             required: true,
+          }}
+        />
+
+        <FormField
+          form={addForm}
+          field={{
+            name: "info.product_type",
+            type: "select",
+            label: "Loại sản phẩm",
+            required: true,
+            options: Object.entries(ProductType).map(([key, value]) => ({
+              value: value,
+              label: key,
+            })),
           }}
         />
 

@@ -6,7 +6,6 @@ export { default as IcCart } from "./ic-cart-icon";
 export { default as IcCoffeCup } from "./ic-coffe-cup";
 export { default as IcRuouIcon } from "./ic-ruou-icon";
 export { default as IcNotification } from "./ic-notification-icon";
-
 export { default as IcTiktok } from "./ic-tiktok";
 export { default as IcInstagram } from "./ic-instagram";
-export { default as IcThread } from "./ic_thread";
+export { default as IcThread } from "./ic-thread";

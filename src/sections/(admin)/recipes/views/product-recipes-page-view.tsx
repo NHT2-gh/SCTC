@@ -47,7 +47,7 @@ export default function ComponentsRecipesPageView() {
   const handleCreateNewRecipe = async () => {
     let versionNumber = 1;
     if (recipes?.data?.length) {
-      versionNumber = recipes.data[recipes.data.length - 1].version_number + 1;
+      versionNumber = recipes.data.length + 1;
     }
     try {
       const result = await upsertProductRecipeVersion.mutateAsync({

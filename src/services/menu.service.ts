@@ -7,11 +7,7 @@ import {
   MenuLayoutItem,
 } from "@/types/menu";
 import { handlePostgresError } from "@/lib/error/postgres-error";
-import {
-  GetWithFilterParams,
-  MutationResult,
-  ResponseStandard,
-} from "@/types/common";
+import { GetParams, MutationResult, ResponseStandard } from "@/types/common";
 import {
   MenuLayoutItemEditValidation,
   ProductInfoValidation,
@@ -43,7 +39,7 @@ class MenuService {
   }
 
   async getAllMenus(
-    params?: GetWithFilterParams<Menu>,
+    params?: GetParams<Menu>,
   ): Promise<ResponseStandard<Menu[]>> {
     const { data, error } = await supabase.from(this.baseTable).select(`*`);
 
@@ -229,7 +225,7 @@ class MenuService {
   }
 
   async getAllOptions(
-    params?: GetWithFilterParams<MenuItemOption>,
+    params?: GetParams<MenuItemOption>,
   ): Promise<ResponseStandard<MenuItemOption[]>> {
     const query = supabase.from(this.menuItemsOptions).select(
       `*,

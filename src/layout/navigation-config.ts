@@ -18,6 +18,13 @@ const NavItems: NavItem[] = [
     ],
     role: ["admin"],
   },
+
+  {
+    icon: "task",
+    name: "Menu",
+    path: APP_ROUTES.ADMIN.MENUS.BASE,
+    role: ["admin"],
+  },
   {
     icon: "package",
     name: "Ingredients",
@@ -52,9 +59,9 @@ const NavItems: NavItem[] = [
   //   subItems: [{ name: "Add Product", path: APP_ROUTES.ADMIN.PRODUCTS.ADD() }],
   // },
   {
-    icon: "task",
-    name: "Menu",
-    path: APP_ROUTES.ADMIN.MENUS.BASE,
+    icon: "customers",
+    name: "Customers",
+    path: APP_ROUTES.ADMIN.CUSTOMERS.BASE,
     role: ["admin"],
   },
   {

@@ -4,14 +4,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { promotionService } from "@/services/promotion.service";
 import { mutationKeys } from "@/config/mutation-keys";
 import { promotionValidation } from "@/schemas/validation/promotion.validation";
-import { GetWithFilterParams } from "@/types/common";
+import { GetParams } from "@/types/common";
 import {
   Promotion,
   RequestApplyPromotion,
   RequestPromotionAllow,
 } from "@/types/promotions";
 
-export function useGetAllPromotion(params?: GetWithFilterParams<Promotion>) {
+export function useGetAllPromotion(params?: GetParams<Promotion>) {
   return useQuery({
     queryKey: queryKeys.promotion.getAll(params),
     queryFn: () => promotionService.getAll(params!),

@@ -2,7 +2,7 @@
 import { MainContainer } from "@/components/common/page-layout";
 import { DataEmpty } from "@/components/common/table/state";
 import { FormRenderer } from "@/components/form";
-import TableHeader, { ColumnDefinition } from "@/components/table/table-header";
+import TableHeader, { ColumnDef } from "@/components/table/table-header";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/ui/modal/modal";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
@@ -24,7 +24,7 @@ import { error } from "console";
 import { ViewIcon } from "lucide-react";
 import React, { useState } from "react";
 
-const columns: ColumnDefinition[] = [
+const columns: ColumnDef[] = [
   { key: "name", title: "Tên", width: 130 },
   { key: "description", title: "Mô tả", width: 130 },
   { key: "discount_value", title: "Giá trị giảm", width: 130 },

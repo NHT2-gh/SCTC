@@ -1,11 +1,7 @@
 import { supabase } from "@/supabase/supabaseClients";
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import { Ingredient } from "@/types/ingredient";
-import {
-  GetWithFilterParams,
-  MutationResult,
-  ResponseStandard,
-} from "@/types/common";
+import { GetParams, MutationResult, ResponseStandard } from "@/types/common";
 import { IngredientValidationSchema } from "@/schemas/validation/ingredient.validation";
 import { errorMessageMap, mapErrorToMessage } from "@/lib/error/app-error";
 
@@ -17,7 +13,7 @@ class IngredientService {
   }
 
   async getAllIngredient(
-    params?: GetWithFilterParams<Ingredient>,
+    params?: GetParams<Ingredient>,
   ): Promise<ResponseStandard<Ingredient[]>> {
     const query = supabase.from(this.tableName).select(
       `

@@ -8,7 +8,7 @@ import Modal from "@/components/ui/modal/modal";
 import { APP_ROUTES } from "@/config/app-routes";
 import { useGetTable } from "@/hooks/queries/use-overview";
 import { TableHeader } from "@/components/table";
-import { ColumnDefinition } from "@/components/table/table-header";
+import { ColumnDef } from "@/components/table/table-header";
 import {
   CheckCircle2Icon,
   ScanQrCode,
@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
-const colums: ColumnDefinition[] = [
+const colums: ColumnDef[] = [
   {
     key: "name",
     title: "Name",
