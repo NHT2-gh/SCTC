@@ -3,7 +3,7 @@ import React from "react";
 import { Checkbox } from "../ui/input";
 import { TableCell, TableHeader as TableHeaderUI, TableRow } from "../ui/table";
 
-export interface ColumnDefinition {
+export interface ColumnDef {
   key: string;
   title: string;
   className?: string;
@@ -18,7 +18,7 @@ export default function TableHeader({
   handleSelectAll,
   className,
 }: {
-  columns: ColumnDefinition[];
+  columns: ColumnDef[];
   className?: string;
   selectAll?: boolean;
   handleSelectAll?: (isSelectAll: boolean) => void;

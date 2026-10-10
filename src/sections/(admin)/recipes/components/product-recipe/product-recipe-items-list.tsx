@@ -17,19 +17,18 @@ import { formatCurrency } from "@/utils/format-data";
 export default function ProductRecipeItemsList() {
   const productRecipeForm =
     useFormContext<ProductRecipeItemsValidationSchema>();
-  const { data: ingredients } = useIngredients();
+  const { data: ingredients, isLoading: ingredientsLoading } = useIngredients();
   const { data: components } = useComponents();
   const { remove } = useFieldArray({
     control: productRecipeForm.control,
     name: "recipe_items",
   });
-  const [fieldLoadingIds, setFieldLoadingIds] = useState<string[]>();
 
   const productRecipeItems = productRecipeForm.watch("recipe_items");
 
   const {
     getValues,
-    formState: { errors, isLoading, dirtyFields },
+    formState: { errors, isLoading },
   } = productRecipeForm;
 
   const [viewComponent, setViewComponent] = useState<Component | null>(null);
@@ -39,7 +38,6 @@ export default function ProductRecipeItemsList() {
 
   return (
     <div className="space-y-2">
-      {isLoading && <div>Đang tải...</div>}
       {errors?.recipe_items?.message ? (
         <p className="text-red-500">{errors?.recipe_items?.message}</p>
       ) : productRecipeItems.length > 0 ? (
@@ -183,6 +181,12 @@ export default function ProductRecipeItemsList() {
         ))
       ) : (
         <div className="text-center">Chưa có thành phần</div>
+      )}
+
+      {(isLoading || ingredientsLoading || componentsLoading) && (
+        <p className="text-sm text-muted-foreground text-brand-700">
+          Đang tải dữ liệu ...
+        </p>
       )}
     </div>
   );

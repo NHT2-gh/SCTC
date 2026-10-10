@@ -2,6 +2,7 @@ import { orderService } from "@/services/order.service";
 import { ServerActionResponse } from "@/types/common";
 import { OrderDetail } from "@/types/order";
 import { mapErrorToMessage } from "../error/app-error";
+import { ErrorCode } from "../error/error-codes";
 
 export async function serverActionGetOrderDetail(
   trackingCode: string,
@@ -11,16 +12,19 @@ export async function serverActionGetOrderDetail(
 
     return {
       data: result.data,
-      message: result.message,
-      error: result.message!,
       success: result.success,
+      error: result.success
+        ? null
+        : {
+            code: ErrorCode.FAILED,
+            message: mapErrorToMessage(ErrorCode.FAILED),
+          },
     };
   } catch (error) {
     return {
       data: null,
-      message: "Failed to get order detail",
-      error: mapErrorToMessage(error),
       success: false,
+      error: { message: mapErrorToMessage(error) },
     };
   }
 }

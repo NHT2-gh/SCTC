@@ -1,11 +1,7 @@
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import { promotionValidation } from "@/schemas/validation/promotion.validation";
 import { supabase } from "@/supabase/supabaseClients";
-import {
-  GetWithFilterParams,
-  MutationResult,
-  ResponseStandard,
-} from "@/types/common";
+import { GetParams, MutationResult, ResponseStandard } from "@/types/common";
 import {
   OrderDiscount,
   Promotion,
@@ -24,7 +20,7 @@ class PromotionService {
   }
 
   async getAll(
-    params?: GetWithFilterParams<Promotion>,
+    params?: GetParams<Promotion>,
   ): Promise<ResponseStandard<Promotion[]>> {
     const query = supabase.from(this.promotionTable).select("*");
 

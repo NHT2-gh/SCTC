@@ -20,6 +20,10 @@ import Form from "@/components/form/Form";
 import { FormField } from "@/components/form";
 import { componentService } from "@/services/component.service";
 import { showToast } from "@/lib/toast";
+import InputText from "@/components/ui/input/input-text";
+import { ItemStateMap } from "@/types/common";
+import { mapErrorToMessage } from "@/lib/error/app-error";
+import { CheckCircle2, X } from "lucide-react";
 
 interface ModalComponentRecipeItemsProps {
   component: Component;
@@ -34,8 +38,10 @@ export default function ModalComponentRecipeItems({
   isOpen,
   onClose,
 }: ModalComponentRecipeItemsProps) {
+  const [itemStateMap, setItemStateMap] = useState<ItemStateMap>(new Map());
   const upsertRecipeItems = useUpsertComponentRecipeItems();
   const deleteRecipeItems = useDeleteComponentRecipeItems();
+
   const [result, setResult] = useState<{
     updated?: {
       items: number;
@@ -63,6 +69,7 @@ export default function ModalComponentRecipeItems({
   useEffect(() => {
     if (items.length > 0) {
       componentRecipeItems.reset({
+        name: component.name,
         recipe_items: items,
         yield_quantity: component.yield_quantity,
       });
@@ -78,36 +85,108 @@ export default function ModalComponentRecipeItems({
       });
 
       if (diffComponentItems.upsert.length > 0) {
-        const res = await upsertRecipeItems.mutateAsync({
-          recipe_items: diffComponentItems.upsert,
+        setItemStateMap((prev) => {
+          prev.set("upsert_data", {
+            isEditting: false,
+          });
+          return prev;
         });
-        setResult({
-          updated: {
-            success: res.success,
-            items: diffComponentItems.upsert.length,
-          },
-        });
+
+        try {
+          const res = await upsertRecipeItems.mutateAsync({
+            recipe_items: diffComponentItems.upsert,
+          });
+
+          setItemStateMap((prev) => {
+            prev.set("upsert_data", {
+              isEditting: false,
+              isSuccess: res.success,
+              message: `Đã cập nhật thành công ${diffComponentItems.upsert.length} thành phần`,
+            });
+            return prev;
+          });
+        } catch (error) {
+          setItemStateMap((prev) => {
+            prev.set("upsert_data", {
+              isEditting: false,
+              isSuccess: false,
+              message: mapErrorToMessage(error),
+            });
+            return prev;
+          });
+        }
       }
       if (diffComponentItems.deleted.length > 0) {
-        const res = await deleteRecipeItems.mutateAsync(
-          diffComponentItems.deleted,
-        );
-        setResult({
-          updated: {
-            success: res.success,
-            items: diffComponentItems.deleted.length,
-          },
+        setItemStateMap((prev) => {
+          prev.set("delete_data", {
+            isEditting: true,
+            isSuccess: false,
+          });
+          return prev;
         });
+
+        try {
+          const res = await deleteRecipeItems.mutateAsync(
+            diffComponentItems.deleted,
+          );
+          setItemStateMap((prev) => {
+            prev.set("delete_data", {
+              isEditting: true,
+              isSuccess: res.success,
+              message: `Đã xoá thành công ${diffComponentItems.deleted.length} thành phần`,
+            });
+            return prev;
+          });
+        } catch (error) {
+          setItemStateMap((prev) => {
+            prev.set("delete_data", {
+              isEditting: true,
+              isSuccess: false,
+              message: mapErrorToMessage(error),
+            });
+            return prev;
+          });
+        }
       }
     }
-    if (dirtyFields.yield_quantity) {
-      try {
-        const result = await componentService.updateComponent(component.id, {
-          yield_quantity: data.yield_quantity,
+    if (dirtyFields.yield_quantity || dirtyFields.name) {
+      const nameState = dirtyFields.yield_quantity
+        ? "yield_quantity"
+        : dirtyFields.name
+          ? "name"
+          : "component_info";
+
+      setItemStateMap((prev) => {
+        prev.set(nameState, {
+          isEditting: true,
         });
-        if (result.success) showToast.success({ title: "Cập nhật thành công" });
-      } catch {
-        showToast.error({ title: "Cập nhật thất bại" });
+        return prev;
+      });
+      try {
+        const res = await componentService.updateComponent(component.id, {
+          yield_quantity: data.yield_quantity,
+          name: data.name,
+        });
+        if (res.success) {
+          setItemStateMap((prev) => {
+            prev.set(nameState, {
+              isEditting: false,
+              isSuccess: true,
+              message: `Đã cập nhật ${nameState === "yield_quantity" ? "khối lượng thành phẩm" : nameState === "name" ? "tên thành phẩm" : "thông tin thành phẩm"}`,
+            });
+            return prev;
+          });
+        }
+      } catch (error) {
+        setItemStateMap((prev) => {
+          prev.set(nameState, {
+            isEditting: false,
+            isDeleting: false,
+            isSuccess: false,
+            message: mapErrorToMessage(error),
+          });
+          return prev;
+        });
       }
     }
   };
@@ -118,9 +197,6 @@ export default function ModalComponentRecipeItems({
       onClose={onClose}
       className="md:max-w-[60rem] md:min-h-fit"
     >
-      <h3 className="text-xl font-bold text-brand-700 mb-4">
-        {component.name}
-      </h3>
       <FormProvider {...componentRecipeItems}>
         <Form
           className="grid !grid-cols-1 gap-4"
@@ -128,6 +204,15 @@ export default function ModalComponentRecipeItems({
             console.log("VALIDATION ERROR", err);
           })}
         >
+          <FormField
+            form={componentRecipeItems}
+            field={{
+              type: "text",
+              name: "name",
+              disabled: true,
+            }}
+            className="w-full font-bold text-brand-500 [&_.input-container]:border-0  [&_.input-container]:shadow-none [&_.input-container>input]:text-2xl"
+          />
           {items && items.length === 0 && !dirtyFields.recipe_items && (
             <p className="italic text-gray-500 dark:text-gray-400">
               Chưa có nguyên liệu nào được thêm
@@ -157,6 +242,23 @@ export default function ModalComponentRecipeItems({
               </p>
             </>
           )}
+
+          {Array.from(itemStateMap.entries()).map(([key, value]) => {
+            return (
+              <p
+                key={key}
+                className="flex items-center text-danger italic text-sm"
+              >
+                {value.isSuccess ? (
+                  <CheckCircle2 fill="#16a34a" stroke="white" />
+                ) : value.isSuccess === false ? (
+                  <X fill="#dc2626" />
+                ) : null}
+
+                {value.message}
+              </p>
+            );
+          })}
 
           <Button
             type="submit"

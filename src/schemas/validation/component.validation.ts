@@ -8,6 +8,7 @@ export const componentRecipeItemValidationSchema = z.object({
 });
 
 export const componentRecipeItemsValidationSchema = z.object({
+  name: z.string(),
   recipe_items: z.array(componentRecipeItemValidationSchema),
   yield_quantity: z
     .number()

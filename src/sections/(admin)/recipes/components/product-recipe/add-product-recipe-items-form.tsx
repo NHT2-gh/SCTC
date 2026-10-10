@@ -42,7 +42,7 @@ export default function AddProductRecipeItemsForm({
     },
   });
 
-  const { handleSubmit, reset } = addProductRecipeItemForm;
+  const { handleSubmit, reset, setValue } = addProductRecipeItemForm;
 
   const onSubmit = (data: ProductRecipeItemValidationSchema) => {
     append({
@@ -75,11 +75,17 @@ export default function AddProductRecipeItemsForm({
           type: "select",
           label: "Ingredient",
           placeholder: "Select ingredient",
-          options:
+          options: [
+            {
+              label: "None",
+              value: "",
+            },
+          ].concat(
             ingredients?.data.map((item) => ({
               label: `${item.name} ${item.notes ? `(${item.notes})` : ""}`,
               value: item.id,
             })) || [],
+          ),
         }}
       />
 
@@ -89,14 +95,19 @@ export default function AddProductRecipeItemsForm({
           field={{
             name: "component_id",
             type: "select",
-
             label: "Component",
             placeholder: "Select component",
-            options:
+            options: [
+              {
+                label: "None",
+                value: "",
+              },
+            ].concat(
               components?.data.map((item) => ({
                 label: `${item.name} ${item.description ? `(${item.description})` : ""}`,
                 value: item.id,
               })) || [],
+            ),
           }}
         />
       )}

@@ -10,7 +10,7 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <div className="container min-h-screen flex items-center justify-center font-delagothic">
+    <div className="w-full min-h-screen flex items-center justify-center font-delagothic">
       <div className="text-center space-y-2">
         <h1 className="text-2xl font-semibold">Oops!</h1>
         <p className="text-gray-600 font-itim">{error.message}</p>

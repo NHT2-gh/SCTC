@@ -3,11 +3,7 @@ import { handlePostgresError } from "@/lib/error/postgres-error";
 import { CheckoutInfo } from "@/store/checkout/config";
 import { supabase } from "@/supabase/supabaseClients";
 import { CartItem } from "@/types/cart";
-import {
-  GetWithFilterParams,
-  MutationResult,
-  ResponseStandard,
-} from "@/types/common";
+import { GetParams, MutationResult, ResponseStandard } from "@/types/common";
 import {
   CreateOrderDTO,
   Order,
@@ -71,7 +67,7 @@ class OrderService {
   }
 
   async getAllOrder(
-    params?: GetWithFilterParams<Order>,
+    params?: GetParams<Order>,
   ): Promise<ResponseStandard<Order[]>> {
     const query = supabase.from(this.baseTable).select(
       `

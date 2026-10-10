@@ -1,5 +1,6 @@
 import { FilterValue } from "@/components/filter/filter-box-render/type";
-import { GetWithFilterParams, Pagination } from "@/types/common";
+import { GetParams, Pagination } from "@/types/common";
+import { Customer } from "@/types/customer";
 import { Ingredient } from "@/types/ingredient";
 import { Menu, MenuItemOption } from "@/types/menu";
 import { Order } from "@/types/order";
@@ -12,10 +13,7 @@ export const queryKeys = {
     getProfile: (userId: string) => ["profiles", userId],
   },
   ingredient: {
-    getAll: (params?: GetWithFilterParams<Ingredient>) => [
-      "ingredients",
-      params,
-    ],
+    getAll: (params?: GetParams<Ingredient>) => ["ingredients", params],
   },
   component: {
     getAll: (searchName?: string) => ["components", searchName],
@@ -23,7 +21,7 @@ export const queryKeys = {
   },
 
   menu: {
-    getAll: (params?: GetWithFilterParams<Menu>) => ["menus", params],
+    getAll: (params?: GetParams<Menu>) => ["menus", params],
     detail: (id: string) => ["menus", id],
     layout: (id: string, isPublished?: boolean) => [
       "menu-layout",
@@ -32,7 +30,7 @@ export const queryKeys = {
     ],
   },
   product: {
-    getAll: (params?: GetWithFilterParams<Product>) => ["products", params],
+    getAll: (params?: GetParams<Product>) => ["products", params],
     detail: {
       getProductInfo: (id: string) => ["product-detail"],
       getProductOptions: (menuItemId: string) => [
@@ -50,7 +48,7 @@ export const queryKeys = {
   },
 
   promotion: {
-    getAll: (params?: GetWithFilterParams<Promotion>) => ["promotions"],
+    getAll: (params?: GetParams<Promotion>) => ["promotions"],
     getById: (id: string) => ["promotions", id],
     allow: (resquest: RequestPromotionAllow) => [
       "promotions",
@@ -64,13 +62,14 @@ export const queryKeys = {
     ],
   },
 
-  options: (params?: GetWithFilterParams<MenuItemOption>) => [
-    "options",
-    params,
-  ],
+  customer: {
+    getAll: (params?: GetParams<Customer[]>) => ["customers"],
+  },
+
+  options: (params?: GetParams<MenuItemOption>) => ["options", params],
 
   order: {
-    getAll: (params?: GetWithFilterParams<Order>) => ["orders", params],
+    getAll: (params?: GetParams<Order>) => ["orders", params],
     detail: (trackingCode: string) => ["orders", trackingCode],
   },
 

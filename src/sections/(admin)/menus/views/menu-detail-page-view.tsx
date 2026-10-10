@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { LayoutIcon } from "lucide-react";
 import { APP_ROUTES } from "@/config/app-routes";
 import Link from "next/link";
+import { AddProductPageView } from "../../products/views";
 
 interface MenuDetailProps {
   id: string;
@@ -26,56 +27,60 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
   const deleteMenuItems = useDeleteMenuItems();
   const updateMenuItem = useUpdateProductInfo(id);
 
-  const handleAddItems = useCallback(async (ids: string[]) => {
-    const originalArray =
-      menuItems?.data && menuItems?.data?.length > 0
-        ? menuItems?.data.map((item) => {
-            return item.product.id;
-          })
-        : undefined;
+  const handleAddItems = useCallback(
+    async (ids: string[]) => {
+      const originalArray =
+        menuItems?.data && menuItems?.data?.length > 0
+          ? menuItems?.data.map((item) => {
+              return item.product.id;
+            })
+          : undefined;
 
-    if (originalArray) {
-      const { added, removed } = diffBasicArray<string>(originalArray, ids);
-      if (added && added.length > 0) {
-        try {
-          const resultAdd = await addMenuItems.mutateAsync({
-            menuId: id,
-            ids: added,
-          });
+      if (originalArray) {
+        const { added, removed } = diffBasicArray<string>(originalArray, ids);
 
-          if (resultAdd.success) {
-            refetch();
-            showToast.success({ title: "Thành công cập nhật menu" });
-          }
-        } catch (error) {
-          showToast.error({
-            title: "Thất bại",
-            description: mapErrorToMessage(error),
-          });
-        }
-      }
+        if (added && added.length > 0) {
+          try {
+            const resultAdd = await addMenuItems.mutateAsync({
+              menuId: id,
+              ids: added,
+            });
 
-      if (removed && removed.length > 0) {
-        try {
-          const resultDelete = await deleteMenuItems.mutateAsync({
-            productIds: removed,
-            menuId: id,
-          });
-          if (!resultDelete.success) {
+            if (resultAdd.success) {
+              refetch();
+              showToast.success({ title: "Thành công cập nhật menu" });
+            }
+          } catch (error) {
             showToast.error({
               title: "Thất bại",
-              description: mapErrorToMessage(resultDelete.message),
+              description: mapErrorToMessage(error),
             });
           }
-        } catch (error) {
-          showToast.error({
-            title: "Thất bại",
-            description: mapErrorToMessage(error),
-          });
+        }
+
+        if (removed && removed.length > 0) {
+          try {
+            const resultDelete = await deleteMenuItems.mutateAsync({
+              productIds: removed,
+              menuId: id,
+            });
+            if (!resultDelete.success) {
+              showToast.error({
+                title: "Thất bại",
+                description: mapErrorToMessage(resultDelete.message),
+              });
+            }
+          } catch (error) {
+            showToast.error({
+              title: "Thất bại",
+              description: mapErrorToMessage(error),
+            });
+          }
         }
       }
-    }
-  }, []);
+    },
+    [menuItems],
+  );
 
   const handleUpdateStatus = async (productId: string, value: boolean) => {
     try {
@@ -119,6 +124,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
           </Button>
         </Link>
       </div>
+
       <section className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,280px)] gap-3">
         {menuItems?.data.length === 0 && (
           <span className="italic">Chưa có item nào được thêm</span>
@@ -133,6 +139,10 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
           />
         ))}
       </section>
+      <details className="w-full">
+        <summary className="text-blue-400 float-end">New Product</summary>
+        <AddProductPageView />
+      </details>
     </MainContainer>
   );
 }

@@ -1,7 +1,7 @@
 import { queryKeys } from "@/config/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { productService } from "@/services/product.service";
-import { GetWithFilterParams } from "@/types/common";
+import { GetParams } from "@/types/common";
 import { menuService } from "@/services/menu.service";
 import { ProductInfoValidation } from "@/schemas/validation/menu.validation";
 import { mutationKeys } from "@/config/mutation-keys";
@@ -9,7 +9,7 @@ import { UpsertProductOptionValidation } from "@/schemas/validation/product-opti
 import { ProductRecipeItemValidationSchema } from "@/schemas/validation/recipe.validation";
 import { Product, ProductRecipeVersion } from "@/types/product";
 
-export function useGetAllProduct(params: GetWithFilterParams<Product>) {
+export function useGetAllProduct(params: GetParams<Product>) {
   return useQuery({
     queryKey: queryKeys.product.getAll(params),
     queryFn: () => productService.getAllProduct(params),
