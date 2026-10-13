@@ -1,11 +1,10 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import {
   useEditIngredient,
   useIngredients,
 } from "@/hooks/queries/use-ingredient";
-import { DataEmpty } from "@/components/common/table/state";
 import { TableHeader, TableTitle } from "@/components/table";
 import { ColumnDef } from "@/components/table/table-header";
 import { SearchBar } from "@/components/search-bar";
@@ -45,6 +44,7 @@ export default function IngredientsTable() {
   const {
     data: ingredientsData,
     isLoading: isLoadingIngredients,
+    isError: isErrorIngredient,
     refetch,
     error,
   } = useIngredients({ searchText: searchText });
@@ -108,23 +108,9 @@ export default function IngredientsTable() {
             }}
           />
         </TableTitle>
-        <Table>
+        <Table isLoading={isLoadingIngredients} isError={isErrorIngredient}>
           <TableHeader columns={columns} />
           <TableBody>
-            {(ingredientsData?.data.length === 0 ||
-              isLoadingIngredients ||
-              error) && (
-              <DataEmpty
-                colSpan={columns.length}
-                message={
-                  isLoadingIngredients
-                    ? "Đang tải dữ liệu..."
-                    : ingredientsData?.data.length
-                      ? "Không tìm thấy nguyên liệu"
-                      : "Lỗi hệ thống vui lòng thử lại"
-                }
-              />
-            )}
             {ingredientsData?.data.map((ingredient, index) => (
               <TableRow
                 key={ingredient.id}

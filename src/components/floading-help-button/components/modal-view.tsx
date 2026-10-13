@@ -2,7 +2,7 @@ import Modal from "@/components/ui/modal/modal";
 import { useModal } from "@/hooks/useModal";
 import Image from "next/image";
 import React from "react";
-import { ContactInfo, ListAnnouncement } from ".";
+import { ContactInfo, CustomerServices, ListAnnouncement } from ".";
 
 interface ModalViewProps {
   isOpen: boolean;
@@ -44,6 +44,7 @@ export default function ModalView({ isOpen, onClose }: ModalViewProps) {
               Sáng Cà Tối Cồn
             </h1>
             <ContactInfo />
+            <CustomerServices />
             <ListAnnouncement />
           </div>
         </div>

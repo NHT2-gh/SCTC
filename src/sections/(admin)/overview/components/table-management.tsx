@@ -1,5 +1,5 @@
-"use clinet";
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 
 import Link from "next/link";
 import QRCode from "react-qr-code";
@@ -35,13 +35,16 @@ const colums: ColumnDef[] = [
 export default function TableManagement() {
   const { data: tables, isLoading, error } = useGetTable();
   const [tableSelected, setTableSelected] = useState<string>();
+  const [origin, setOrigin] = useState("");
   const modalViewQRCode = useModal();
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   return (
     <section>
-      <Table title="QR Order">
+      <Table title="QR Order" isError={!!error} isLoading={isLoading}>
         <TableHeader columns={colums} />
         <TableBody>
           <TableRow>
@@ -58,7 +61,7 @@ export default function TableManagement() {
               >
                 <ScanQrCode />
               </button>
-              <Link target="_blank" href={`${window.location.origin}/tables/*`}>
+              <Link target="_blank" href={APP_ROUTES.GUEST.TABLE.DETAIL("*")}>
                 <button>
                   <SquareArrowOutUpRightIcon
                     className="text-blue-500"
@@ -89,7 +92,7 @@ export default function TableManagement() {
                 </button>
                 <Link
                   target="_blank"
-                  href={`${window.location.origin}${APP_ROUTES.GUEST.TABLE.DETAIL(table.qr_token)}`}
+                  href={APP_ROUTES.GUEST.TABLE.DETAIL(table.qr_token)}
                 >
                   <button>
                     <SquareArrowOutUpRightIcon
@@ -113,7 +116,11 @@ export default function TableManagement() {
           <QRCode
             size={200}
             style={{ height: "auto", maxWidth: "200", width: "100%" }}
-            value={`${window.location.origin}/${APP_ROUTES.GUEST.TABLE.DETAIL(tableSelected)}`}
+            value={
+              origin
+                ? `${origin}${APP_ROUTES.GUEST.TABLE.DETAIL(tableSelected)}`
+                : APP_ROUTES.GUEST.TABLE.DETAIL(tableSelected)
+            }
             viewBox={`0 0 200 200`}
           />
         </Modal>

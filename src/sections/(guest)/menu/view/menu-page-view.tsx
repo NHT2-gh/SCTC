@@ -59,7 +59,7 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
                   "w-full overflow-hidden z-1 rounded-xl flex flex-col items-center hover:opacity-80",
                   {
                     "pointer-events-none opacity-30":
-                      !item.menu_items.product.is_active,
+                      !item.menu_item.product.is_active,
                   },
                 )}
                 style={{
@@ -74,12 +74,10 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
               >
                 <Link
                   className="block w-full"
-                  href={APP_ROUTES.GUEST.PRODUCT.VIEW_DETAIL(
-                    item.menu_items.id,
-                  )}
+                  href={APP_ROUTES.GUEST.PRODUCT.VIEW_DETAIL(item.menu_item.id)}
                 >
                   <MenuItemCard
-                    item={item.menu_items.product}
+                    item={item.menu_item.product}
                     className={cn("bg-transparent", {
                       "flex-row-reverse text-right": item.x > 1,
                     })}

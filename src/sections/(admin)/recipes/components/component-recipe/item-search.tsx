@@ -10,7 +10,7 @@ export default function ItemSearch({ data, onSelect }: ItemSearchProps) {
   return (
     <article
       onClick={() => onSelect(data.id)}
-      className="w-full border-b flex justify-between p-3 last:border-none"
+      className="w-full border-b flex justify-between p-3 cursor-pointer hover:bg-neutral-100 last:border-none"
     >
       <h4 className="font-semibold text-sm">
         {data.name} {data.description && "(" + data.description + ")"}

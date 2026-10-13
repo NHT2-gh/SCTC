@@ -43,11 +43,12 @@ export interface MenuItem {
   id: string;
   menu_id: string;
   product: Product;
+  is_active: boolean;
 }
 
 export interface MenuLayoutItem {
   id: string;
-  menu_items: MenuItem;
+  menu_item: MenuItem;
   x: number;
   y: number;
   w: number;

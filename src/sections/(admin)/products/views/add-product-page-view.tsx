@@ -33,6 +33,7 @@ export default function AddProductPageView() {
       description: "",
       selling_price: 0,
       is_active: false,
+      image_url: null,
     },
   });
 

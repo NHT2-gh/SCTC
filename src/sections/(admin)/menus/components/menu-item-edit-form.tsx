@@ -32,7 +32,6 @@ import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { v4 } from "uuid";
 import { AddProductOptionForm } from ".";
-import { DataEmpty } from "@/components/common/table/state";
 import { Edit2Icon, RefreshCcw, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useGetProductOptions } from "@/hooks/queries/use-product";
@@ -104,7 +103,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
   const {
     handleSubmit,
     setValue,
-    formState: { dirtyFields, isLoading },
+    formState: { dirtyFields, isLoading, errors },
   } = editForm;
 
   useEffect(() => {
@@ -342,7 +341,11 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
               <RefreshCcw /> Refetch
             </Button>
           </div>
-          <Table>
+          <Table
+            isLoading={isLoading}
+            isError={!!errors.options}
+            isEmpty={currentOptions.length === 0}
+          >
             <TableHeader
               columns={[
                 {
@@ -370,17 +373,6 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
             />
 
             <TableBody>
-              {currentOptions.length === 0 ||
-                (isLoading && (
-                  <DataEmpty
-                    message={
-                      isLoading
-                        ? "Đang tải dữ liệu"
-                        : "Không có dữ liệu phù hợp"
-                    }
-                    colSpan={4}
-                  />
-                ))}
               {currentOptions.map((option, index) => (
                 <TableRow key={option.id}>
                   <TableCell>{option.option_name}</TableCell>

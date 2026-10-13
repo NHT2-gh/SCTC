@@ -20,6 +20,7 @@ import ModalAlert from "@/components/modal/alerts/modal-alert";
 import { MainContainer } from "@/components/common/page-layout";
 import { ComponentCard } from "@/components/common/component-card";
 import { ListProductRecipes, ModalProductRecipeEdit } from "../components";
+import { DataState } from "@/components/common/data-state";
 
 export default function ComponentsRecipesPageView() {
   const [searchText, setSearchText] = useState<string>();
@@ -32,7 +33,7 @@ export default function ComponentsRecipesPageView() {
   const upsertProductRecipeVersion = useUpsertProductRecipeVersion();
   const {
     data: products,
-    error,
+    isError,
     isLoading,
   } = useGetAllProduct({
     searchText: searchText,
@@ -86,7 +87,10 @@ export default function ComponentsRecipesPageView() {
 
         {searchText && (
           <div className="border absolute z-[10] bg-white top-[7.5rem] left-6 right-6 rounded-lg mt-3 h-fit max-h-[40vh] overflow-y-scroll">
-            {products?.data && products?.data?.length > 0 ? (
+            <DataState isLoading={isLoading} isError={isError} />
+
+            {products?.data &&
+              products?.data?.length > 0 &&
               products?.data?.map((item) => (
                 <article
                   key={item.id}
@@ -110,16 +114,7 @@ export default function ComponentsRecipesPageView() {
                     Giá cost: {formatCurrency(item.cost)}
                   </p>
                 </article>
-              ))
-            ) : (
-              <article className="w-full border-b p-3 last:border-none hover:bg-gray-100 transition-colors cursor-pointer">
-                {isLoading
-                  ? "...Đang tải"
-                  : error
-                    ? "Lỗi tìm kiếm. Vui lòng thử lại"
-                    : "Không tìm thấy dữ liệu"}
-              </article>
-            )}
+              ))}
           </div>
         )}
       </ComponentCard>

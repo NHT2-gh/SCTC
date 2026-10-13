@@ -47,7 +47,7 @@ export const APP_ROUTES = {
       UPDATE: (id: string) => `${APP_ROUTES.ADMIN.PROMOTIONS.BASE}/${id}`,
     },
     CUSTOMERS: {
-      BASE: "./admin/customers",
+      BASE: "/admin/customers",
     },
   },
   GUEST: {
@@ -67,6 +67,12 @@ export const APP_ROUTES = {
     TABLE: {
       BASE: "/tables",
       DETAIL: (token: string) => `${APP_ROUTES.GUEST.TABLE.BASE}/${token}`,
+    },
+
+    CUSTOMER: {
+      BASE: "/customers",
+      POINTS_ACCUMULATE: () =>
+        `${APP_ROUTES.GUEST.CUSTOMER.BASE}/points-accumulate`,
     },
   },
 };

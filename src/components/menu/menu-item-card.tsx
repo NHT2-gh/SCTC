@@ -17,7 +17,11 @@ export default function MenuItemCard({ item, className }: DrinkCardProps) {
       <Image
         unoptimized
         src={
-          item.image_url ? item.image_url[0] : "/images/logo/logo-text-1.webp"
+          item.image_url &&
+          item.image_url.length > 0 &&
+          item.image_url[0].trim()
+            ? item.image_url[0]
+            : "/images/logo/logo-text-1.webp"
         }
         alt={item.name}
         width={100}

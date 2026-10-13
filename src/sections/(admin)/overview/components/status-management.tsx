@@ -7,7 +7,6 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { TableHeader } from "@/components/table";
 import { ColumnDef } from "@/components/table/table-header";
-import { DataEmpty } from "@/components/common/table/state";
 import { formatDateTime } from "@/utils/format-data";
 import { Switch } from "@/components/ui/switch";
 import { UpsertHistoryFormInRow } from "./sub-components";
@@ -35,7 +34,12 @@ const columns: ColumnDef[] = [
 ];
 
 export default function StatusManagement() {
-  const { data: historyStatus, refetch } = useGetHistoryStoreStatus();
+  const {
+    data: historyStatus,
+    refetch,
+    isError,
+    isLoading,
+  } = useGetHistoryStoreStatus();
   const upsertHistory = useUpsertHistoryStoreStatus();
   const upsertForm = useForm<StatusStoreValidationType>({
     defaultValues: {
@@ -69,21 +73,9 @@ export default function StatusManagement() {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full block overflow-x-scroll"
       >
-        <Table title="Store History">
+        <Table title="Store History" isError={isError} isLoading={isLoading}>
           <TableHeader columns={columns} />
           <TableBody className="[&_td]:min-w-[150px]">
-            {!historyStatus?.success ||
-              (historyStatus?.data.length === 0 && (
-                <DataEmpty
-                  message={
-                    !historyStatus?.success
-                      ? "Lỗi hệ thống không thể truy cập lịch sử"
-                      : historyStatus?.data.length === 0 && "Không tìm thấy"
-                  }
-                  colSpan={columns.length}
-                />
-              ))}
-
             {historyStatus &&
               historyStatus?.data.length > 0 &&
               historyStatus?.data.map((item) => (

@@ -3,6 +3,7 @@ import { FormSchema } from "@/components/form/type";
 import { componentValidationSchema } from "../validation/component.validation";
 
 export const componentFormSchema: FormSchema = {
+  title: "Tạo công thức thành phần",
   fields: [
     {
       name: "name",
