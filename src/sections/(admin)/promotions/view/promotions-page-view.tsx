@@ -1,6 +1,5 @@
 "use client";
 import { MainContainer } from "@/components/common/page-layout";
-import { DataEmpty } from "@/components/common/table/state";
 import { FormRenderer } from "@/components/form";
 import TableHeader, { ColumnDef } from "@/components/table/table-header";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,6 @@ import {
   PromotionStatusMapText,
 } from "@/types/promotions";
 import { formatCurrency } from "@/utils/format-data";
-import { error } from "console";
 import { ViewIcon } from "lucide-react";
 import React, { useState } from "react";
 
@@ -53,46 +51,35 @@ export default function PromotionPageView() {
 
   return (
     <MainContainer title={"Khuyến mãi"}>
-      <Table>
+      <Table isError={isError} isLoading={isLoading}>
         <TableHeader columns={columns} />
         <TableBody>
-          {isLoading ? (
-            <DataEmpty message={"Đang tải dữ liệu"} colSpan={columns.length} />
-          ) : isError ? (
-            <DataEmpty
-              message={"Có lỗi xảy ra khi tải dữ liệu"}
-              colSpan={columns.length}
-            />
-          ) : !promotions?.data || promotions?.data.length === 0 ? (
-            <DataEmpty message={"Không có dữ liệu"} colSpan={columns.length} />
-          ) : (
-            promotions?.data.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.description || "-"}</TableCell>
-                <TableCell>
-                  {item.discount_type === PromotionDiscountType.percentage
-                    ? item.discount_value + " %"
-                    : formatCurrency(item.discount_value)}
-                </TableCell>
-                <TableCell>
-                  {item.start_at || "∞"} - {item.end_at || "∞"}
-                </TableCell>
-                <TableCell>{PromotionStatusMapText[item.status]}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setPromotionIdSelected(item.id);
-                      modalUpdate.openModal();
-                    }}
-                  >
-                    <ViewIcon />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
+          {promotions?.data.map((item) => (
+            <TableRow key={item.id}>
+              <TableCell>{item.name}</TableCell>
+              <TableCell>{item.description || "-"}</TableCell>
+              <TableCell>
+                {item.discount_type === PromotionDiscountType.percentage
+                  ? item.discount_value + " %"
+                  : formatCurrency(item.discount_value)}
+              </TableCell>
+              <TableCell>
+                {item.start_at || "∞"} - {item.end_at || "∞"}
+              </TableCell>
+              <TableCell>{PromotionStatusMapText[item.status]}</TableCell>
+              <TableCell>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setPromotionIdSelected(item.id);
+                    modalUpdate.openModal();
+                  }}
+                >
+                  <ViewIcon />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
 

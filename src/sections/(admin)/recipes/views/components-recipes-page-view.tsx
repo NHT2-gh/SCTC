@@ -15,6 +15,7 @@ import {
 import { useModal } from "@/hooks/useModal";
 import { Component } from "@/types/component";
 import { useUrlState } from "@/hooks/use-url-state";
+import { DataState } from "@/components/common/data-state";
 
 export default function ComponentsRecipesPageView() {
   const [searchText, setSearchText] = useState<string | undefined>(undefined);
@@ -24,7 +25,11 @@ export default function ComponentsRecipesPageView() {
   const modalViewComponentItems = useModal();
   const [viewComponentRecipe, setViewComponentRecipe] =
     useUrlState<string>("component_id ");
-  const { data: componentsData, error, isLoading } = useComponents(searchText);
+  const {
+    data: componentsData,
+    isError,
+    isLoading,
+  } = useComponents(searchText);
   const { data: componentRecipeItems } = useGetComponentRecipeItems(
     componentSelected?.id,
   );
@@ -57,8 +62,9 @@ export default function ComponentsRecipesPageView() {
         />
         {componentsData?.data && searchText && (
           <div className="border absolute bg-white z-[10] top-32 left-6 right-6 rounded-lg mt-3 min-h-fit">
-            {isLoading && <span>...Đang tải</span>}
-            {componentsData?.data.length > 0 ? (
+            <DataState isLoading={isLoading} isError={isError} />
+            {componentsData?.data &&
+              componentsData?.data.length > 0 &&
               componentsData?.data?.map((item) => (
                 <ItemSearch
                   key={item.id}
@@ -67,19 +73,16 @@ export default function ComponentsRecipesPageView() {
                     setViewComponentRecipe(id);
                   }}
                 />
-              ))
-            ) : (
-              <p>Không tìm thấy dữ liệu</p>
-            )}
-
-            {error && <span>Lỗi tìm kiếm. Vui lòng thử lại</span>}
+              ))}
           </div>
         )}
       </ComponentCard>
 
-      <ComponentCard title={"Tạo công thức thành phần"}>
+      <details className="w-full">
+        <summary className="text-blue-400 float-end">New Component</summary>
         <AddComponentForm />
-      </ComponentCard>
+      </details>
+
       {modalViewComponentItems.isOpen && (
         <ModalComponentRecipeItems
           component={componentSelected!}

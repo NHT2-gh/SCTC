@@ -6,8 +6,6 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
 import { cn } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
-import { FormField } from "@/components/form";
-import { NumberInput, TextInput } from "@/components/ui/input";
 
 export default function MenuLayoutPreview({
   items,
@@ -62,7 +60,7 @@ export default function MenuLayoutPreview({
                 }}
               >
                 <MenuItemCard
-                  item={item.menu_items.product}
+                  item={item.menu_item.product}
                   className={cn("bg-transparent", {
                     "flex-row-reverse text-right":
                       dataEditing.id === item.id && dataEditing?.x

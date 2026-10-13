@@ -4,6 +4,7 @@ import {
   IcModalAlertInfoIcon,
   IcModalAlertWarningIcon,
 } from "@/assets/svgs";
+import ICGift from "@/assets/svgs/ic-gift";
 
 import {
   BoxIcon,
@@ -30,6 +31,7 @@ export const iconMap = {
   setting: SettingsIcon,
   coupon: Ticket,
   customers: Users2Icon,
+  gift: ICGift,
 
   "modal-alert-success": IcModalAlertSuccessIcon,
   "modal-alert-info": IcModalAlertInfoIcon,

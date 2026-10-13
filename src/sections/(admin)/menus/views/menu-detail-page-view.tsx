@@ -1,5 +1,6 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
+import Link from "next/link";
 import {
   useAddMenuItems,
   useDeleteMenuItems,
@@ -14,7 +15,6 @@ import { mapErrorToMessage } from "@/lib/error/app-error";
 import { Button } from "@/components/ui/button";
 import { LayoutIcon } from "lucide-react";
 import { APP_ROUTES } from "@/config/app-routes";
-import Link from "next/link";
 import { AddProductPageView } from "../../products/views";
 
 interface MenuDetailProps {
@@ -25,7 +25,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
   const { data: menuItems, isLoading, refetch } = useGetMenuDetail(id);
   const addMenuItems = useAddMenuItems();
   const deleteMenuItems = useDeleteMenuItems();
-  const updateMenuItem = useUpdateProductInfo(id);
+  const updateProductInfo = useUpdateProductInfo(id);
 
   const handleAddItems = useCallback(
     async (ids: string[]) => {
@@ -84,7 +84,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
 
   const handleUpdateStatus = async (productId: string, value: boolean) => {
     try {
-      const result = await updateMenuItem.mutateAsync({
+      const result = await updateProductInfo.mutateAsync({
         id: productId,
         is_active: value,
       });

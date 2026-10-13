@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/input";
 import { SearchBar } from "@/components/search-bar";
 import { formatCurrency } from "@/utils/format-data";
 import { useAllOption } from "@/hooks/queries/use-menu";
+import { DataState } from "../common/data-state";
 
 interface SearchBoxProps {
   onChange: (id: string[]) => void;
@@ -54,11 +55,6 @@ export default function SearchSelecter({
               "border w-full max-h-[30vh] overflow-y-auto bg-amber-50 rounded-lg absolute z-50 mt-2",
             )}
           >
-            {isLoading && (
-              <p className="text-sm text-neutral-600 hover:text-neutral-900 p-2">
-                ...Đang tải
-              </p>
-            )}
             {!isLoading &&
               data &&
               data?.length > 0 &&
@@ -92,11 +88,8 @@ export default function SearchSelecter({
                   <span className="text-xs">{formatCurrency(item.price)}</span>
                 </div>
               ))}
-            {searchText && !isLoading && data && data?.length === 0 && (
-              <p className="text-sm text-neutral-600 hover:text-neutral-900 p-2">
-                Không tìm thấy dữ liệu nào phù hợp
-              </p>
-            )}
+
+            <DataState isLoading={isLoading} />
           </div>
         )}
       </div>

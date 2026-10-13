@@ -1,6 +1,5 @@
 "use client";
 import { MainContainer } from "@/components/common/page-layout";
-import { DataEmpty } from "@/components/common/table/state";
 import { TableHeader } from "@/components/table";
 import { ColumnDef } from "@/components/table/table-header";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
@@ -21,12 +20,7 @@ export default function CustomersPageView() {
   const { data: customers, isLoading, isError } = useGetAllCustomer();
   return (
     <MainContainer title={"Customers"}>
-      <Table
-        isError={isError}
-        isLoading={isLoading}
-        dataLength={customers?.data?.length || 0}
-        colSpan={columns.length}
-      >
+      <Table isError={isError} isLoading={isLoading}>
         <TableHeader columns={columns} />
         <TableBody>
           {customers?.data.map((customer) => (

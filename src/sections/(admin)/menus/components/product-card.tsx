@@ -39,7 +39,9 @@ export default function ProductCard({
         <div className="w-full flex items-center gap-3">
           <Image
             src={
-              productInfo.image_url && productInfo.image_url.length > 0
+              productInfo.image_url &&
+              productInfo.image_url.length > 0 &&
+              productInfo.image_url[0].trim()
                 ? productInfo.image_url[0]
                 : "/images/logo/logo-text-1.webp"
             }

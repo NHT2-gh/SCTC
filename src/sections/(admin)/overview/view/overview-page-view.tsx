@@ -1,7 +1,7 @@
+"use client";
 import React from "react";
-import { StatusManagement, TableManagement } from "../components";
-import QRCode from "react-qr-code";
 import { MainContainer } from "@/components/common/page-layout";
+import { StatusManagement, TableManagement } from "../components";
 
 export default function OverviewPageView() {
   return (

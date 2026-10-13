@@ -2,7 +2,7 @@ import { FilterValue } from "@/components/filter/filter-box-render/type";
 import { useUrlState } from "@/hooks/use-url-state";
 import { cn } from "@/lib/utils";
 import { OrderStatus } from "@/types/order";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface FilterStatusProps {
   filterValues: Record<string, FilterValue>;
@@ -18,6 +18,7 @@ export default function FilterStatus({
   countOrder = 0,
 }: FilterStatusProps) {
   const [_, setStatus] = useUrlState("status");
+
   return (
     <div className="z-10 py-3 bg-white flex gap-3 items-center overflow-x-scroll scrollbar-hidden">
       <button

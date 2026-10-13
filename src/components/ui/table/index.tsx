@@ -1,4 +1,5 @@
-import { DataEmpty } from "@/components/common/table/state";
+import { DataState } from "@/components/common/data-state";
+import { DataStateProps } from "@/components/common/data-state/data_state";
 import { TableTitle } from "@/components/table";
 import { TableTitleProps } from "@/components/table/table-title";
 import { cn } from "@/lib/utils";
@@ -43,37 +44,28 @@ interface TableCellProps {
 }
 
 // Table Component
-const Table: React.FC<TableProps> = ({
+const Table: React.FC<TableProps & Partial<DataStateProps>> = ({
   children,
   className,
   title,
   isLoading,
+  isEmpty,
   isError,
-  dataLength,
-  colSpan,
 }) => {
   return (
     <div slot="table">
       {title && <TableTitle title={title} />}
       <div className={cn("max-w-full overflow-x-auto", className)}>
+        {(isLoading || isError || isEmpty) && (
+          <DataState
+            isLoading={isLoading}
+            isError={isError}
+            isEmpty={isEmpty}
+          />
+        )}
+
         {!isLoading && (
-          <table className={` w-full scrollbar-hidden`}>
-            {colSpan && (
-              <DataEmpty
-                message={
-                  isLoading
-                    ? "Loading..."
-                    : dataLength === 0
-                      ? "No customers found"
-                      : isError
-                        ? "Error!"
-                        : null
-                }
-                colSpan={colSpan}
-              />
-            )}
-            {children}
-          </table>
+          <table className={` w-full scrollbar-hidden`}>{children}</table>
         )}
       </div>
     </div>

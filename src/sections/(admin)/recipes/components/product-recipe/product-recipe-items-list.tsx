@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FormField } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useIngredients } from "@/hooks/queries/use-ingredient";
-import { Edit2, Trash, View } from "lucide-react";
+import { Trash, View } from "lucide-react";
 import { ProductRecipeItemsValidationSchema } from "@/schemas/validation/recipe.validation";
 import {
   useComponents,
@@ -13,6 +13,7 @@ import { Select } from "@/components/ui/select";
 import { NumberInput, TextInput } from "@/components/ui/input";
 import { Component } from "@/types/component";
 import { formatCurrency } from "@/utils/format-data";
+import { DataState } from "@/components/common/data-state";
 
 export default function ProductRecipeItemsList() {
   const productRecipeForm =
@@ -167,7 +168,11 @@ export default function ProductRecipeItemsList() {
                         if (item.ingredients?.cost_per_unit) {
                           return (
                             total +
-                            item.ingredients.cost_per_unit * item.quantity
+                            item.ingredients.cost_per_unit *
+                              Math.floor(
+                                (item.quantity / viewComponent.yield_quantity) *
+                                  getValues(`recipe_items.${index}.quantity`),
+                              )
                           );
                         }
                         return total;
@@ -183,11 +188,11 @@ export default function ProductRecipeItemsList() {
         <div className="text-center">Chưa có thành phần</div>
       )}
 
-      {(isLoading || ingredientsLoading || componentsLoading) && (
-        <p className="text-sm text-muted-foreground text-brand-700">
-          Đang tải dữ liệu ...
-        </p>
-      )}
+      <DataState
+        isLoading={ingredientsLoading || componentsLoading || isLoading}
+        isError={errors.recipe_items && true}
+        isEmpty={!productRecipeItems.length}
+      />
     </div>
   );
 }

@@ -51,3 +51,9 @@ export type ItemStateMap = Map<
     message?: string;
   }
 >;
+
+export interface IconComponentProps {
+  size: number;
+  color: string;
+  fill: string;
+}
