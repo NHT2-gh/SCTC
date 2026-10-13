@@ -9,6 +9,10 @@ import React, { ReactNode } from "react";
 interface TableProps extends Partial<TableTitleProps> {
   children: ReactNode; // Table content (thead, tbody, etc.)
   className?: string; // Optional className for styling
+  isLoading?: boolean;
+  isError?: boolean;
+  dataLength?: number;
+  colSpan?: number;
 }
 
 // Props for TableHeader
