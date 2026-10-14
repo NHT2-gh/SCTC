@@ -37,8 +37,8 @@
 
   --color-current: currentColor;
   --color-transparent: transparent;
-  --color-white: #ffffff;
-  --color-black: #101828;
+  --color-white: white;
+  --color-black: black;
 
   --color-brand-25: #fef5f5;
   --color-brand-50: #fdecec;

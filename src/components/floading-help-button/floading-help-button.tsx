@@ -11,7 +11,7 @@ export default function FloadingHelpButton() {
     <div>
       <button
         onClick={() => modal.openModal()}
-        className="fixed bottom-10 z-[50] left-4 text-black bg-lime-200 p-2 flex justify-center items-center rounded-full"
+        className="fixed bottom-[10%] z-50 left-4 text-black bg-lime-200 p-2 flex justify-center items-center rounded-full"
       >
         <BadgeQuestionMarkIcon strokeWidth={2} size={24} />
       </button>
@@ -22,4 +22,3 @@ export default function FloadingHelpButton() {
     </div>
   );
 }
-``;

@@ -11,7 +11,7 @@ export default function GuestLayout({
 }) {
   return (
     <div
-      className={`${itim.className} min-h-screen overflow-hidden bg-[#FFFAEA] [&_header]:bg-[#FFFAEACC]`}
+      className={`${itim.className} min-h-screen overflow-hidden bg-black/80 backdrop-blur-sm  [&_header]:bg-[#FFFAEACC]`}
     >
       {/* Main Content Area */}
       <div className={`transition-all duration-300 ease-in-out `}>
@@ -19,7 +19,7 @@ export default function GuestLayout({
         {/* <AppHeader /> */}
         {/* Page Content */}
         <main
-          className={`max-w-[31.25rem] relative mx-auto h-fit min-h-[100dvh] overflow-y-scroll `}
+          className={`max-w-[31.25rem] relative mx-auto h-fit min-h-[100dvh] max-h-[100dvh] overflow-y-scroll no-scrollbar bg-[#FFFAEA]`}
         >
           <StoreStatusProvider>
             {children}

@@ -18,7 +18,7 @@ export default function CheckoutPageView() {
 
       <CartItemsList
         items={items}
-        className="max-h-[30vh] gap-4 overflow-y-scroll p-0 grow-0"
+        className="max-h-[30vh] gap-4 overflow-y-scroll custom-scrollbar p-0 grow-0"
       />
 
       <p className="ml-auto">Tổng: {cartSummary.item_count} món</p>

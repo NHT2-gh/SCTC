@@ -183,10 +183,10 @@ export default function EditProductInfo({
     <section className="h-full relative">
       <div
         onClick={onClose}
-        className="fixed inset-0 z-20 w-screen bg-black/10"
+        className="fixed inset-0 z-60 w-screen bg-black/10"
       />
 
-      <div className="z-[30] h-[60vh] flex flex-col border overflow-y-scroll scrollbar-hidden absolute bottom-0 left-0 right-0 rounded-tl-[1.875rem] rounded-tr-[1.875rem] bg-[#FFFAEA]">
+      <div className="z-70 h-[60vh] flex flex-col border overflow-y-scroll scrollbar-hidden absolute bottom-0 left-0 right-0 rounded-tl-[1.875rem] rounded-tr-[1.875rem] bg-[#FFFAEA]">
         <div className="grow space-y-3 p-5">
           <div className="flex justify-between">
             <div className="">

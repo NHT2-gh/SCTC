@@ -70,7 +70,7 @@ export default function CategoryTabs({
   return (
     <section
       className={cn(
-        "relative w-full max-w-full overflow-x-scroll scrollbar-hidden flex items-center gap-5 mb-10 z-[20]",
+        "sticky top-0 w-full max-w-full overflow-x-scroll scrollbar-hidden flex items-center gap-5 z-[20]",
         delagothic.className,
       )}
     >

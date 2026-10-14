@@ -18,7 +18,8 @@ export default function FloatingCartButton({
   return (
     <Link href={APP_ROUTES.GUEST.CART.VIEW}>
       <button
-        className={cn("fixed bottom-20 z-[50] right-4", {
+        aria-label="Cart"
+        className={cn("fixed bottom-[10%] z-20 right-4", {
           "animate-bounce": isLoading,
           className,
         })}

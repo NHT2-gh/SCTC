@@ -23,7 +23,7 @@ export default function CartPageView() {
     if (items.every((item) => item.menu_item.product === undefined)) {
       clearCart();
     }
-  }, [items]);
+  }, []);
 
   useEffect(() => {
     const itemEditting = items.find(
