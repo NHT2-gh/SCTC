@@ -119,6 +119,14 @@ export default function ApplyPromotions({ orderDetail }: ApplyPromotionsProps) {
             {formatCurrency(orderDetail.order.subtotal - totalDiscount)}
           </span>
         </li>
+        {orderDetail.order.cost_snapshot && (
+          <li>
+            <p>Total Cost:</p>
+            <span className="text-blue-400">
+              {formatCurrency(orderDetail.order.cost_snapshot)}
+            </span>
+          </li>
+        )}
       </ul>
 
       <div

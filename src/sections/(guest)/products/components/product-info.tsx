@@ -161,7 +161,7 @@ export default function ProductInfo({
               : "/images/logo/logo-text-1.webp"
           }
           alt={info.product.name}
-          className="mx-auto object-contain"
+          className="mx-auto object-contain rounded-xl"
         />
       </div>
       <div className="rounded-tl-[1.875rem] grow flex flex-col rounded-tr-[1.875rem] bg-[#FFFAEA]">

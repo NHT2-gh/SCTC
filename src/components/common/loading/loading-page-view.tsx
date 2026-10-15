@@ -4,7 +4,7 @@ import React from "react";
 
 export default function LoadingPageView() {
   return (
-    <div className="fixed inset-0 bg-black/40 flex flex-col items-center justify-center z-[1000]">
+    <div className="fixed inset-0 bg-[#FFFAEA] flex flex-col items-center justify-center z-[1000]">
       <Image
         src={"/images/logo/logo-sctc-v1.webp"}
         alt=""
@@ -13,7 +13,7 @@ export default function LoadingPageView() {
         priority
         className="animate-bounce"
       />
-      <p className="text-base text-white">Chờ 1 tí thoi...</p>
+      <p className="text-base">Chờ xíu ...</p>
     </div>
   );
 }

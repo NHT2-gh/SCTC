@@ -11,7 +11,7 @@ export default function GuestLayout({
 }) {
   return (
     <div
-      className={`${itim.className} min-h-screen overflow-hidden bg-black/80 backdrop-blur-sm  [&_header]:bg-[#FFFAEACC]`}
+      className={`${itim.className} min-h-screen overflow-hidden bg-[#FFFAEACC]/50 backdrop-blur-sm  [&_header]:bg-[#FFFAEACC]`}
     >
       {/* Main Content Area */}
       <div className={`transition-all duration-300 ease-in-out `}>

@@ -46,7 +46,7 @@ export default function CartPageView() {
 
       <CartItemsList
         items={items}
-        className="max-h-[calc(100%-4rem)] min-h-[calc(100%-8rem)] overflow-y-scroll z-10"
+        className="max-h-[calc(100%-4rem)] min-h-[calc(100%-8rem)] overflow-y-scroll no-scrollbar z-10"
       />
 
       <div className="w-full bottom-4 p-1.5 after:absolute after:inset-0 after:z-[-1] after:bg-[linear-gradient(90deg,rgba(255,250,234,0)_0%,rgba(255,250,234,0.3)_25.96%)] after:backdrop-blur-[20px] after:blur-[1px]">
