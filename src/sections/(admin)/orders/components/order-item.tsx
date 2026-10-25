@@ -97,7 +97,7 @@ export default function OrderItemCard({
             </ul>
 
             {order.notes && (
-              <li className="w-full whitespace-pre-line text-sm text-neutral-600 italic">
+              <li className="w-full whitespace-preLine text-sm text-neutral-600 italic">
                 {'"'} {order.notes} {'"'}
               </li>
             )}

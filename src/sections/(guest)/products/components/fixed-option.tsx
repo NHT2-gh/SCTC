@@ -29,8 +29,6 @@ export default function FixedOption({
     ? _product_setting.fixedOptions[productType]
     : [];
 
-  if (!fixedOpt) return;
-
   return fixedOpt.map((type) => (
     <div key={type} className={cn("space-y-4")}>
       <div className="space-y-2">

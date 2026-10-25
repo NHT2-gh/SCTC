@@ -1,6 +1,5 @@
 import * as htmlToImage from "html-to-image";
 import { useState } from "react";
-import { set } from "zod";
 
 type CopyResult = {
   success: boolean;

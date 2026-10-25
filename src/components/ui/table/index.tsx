@@ -65,7 +65,9 @@ const Table: React.FC<TableProps & Partial<DataStateProps>> = ({
         )}
 
         {!isLoading && (
-          <table className={` w-full scrollbar-hidden`}>{children}</table>
+          <table className={`w-full overflow-visible scrollbar-hidden`}>
+            {children}
+          </table>
         )}
       </div>
     </div>
@@ -79,7 +81,13 @@ const TableHeader: React.FC<TableHeaderProps> = ({ children, className }) => {
 
 // TableBody Component
 const TableBody: React.FC<TableBodyProps> = ({ children, className }) => {
-  return <tbody className={className}>{children}</tbody>;
+  return (
+    <tbody
+      className={cn("max-h-full overflow-y-scroll scrollbar-hidden", className)}
+    >
+      {children}
+    </tbody>
+  );
 };
 
 // TableRow Component
@@ -113,7 +121,7 @@ const TableCell: React.FC<TableCellProps> = ({
     <td
       colSpan={colSpan}
       className={cn(
-        "table-cell min-w-fit text-xs dark:text-gray-400 text-start text-gray-800 px-3 py-2 md:px-6 md:py-3 ",
+        "table-cell min-w-fit whitespace-nowrap text-xs dark:text-gray-400 text-start text-gray-800 px-3 py-2 md:px-6 md:py-3 ",
         className,
       )}
     >

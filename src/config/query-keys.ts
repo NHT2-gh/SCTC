@@ -1,6 +1,6 @@
 import { FilterValue } from "@/components/filter/filter-box-render/type";
 import { GetParams, Pagination } from "@/types/common";
-import { Customer } from "@/types/customer";
+import { Customer, LoyaltyImportBatch } from "@/types/customer";
 import { Ingredient } from "@/types/ingredient";
 import { Menu, MenuItemOption } from "@/types/menu";
 import { Order } from "@/types/order";
@@ -80,5 +80,13 @@ export const queryKeys = {
   store: {
     getAnnouncement: () => ["store", "announcements"],
     getHistoryStoreStatus: () => ["store", "history-store-status"],
+  },
+
+  loyalty: {
+    importBatches: (params?: GetParams<LoyaltyImportBatch>) => [
+      "loyalty",
+      "import-batches",
+      params,
+    ],
   },
 };

@@ -1,15 +1,14 @@
 "use client";
 import React from "react";
+import { outfit } from "@/lib/fonts";
 import Backdrop from "@/layout/Backdrop";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
+import AuthProvider from "@/context/AuthContext";
 import { useSidebar } from "@/context/SidebarContext";
 import { NavigationConfig } from "@/layout/navigation-config";
 import { OrderRealtimeListener } from "@/sections/(admin)/orders/components";
-import AuthProvider from "@/context/AuthContext";
 import { AudioProvider } from "@/sections/(admin)/orders/components/audio-init";
-import { ThemeProvider } from "@/context/ThemeContext";
-import { outfit } from "@/lib/fonts";
 
 export default function AdminLayout({
   children,

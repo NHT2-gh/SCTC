@@ -17,7 +17,7 @@ import CustomNumberInput from "./custom-number-input";
 import { FilterBoxRender } from "@/components/filter/filter-box-render";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { FilterItemConfig } from "@/components/filter/filter-box-render/type";
-import { FixedOption } from ".";
+import { FixedOption, ProductVariantOptions } from ".";
 
 export default function ProductInfo({
   info,
@@ -64,6 +64,17 @@ export default function ProductInfo({
             } as SelectedOption;
           }
 
+          const variant = options.variant?.find(
+            (o) => String(o.option_id) === String(optionId),
+          );
+
+          if (variant) {
+            return {
+              ...variant,
+              id: String(variant.id),
+            } as SelectedOption;
+          }
+
           return null;
         };
 
@@ -75,6 +86,7 @@ export default function ProductInfo({
           const opt = findOption(value);
           return opt ? [opt] : [];
         }
+
         return [];
       });
 
@@ -111,7 +123,11 @@ export default function ProductInfo({
     }
 
     if (options) {
-      const normalOptions = [...options.fixed, ...options.custom].reduce(
+      const normalOptions = [
+        ...options.fixed,
+        ...options.custom,
+        ...(options.variant || []),
+      ].reduce(
         (acc, option) => {
           if (option.is_default) {
             acc[option.option_type] = String(option.option_id);
@@ -130,14 +146,16 @@ export default function ProductInfo({
     const basePrice = info.product.selling_price;
 
     const optionPrice = Object.entries(filterValues).flatMap(([_, value]) =>
-      Array.isArray(value)
-        ? value
-            .map((optionId) =>
-              options.custom.find(
-                (option) => String(option.option_id) === optionId,
-              ),
-            )
-            .filter(Boolean)
+      value
+        ? [
+            ...(Array.isArray(value) ? value : [value])
+              .map((optionId) =>
+                [...options.custom, ...(options.variant || [])].find(
+                  (option) => String(option.option_id) === optionId,
+                ),
+              )
+              .filter(Boolean),
+          ].filter(Boolean)
         : [],
     );
 
@@ -187,6 +205,15 @@ export default function ProductInfo({
               </p>
             )}
           </div>
+
+          {options.variant && filterValues["variant"] && (
+            <ProductVariantOptions
+              variants={options.variant}
+              update={updateFilter}
+              remove={removeFilter}
+              value={filterValues}
+            />
+          )}
 
           <FixedOption
             value={filterValues}

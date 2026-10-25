@@ -7,6 +7,12 @@ import { Menu, NavItem } from "@/types/nav";
 // Main navigation items for CMS
 const NavItems: NavItem[] = [
   {
+    icon: "setting",
+    name: "Overview",
+    path: APP_ROUTES.ADMIN.BASE,
+    role: ["admin", "super_admin"],
+  },
+  {
     icon: "receipt",
     name: "Orders",
     path: APP_ROUTES.ADMIN.ORDER.BASE,
@@ -80,11 +86,10 @@ const NavItems: NavItem[] = [
     ],
     role: ["admin"],
   },
-
   {
-    icon: "setting",
-    name: "Overview",
-    path: APP_ROUTES.ADMIN.BASE,
+    icon: "phone",
+    name: "Sales Platform",
+    path: APP_ROUTES.ADMIN.SALES_PLATFORMS.BASE,
     role: ["admin", "super_admin"],
   },
 ];

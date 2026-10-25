@@ -1,3 +1,4 @@
+import { LogoGrabFood, LogoXanhSMFood } from "@/assets/logos";
 import {
   IcModalAlertDangerIcon,
   IcModalAlertSuccessIcon,
@@ -44,6 +45,11 @@ export const iconMap = {
   phone: PackageIcon,
   mail: PackageIcon,
   mapPin: PackageIcon,
+
+  //logos
+
+  grabfood: LogoGrabFood,
+  xanhsmfood: LogoXanhSMFood,
 } as const;
 
 export type IconKey = keyof typeof iconMap;

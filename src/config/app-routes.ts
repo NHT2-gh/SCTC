@@ -49,6 +49,9 @@ export const APP_ROUTES = {
     CUSTOMERS: {
       BASE: "/admin/customers",
     },
+    SALES_PLATFORMS: {
+      BASE: "/admin/sales-platforms",
+    },
   },
   GUEST: {
     ROOT: "/",

@@ -1,6 +1,6 @@
 "use client";
-import { OverviewPageView } from "@/sections/(admin)/overview/view";
 import React from "react";
+import { OverviewPageView } from "@/sections/(admin)/overview/view";
 
 export default function OverivewPage() {
   return <OverviewPageView />;

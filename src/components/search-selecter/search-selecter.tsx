@@ -36,7 +36,7 @@ export default function SearchSelecter({
 
   return (
     <div className="flex items-center gap-3 my-4">
-      <div className="relative w-full max-w-[400px]">
+      <div className="relative w-full max-w-[500px]">
         <SearchBar
           className="h-10 w-full border-[1.5px] bg-amber-50"
           handleKeyDown={(value) => setSearchText(value)}
@@ -83,6 +83,7 @@ export default function SearchSelecter({
                       : item.components?.name
                         ? item.components.name
                         : item.ingredients?.name}
+                    {item.description && "(" + item.description + ")"}
                   </label>
 
                   <span className="text-xs">{formatCurrency(item.price)}</span>
