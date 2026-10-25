@@ -53,7 +53,22 @@ export type ItemStateMap = Map<
 >;
 
 export interface IconComponentProps {
-  size: number;
-  color: string;
-  fill: string;
+  size?: number;
+  color?: string;
+  fill?: string;
+  className?: string;
 }
+
+export enum LoyaltySource {
+  grabfood = "grabfood",
+  xanhsm = "xanhsm",
+  befood = "befood",
+}
+
+export const LoyaltySourceMapCode: Record<LoyaltySource, string> = {
+  [LoyaltySource.grabfood]: "GF",
+  [LoyaltySource.xanhsm]: "XSM",
+  [LoyaltySource.befood]: "BF",
+};
+
+export type UploadStatus = "idle" | "uploading" | "success" | "error";

@@ -16,7 +16,7 @@ import {
 import { showToast } from "@/lib/toast";
 import GenerateBankQr from "./generate-bank-qr";
 import { APP_ROUTES } from "@/config/app-routes";
-import { CheckCircle, CopyIcon } from "lucide-react";
+import { CheckCircle, CopyIcon, Printer } from "lucide-react";
 import { useCopyImage } from "@/hooks/use-copy-image";
 import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 
@@ -54,27 +54,47 @@ export default function Bill({
 
     setIsLoading(false);
   };
+
+  // const handlePrint = () => {
+  //   const printArea = billRef.current;
+  //   if (!printArea) return;
+  // };
+
   return (
     <article
       style={{ backgroundImage: `url(/images/backgrounds/${backgroundUrl})` }}
       className="bill-box relative text-black max-w-[87%] mx-auto h-fit opacity-[0.97] border-brand-500  "
     >
-      <button
-        onClick={handleCopy}
-        className="gap-2 py-1 px-2 flex items-center justify-center absolute right-2 top-3"
-      >
-        <CopyIcon size={16} />
-      </button>
+      <div className="absolute right-2 top-3 flex items-center gap-2 print:hidden">
+        {/* <button
+          type="button"
+          onClick={handlePrint}
+          className="print flex items-center justify-center gap-1 rounded-md px-2 py-1 hover:bg-black/5"
+          aria-label="Print bill"
+        >
+          <Printer size={16} />
+        </button> */}
+
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="flex items-center justify-center gap-1 rounded-md px-2 py-1 hover:bg-black/5"
+          aria-label="Copy bill image"
+          disabled={isLoading}
+        >
+          <CopyIcon size={16} />
+        </button>
+      </div>
       <div
         ref={billRef}
-        className="text-sm [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2] px-3.5 py-8 space-y-4"
+        className="bill-print text-sm [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2] px-3.5 py-8 space-y-4"
       >
         <div className="w-full flex items-center justify-between text-center">
           <Link
             href={APP_ROUTES.GUEST.ROOT}
-            className="size-[100px] bg-[url('/images/logo/logo-text-1.webp')] bg-center bg-no-repeat bg-contain"
             aria-label="logo"
-          />
+            className="size-[100px] bg-[url('/images/logo/logo-text-1.webp')] bg-center bg-no-repeat bg-contain"
+          ></Link>
 
           <div className="text-left">
             <p className="mt-3 font-bold">No: {data.order.tracking_order}</p>

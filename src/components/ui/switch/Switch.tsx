@@ -76,7 +76,7 @@ export default function Switch({
       <div className="relative">
         <div
           className={cn(
-            "block transition duration-150 ease-linear h-6 w-11 rounded-full",
+            "block transition duration-150 easeLinear h-6 w-11 rounded-full",
             {
               "bg-gray-100 pointer-events-none dark:bg-gray-800": disabled,
             },
@@ -87,7 +87,7 @@ export default function Switch({
         ></div>
         <div
           className={cn(
-            "absolute left-0.5 top-0.5 h-5 w-5 rounded-full shadow-theme-sm duration-150 ease-linear transform",
+            "absolute left-0.5 top-0.5 h-5 w-5 rounded-full shadow-theme-sm duration-150 easeLinear transform",
             isChecked
               ? switchColors[color].checked.knob
               : isChecked && switchColors[color].normal,

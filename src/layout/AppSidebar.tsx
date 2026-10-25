@@ -6,8 +6,6 @@ import { useSidebar } from "../context/SidebarContext";
 import { NavItem } from "@/types/nav";
 import { getIcon } from "@/utils/icon-map";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/context/AuthContext";
-import { SystemRole } from "@/types/common";
 import Image from "next/image";
 import { ChevronDownIcon, EllipsisIcon } from "lucide-react";
 
@@ -302,7 +300,7 @@ export default function AppSidebar<
           )}
         </Link>
       </div>
-      <div className="flex flex-col overflow-y-auto  duration-300 ease-linear no-scrollbar">
+      <div className="flex flex-col overflow-y-auto  duration-300 easeLinear no-scrollbar">
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
             {Object.keys(navContent).map((key) => {

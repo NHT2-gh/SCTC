@@ -23,7 +23,7 @@ export default function OrderDetailPageView({
       style={{
         backgroundImage: `url('/images/backgrounds/${template.backgroundPattern}')`,
       }}
-      className="bg-no-repeat bg-center bg-cover max-w-screen h-screen overflow-y-scroll scrollbar-hidden flex flex-col justify-center items-center gap-2"
+      className="bg-no-repeat bg-center bg-cover max-w-screen h-screen overflow-y-scroll scrollbar-hidden py-5"
     >
       <Bill data={orderDetail} />
     </section>

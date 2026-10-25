@@ -20,7 +20,7 @@ export default function ListAnnouncement() {
             {/* <Icon strokeWidth={2.5} size={22} /> */}
             <div className="">
               <h3 className="font-semibold text-lg">{item.title}</h3>
-              <p className="whitespace-pre-line w-full">{item.message}</p>
+              <p className="whitespace-preLine w-full">{item.message}</p>
             </div>
           </div>
         );

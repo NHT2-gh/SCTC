@@ -76,7 +76,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
         is_only_allow_dinein: !!data.info.product.is_only_allow_dinein,
         product_type: data.info.product.product_type || ProductType.coffee,
       },
-      options: [...data.options.custom]
+      options: [...data.options.custom, ...(data.options.variant || [])]
         .filter((option) => {
           if (!option.id) return false;
           return true;
@@ -210,7 +210,7 @@ export default function MenuItemEditForm({ data }: { data: ProductDetail }) {
     if (dirtyFields.options && data.options && currentOptions) {
       const { upsert, deleted } = diffArray<ProductOptionValidation>({
         current: currentOptions,
-        initial: data.options.custom,
+        initial: [...data.options.custom, ...(data.options.variant || [])],
         dirtyFields: dirtyFields.options!,
       });
 

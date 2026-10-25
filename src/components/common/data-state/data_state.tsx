@@ -20,7 +20,7 @@ export default function DataState({
         : null;
 
   return messageData ? (
-    <div className="w-full text-center text-sm font-normal text-gray-600 dark:text-gray-400 italic">
+    <div className="w-full text-center text-sm font-normal text-gray-600 dark:text-gray-400 italic p-4">
       {messageData}
     </div>
   ) : null;

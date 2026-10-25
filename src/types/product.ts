@@ -40,6 +40,7 @@ export interface ProductDetail {
   options: {
     custom: SelectedOption[];
     fixed: SelectedOption[];
+    variant?: SelectedOption[];
   };
   isAllowOrder: boolean;
 }

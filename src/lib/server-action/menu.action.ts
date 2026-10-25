@@ -1,5 +1,5 @@
 "use server";
-import { MenuLayoutItem } from "@/types/menu";
+import { MenuLayoutItem, OptionType } from "@/types/menu";
 import { ProductDetail } from "@/types/product";
 import { ErrorCode } from "@/lib/error/error-codes";
 import { menuService } from "@/services/menu.service";
@@ -55,8 +55,15 @@ export async function serverActionGetMenuItemInfo(
         data: {
           info: result.data,
           options: {
-            custom: productOptions.data.custom || [],
+            custom:
+              productOptions.data.custom.filter(
+                (item) => item.option_type != OptionType.variant,
+              ) || [],
             fixed: productOptions.data.fixed || [],
+            variant:
+              productOptions.data.custom.filter(
+                (item) => item.option_type == OptionType.variant,
+              ) || [],
           },
           isAllowOrder,
         },

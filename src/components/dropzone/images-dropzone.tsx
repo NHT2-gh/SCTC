@@ -9,6 +9,7 @@ import { deleteImage } from "@/supabase/storage/storageClinets";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import { v4 } from "uuid";
+import { UploadStatus } from "@/types/common";
 
 interface DropzoneComponentProps {
   images: ImageItem[] | [];
@@ -17,8 +18,6 @@ interface DropzoneComponentProps {
   className?: string;
   isUploading?: boolean;
 }
-
-type UploadStatus = "idle" | "uploading" | "success" | "error";
 
 export type ImageItem = {
   id: string;

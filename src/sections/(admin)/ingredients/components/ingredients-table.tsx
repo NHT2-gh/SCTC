@@ -97,20 +97,25 @@ export default function IngredientsTable() {
   return (
     <div className="border border-gray-200 dark:border-gray-800 rounded-xl">
       <Form className="!grid-cols-1" onSubmit={handleSubmit(onSubmit)}>
-        <TableTitle title="Bảng nguyên liệu">
-          <SearchBar
-            ref={searchInputRef}
-            handleKeyDown={(value) => {
-              setSearchText(value);
-            }}
-            handleOnChange={(value) => {
-              if (!value.trim()) setSearchText(undefined);
-            }}
-          />
-        </TableTitle>
-        <Table isLoading={isLoadingIngredients} isError={isErrorIngredient}>
+        <SearchBar
+          ref={searchInputRef}
+          handleKeyDown={(value) => {
+            setSearchText(value);
+          }}
+          handleOnChange={(value) => {
+            if (!value.trim()) setSearchText(undefined);
+          }}
+          className="absolute right-4 top-4"
+        />
+
+        <Table
+          title="Bảng nguyên liệu"
+          isLoading={isLoadingIngredients}
+          isError={isErrorIngredient}
+          className="max-h-[80vh]"
+        >
           <TableHeader columns={columns} />
-          <TableBody>
+          <TableBody className="max-h-[50vh]">
             {ingredientsData?.data.map((ingredient, index) => (
               <TableRow
                 key={ingredient.id}

@@ -74,7 +74,7 @@ export default function Checkbox({
         )}
       </div>
       {label && (
-        <span className="text-sm ml-0 font-medium text-gray-800 dark:text-gray-200 whitespace-pre-line">
+        <span className="text-sm ml-0 font-medium text-gray-800 dark:text-gray-200 whitespace-preLine">
           {label}
         </span>
       )}

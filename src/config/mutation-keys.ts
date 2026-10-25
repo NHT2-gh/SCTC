@@ -40,4 +40,8 @@ export const mutationKeys = {
   historyStatus: {
     upsert: ["historyStatus", "upsert"],
   },
+
+  customerService: {
+    loyaltyClaim: ["customerService", "loyaltyClaim"],
+  },
 };

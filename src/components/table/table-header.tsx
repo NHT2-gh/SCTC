@@ -27,7 +27,7 @@ export default function TableHeader({
   return (
     <TableHeaderUI
       className={cn(
-        "w-full border-b bg-gray-50 dark:bg-black border-gray-100 dark:border-white/5",
+        "w-full border-b sticky top-0 bg-gray-50 dark:bg-black border-gray-100 dark:border-white/5",
         className,
       )}
     >

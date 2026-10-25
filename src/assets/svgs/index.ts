@@ -9,3 +9,5 @@ export { default as IcNotification } from "./ic-notification-icon";
 export { default as IcTiktok } from "./ic-tiktok";
 export { default as IcInstagram } from "./ic-instagram";
 export { default as IcThread } from "./ic-thread";
+export { default as IcSizeMedium } from "./ic-size-medium";
+export { default as IcSizeLarge } from "./ic-size-large";

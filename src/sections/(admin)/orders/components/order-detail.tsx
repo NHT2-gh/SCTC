@@ -115,7 +115,7 @@ export default function OrderDetail({ data }: { data: OrderDetailType }) {
             </li>
           ))}
 
-          <li className="whitespace-pre-line mt-5">
+          <li className="whitespace-preLine mt-5">
             Note:{" "}
             {data.order.notes
               ? data.order.notes
