@@ -12,7 +12,7 @@ interface DrinkCardProps {
 export default function MenuItemCard({ item, className }: DrinkCardProps) {
   return (
     <article
-      className={cn("flex gap-4 w-full items-center bg-orange-50", className)}
+      className={cn("flex gap-4 w-full items-center bg-orange-50 ", className)}
     >
       <Image
         unoptimized
@@ -37,7 +37,7 @@ export default function MenuItemCard({ item, className }: DrinkCardProps) {
         >
           {item.name}
         </h5>
-        <p className={cn("line-clamp-2 text-sm text-black")}>
+        <p className={cn("line-clamp-2 text-sm text-left text-black")}>
           {item.description || "Chưa có mô tả"}
         </p>
       </div>

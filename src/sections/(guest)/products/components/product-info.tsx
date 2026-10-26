@@ -246,7 +246,7 @@ export default function ProductInfo({
               type={"textarea"}
               rows={3}
               value={lineNote}
-              placeholder="Thích gì ghi đó"
+              placeholder="Ghi gì cũng được"
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                 setLineNote(e.target.value);
               }}

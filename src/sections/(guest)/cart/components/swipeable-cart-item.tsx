@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import CartItem from "./cart-item";
 import { CartItem as CartItemType } from "@/types/cart";
 import { useCart } from "@/hooks/use-cart";
+import { Trash2 } from "lucide-react";
 
 interface SwipeableCartItemProps {
   item: CartItemType;
@@ -37,7 +38,7 @@ export default function SwipeableCartItem({ item }: SwipeableCartItemProps) {
         onClick={() => remove(item.id)}
         className="absolute right-0 top-0 h-full w-20 bg-[#8D1111] text-white"
       >
-        Xoá
+        <Trash2 className="size-5 mx-auto text-white" />
       </button>
 
       <div

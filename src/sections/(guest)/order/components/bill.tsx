@@ -16,10 +16,10 @@ import {
 import { showToast } from "@/lib/toast";
 import GenerateBankQr from "./generate-bank-qr";
 import { APP_ROUTES } from "@/config/app-routes";
-import { CheckCircle, CopyIcon } from "lucide-react";
+import { CopyIcon } from "lucide-react";
 import { useCopyImage } from "@/hooks/use-copy-image";
 import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
-
+import { cn } from "@/lib/utils";
 interface BillComponentProps {
   data: OrderDetail;
   backgroundUrl?: string;
@@ -88,7 +88,7 @@ export default function Bill({
       </div>
       <div
         ref={billRef}
-        className="bill-print h-full flex flex-col text-sm [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2] px-3.5 py-8 space-y-4"
+        className="bill-print h-full text-sm [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2] px-3.5 py-8 space-y-4"
       >
         <div className="w-full flex items-center justify-between text-center">
           <Link
@@ -185,17 +185,22 @@ export default function Bill({
 
         <hr />
 
-        <p className="text-center space-y-4">
-          * Túi tiền của bạn có thể sẽ khóc một chút, nhưng ít nhất bạn sẽ vui
-          vẻ khi thưởng thức một ly nước ngon {":))))"}
-        </p>
+        <div className="text-center space-y-4">
+          <p className="w-[90%] mx-auto">
+            * Túi tiền của bạn có thể sẽ khóc một chút, nhưng ít nhất bạn sẽ vui
+            vẻ khi thưởng thức một ly nước ngon {":))))"}
+          </p>
 
-        <div className="flex items-center justify-center gap-2">
-          {data.order.status === OrderStatus.COMPLETED && (
-            <CheckCircle className="stroke-2 text-green-700" />
-          )}
-          <span className="capitalize italic">
-            Trạng thái: {MapTextStatusOrder[data.order.status]}
+          <span className={cn("capitalize italic")}>
+            Trạng thái:{" "}
+            <span
+              className={cn("", {
+                "text-brand-500": data.order.status === OrderStatus.CANCELLED,
+              })}
+            >
+              {" "}
+              {MapTextStatusOrder[data.order.status]}
+            </span>
           </span>
         </div>
 
@@ -205,6 +210,15 @@ export default function Bill({
           paymentMethod={data.order.payment_method}
           tableId={data.order.table_id?.toString() ?? ""}
         />
+
+        {data.order.status === OrderStatus.COMPLETED && (
+          <span
+            style={{
+              backgroundImage: `url(/images/logo/sctc-small-tag.webp)`,
+            }}
+            className="absolute bg-center bg-no-repeat bg-contain opacity-[0.95] aspect-[1.5/7] w-[50px] h-auto left-22 top-5 rotate-[40deg]"
+          />
+        )}
       </div>
     </article>
   );

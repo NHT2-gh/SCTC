@@ -50,7 +50,7 @@ export default function Tooltip({
   };
 
   return (
-    <div className="relative w-full inline-block group">
+    <div className="relative w-fit h-fit inline-block group">
       {children}
       <div
         className={`invisible absolute z-30 opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100 ${getPositionClasses(

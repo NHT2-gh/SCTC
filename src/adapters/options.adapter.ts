@@ -1,10 +1,8 @@
 import { SelectedOption } from "@/types/cart";
 import { ItemOptionDetail, MenuItemOption } from "@/types/menu";
-import { v4 } from "uuid";
 
 export function OptionsAdapter(options: ItemOptionDetail[]): SelectedOption[] {
   return options
-    .sort((_, b) => (b.menu_items_options.is_default ? 1 : 0))
     .map((option) => {
       return {
         id: String(option.id),
@@ -20,14 +18,15 @@ export function OptionsAdapter(options: ItemOptionDetail[]): SelectedOption[] {
         description: option.menu_items_options.description,
         limit: option.limit,
       };
-    });
+    })
+    .sort((a, b) => Number(b.is_default) - Number(a.is_default));
 }
 
 export function FixedOptionAdapter(
   fiexedOptions: MenuItemOption[],
 ): SelectedOption[] {
   return fiexedOptions
-    .sort((_, b) => (b.is_default ? 1 : 0))
+    .sort((a, b) => (b.is_default ? 0 : 1))
     .map((option) => ({
       id: String(option.id),
       option_id: String(option.id),
@@ -37,5 +36,6 @@ export function FixedOptionAdapter(
       price: option.price,
       option_type: option.option_type,
       is_default: option.is_default,
-    }));
+    }))
+    .sort((a, b) => Number(b.is_default) - Number(a.is_default));
 }

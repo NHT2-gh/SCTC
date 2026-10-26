@@ -75,15 +75,6 @@ export default function GenerateBankQr({
             alt="QR Code"
             width={150}
             height={150}
-            onLoad={() => {
-              console.log("[QR] Image loaded:", qrUrl);
-            }}
-            onError={(event) => {
-              console.error("[QR] Image failed:", {
-                src: qrUrl,
-                event,
-              });
-            }}
           />
         </Link>
       </div>
