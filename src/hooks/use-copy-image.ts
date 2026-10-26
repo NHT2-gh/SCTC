@@ -1,5 +1,4 @@
 import * as htmlToImage from "html-to-image";
-import { useState } from "react";
 
 type CopyResult = {
   success: boolean;
@@ -7,86 +6,130 @@ type CopyResult = {
   error?: unknown;
 };
 
-export const useCopyImage = () => {
-  const [fileName, setFileName] = useState<string>("image.png");
+const canUseClipboard = () => {
+  return (
+    typeof window !== "undefined" &&
+    typeof navigator !== "undefined" &&
+    typeof navigator.clipboard?.write === "function" &&
+    typeof ClipboardItem !== "undefined"
+  );
+};
 
-  const isMobile = () => {
-    if (typeof navigator === "undefined") return false;
-    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  };
+const downloadImage = (blob: Blob, fileName: string) => {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
 
-  const canUseClipboard = () => {
-    return !!(navigator?.clipboard && (window as any).ClipboardItem);
-  };
+  a.href = url;
+  a.download = fileName;
+  a.style.display = "none";
 
-  const downloadImage = (blob: Blob) => {
-    const url = URL.createObjectURL(blob);
+  document.body.appendChild(a);
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
+  try {
     a.click();
+  } catch (event) {
+    console.log(event);
+  } finally {
     a.remove();
 
-    URL.revokeObjectURL(url);
-  };
+    // Cho trình duyệt thời gian xử lý download.
+    window.setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 1000);
+  }
+};
+
+const createImageBlob = (node: HTMLElement): Promise<Blob> => {
+  return htmlToImage
+    .toBlob(node, {
+      pixelRatio: 2,
+      backgroundColor: "#fff",
+    })
+    .then((blob) => {
+      if (!blob) {
+        throw new Error("Failed to generate image");
+      }
+
+      return blob;
+    });
+};
+
+export const useCopyImage = () => {
+  const isMobile =
+    typeof navigator !== "undefined" &&
+    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const copyImage = async (
     node: HTMLElement | null,
     fileName: string,
   ): Promise<CopyResult> => {
     if (!node) {
-      return { success: false, method: "none", error: "Node not found" };
+      return {
+        success: false,
+        method: "none",
+        error: new Error("Node not found"),
+      };
     }
 
     try {
-      const blob = await htmlToImage.toBlob(node, {
-        pixelRatio: 2,
-        backgroundColor: "#fff",
-      });
+      // Tạo Promise nhưng chưa await, để có thể gọi clipboard
+      // ngay trong lượt xử lý click của người dùng.
+      const blobPromise = createImageBlob(node);
 
-      if (!blob) {
-        return {
-          success: false,
-          method: "none",
-          error: "Failed to generate image",
-        };
-      }
-
-      setFileName(fileName); // đảm bảo tên file đã được set trước khi fallback
-
-      // 👉 Ưu tiên thử clipboard trước
       if (canUseClipboard()) {
         try {
-          await navigator.clipboard.write([
-            new ClipboardItem({
-              "image/png": blob,
-            }),
-          ]);
+          const item = new ClipboardItem({
+            "image/png": blobPromise,
+          });
 
-          return { success: true, method: "clipboard" };
-        } catch (err) {
-          // fallback nếu bị chặn (iOS Safari, permission, etc.)
-          downloadImage(blob);
+          // Gọi write trước khi await quá trình render ảnh.
+          await navigator.clipboard.write([item]);
+
           return {
             success: true,
-            method: "download",
-            error: err,
+            method: "clipboard",
           };
+        } catch (clipboardError) {
+          console.log(clipboardError);
+          // Clipboard thất bại: thử tải ảnh xuống.
+          try {
+            const blob = await blobPromise;
+            downloadImage(blob, fileName);
+
+            return {
+              success: true,
+              method: "download",
+              error: clipboardError,
+            };
+          } catch (fallbackError) {
+            return {
+              success: false,
+              method: "none",
+              error: fallbackError,
+            };
+          }
         }
       }
 
-      // 👉 Không support clipboard → download luôn
-      downloadImage(blob);
-      return { success: true, method: "download" };
-    } catch (err) {
-      return { success: false, method: "none", error: err };
+      // Trình duyệt không hỗ trợ clipboard.
+      const blob = await blobPromise;
+      downloadImage(blob, fileName);
+
+      return {
+        success: true,
+        method: "download",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        method: "none",
+        error: "Copy image failed",
+      };
     }
   };
 
   return {
     copyImage,
-    isMobile: isMobile(),
+    isMobile,
   };
 };

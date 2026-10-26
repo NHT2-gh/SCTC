@@ -16,7 +16,7 @@ import {
 import { showToast } from "@/lib/toast";
 import GenerateBankQr from "./generate-bank-qr";
 import { APP_ROUTES } from "@/config/app-routes";
-import { CheckCircle, CopyIcon, Printer } from "lucide-react";
+import { CheckCircle, CopyIcon } from "lucide-react";
 import { useCopyImage } from "@/hooks/use-copy-image";
 import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 
@@ -38,7 +38,7 @@ export default function Bill({
 
     const result = await copyImage(
       billRef.current,
-      `SCTC-${data.order.tracking_order}.png`,
+      `SCTC${data.order.tracking_order}.png`,
     );
 
     if (result.method === "clipboard") {
@@ -49,6 +49,7 @@ export default function Bill({
     } else if (result.method === "download") {
       showToast.success({ title: "Thành công", description: "Đã tải ảnh" });
     } else {
+      console.log(result.error);
       showToast.error({ title: "Lỗi", description: "Có lỗi xảy ra" });
     }
 
@@ -63,7 +64,7 @@ export default function Bill({
   return (
     <article
       style={{ backgroundImage: `url(/images/backgrounds/${backgroundUrl})` }}
-      className="bill-box relative text-black max-w-[87%] mx-auto h-fit opacity-[0.97] border-brand-500  "
+      className="bill-box bg-cover bg-no-repeat bg-center relative text-black max-w-[87%] mx-auto h-fit opacity-[0.97] border-brand-500  "
     >
       <div className="absolute right-2 top-3 flex items-center gap-2 print:hidden">
         {/* <button
@@ -87,7 +88,7 @@ export default function Bill({
       </div>
       <div
         ref={billRef}
-        className="bill-print text-sm [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2] px-3.5 py-8 space-y-4"
+        className="bill-print h-full flex flex-col text-sm [&_hr]:border-dashed bg-cover [&_hr]:border-[#000000B2] px-3.5 py-8 space-y-4"
       >
         <div className="w-full flex items-center justify-between text-center">
           <Link
@@ -138,7 +139,7 @@ export default function Bill({
         </ul>
         <hr />
 
-        <ul className="px-3 overflow-y-scroll scrollbar-hidden [&>li>div]:grid [&>li>div]:grid-cols-[60%_15%_25%] [&>li>div]:items-center">
+        <ul className="px-3 [&>li>div]:grid [&>li>div]:grid-cols-[60%_15%_25%] [&>li>div]:items-center">
           {data.items.map((item) => (
             <li key={item.order_item.id}>
               <div>
@@ -183,6 +184,7 @@ export default function Bill({
         </ul>
 
         <hr />
+
         <p className="text-center space-y-4">
           * Túi tiền của bạn có thể sẽ khóc một chút, nhưng ít nhất bạn sẽ vui
           vẻ khi thưởng thức một ly nước ngon {":))))"}

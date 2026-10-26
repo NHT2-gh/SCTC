@@ -30,7 +30,6 @@ export default function GenerateBankQr({
           ids: orderIds,
           paymentType:
             orderIds.length === 1 ? PaymentType.INDIVIDUAL : PaymentType.GROUP,
-
           paymentMethod,
         }),
       });
@@ -40,13 +39,21 @@ export default function GenerateBankQr({
       if (data.success && data.data?.qrUrl) {
         setQrUrl(data.data.qrUrl);
       }
-    } catch (error) {
+    } catch {
       showToast.error({
         title: "Lỗi khi tạo mã thanh toán",
         description: "Vui lòng liên hệ nhân viên",
       });
     }
-  }, [orderIds]);
+  }, [orderIds, paymentMethod]);
+
+  useEffect(() => {
+    const processValue = _product_setting.processOrder[status].value;
+
+    if (processValue >= 1 && processValue < 5) {
+      void handlePayment();
+    }
+  }, [handlePayment, status]);
 
   useEffect(() => {
     if (
@@ -62,7 +69,22 @@ export default function GenerateBankQr({
     qrUrl && (
       <div className="mt-2 w-fit mx-auto rounded-lg overflow-hidden">
         <Link href={qrUrl} target="_blank">
-          <Image src={qrUrl} alt="QR Code" width={150} height={150} />
+          <Image
+            unoptimized
+            src={qrUrl}
+            alt="QR Code"
+            width={150}
+            height={150}
+            onLoad={() => {
+              console.log("[QR] Image loaded:", qrUrl);
+            }}
+            onError={(event) => {
+              console.error("[QR] Image failed:", {
+                src: qrUrl,
+                event,
+              });
+            }}
+          />
         </Link>
       </div>
     )

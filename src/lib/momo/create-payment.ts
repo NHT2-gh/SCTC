@@ -80,7 +80,7 @@ export async function createPayment(
     0,
   );
 
-  const orderId = `${payment_type === PaymentType.INDIVIDUAL ? `IND${orders.data[0].tracking_order}` : `GRP${table_id}T${Date.now().toString()}`}`;
+  const orderId = `SCTC${payment_type === PaymentType.INDIVIDUAL ? `IND${orders.data[0].tracking_order}` : `GRP${table_id}T${Date.now().toString()}`}`;
 
   if (payment_menthod === PaymentMethod.CASH) {
     return;
@@ -91,7 +91,7 @@ export async function createPayment(
       const result = await createQuickQR({
         base_url: process.env.NEXT_PUBLIC_QR_VIET_BASE_URL!,
         amount: totalAmount,
-        addInfo: `SCTCQR${orderId}`,
+        addInfo: orderId,
       });
 
       return result;
