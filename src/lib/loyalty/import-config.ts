@@ -4,7 +4,8 @@ export type DateFormat =
   | "excel"
   | "iso"
   | "yyyy-mm-dd hh:mm:ss"
-  | "dd/mm/yyyy hh:mm:ss";
+  | "dd/mm/yyyy hh:mm:ss"
+  | "dd mmm yyyy h:mm a";
 
 export type AmountFormat = "vi-VN" | "en-US";
 
@@ -17,6 +18,7 @@ export interface SourceImportConfig {
     completedAt: string;
     status: string;
     paidAmount: string;
+    shortCode?: string;
   };
 
   completedStatuses: string[];
@@ -38,6 +40,7 @@ export interface ImportedOrder {
   points: number;
   source: SourceImportConfig["source"];
   rowNumber: number;
+  shortCode?: string;
 }
 
 export interface ImportRowError {
@@ -57,13 +60,14 @@ export const IMPORT_CONFIGS: Record<LoyaltySource, SourceImportConfig> = {
   grabfood: {
     source: "grabfood",
     columns: {
-      orderNumber: "Mã đơn hàng ngắn",
+      orderNumber: "Mã đặt hàng",
       completedAt: "Cập nhật vào",
       status: "Trạng thái",
       paidAmount: "Doanh thu ròng",
+      shortCode: "Mã đơn hàng ngắn",
     },
-    completedStatuses: ["Đã hoàn tất", "Đã hoàn thành"],
-    dateFormat: "dd/mm/yyyy hh:mm:ss",
+    completedStatuses: ["Đã hoàn tất", "Đã thanh toán"],
+    dateFormat: "dd mmm yyyy h:mm a",
     amountFormat: "vi-VN",
     pointsPerCurrencyUnit: 30_000,
     pointsPrecision: 2,

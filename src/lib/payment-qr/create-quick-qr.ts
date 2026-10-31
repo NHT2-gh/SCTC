@@ -7,13 +7,14 @@ export async function createQuickQR(
     throw new Error("Invalid amount");
   }
 
-  const queries = new URLSearchParams();
-  queries.append("amount", resquest.amount.toString());
+  const params = new URLSearchParams();
+  params.append("amount", resquest.amount.toString());
+
   if (resquest.addInfo) {
-    queries.append("addInfo", resquest.addInfo);
+    params.append("addInfo", resquest.addInfo);
   }
 
-  const qrUrl = `${resquest.base_url}?${queries.toString()}`;
+  const qrUrl = `${resquest.base_url}&${params.toString()}`;
 
   return { qrUrl: qrUrl };
 }

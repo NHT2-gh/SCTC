@@ -16,7 +16,7 @@ import { formatCurrency } from "@/utils/format-data";
 import React, { useEffect, useMemo, useState } from "react";
 import CustomNumberInput from "../../products/components/custom-number-input";
 import { useCart } from "@/hooks/use-cart";
-import { FixedOption } from "../../products/components";
+import { FixedOption, ProductVariantOptions } from "../../products/components";
 
 interface EditProductInfoProps {
   cartItem: CartItem;
@@ -52,9 +52,13 @@ export default function EditProductInfo({
         if (!value) return [];
         const findOption = (optionId: string) => {
           const opt = productOptions?.data.custom.find(
-            (o) => o.option_id === optionId,
+            (o) => String(o.option_id) === String(optionId),
           );
-          if (opt) return opt;
+          if (opt)
+            return {
+              ...opt,
+              id: String(opt.id),
+            };
           const fixedOpt = productOptions?.data.fixed.find(
             (o) => String(o.option_id) === String(optionId),
           );
@@ -65,6 +69,18 @@ export default function EditProductInfo({
               id: String(fixedOpt.id),
             } as SelectedOption;
           }
+
+          const variant = productOptions?.data.variant?.find(
+            (o) => String(o.option_id) === String(optionId),
+          );
+
+          if (variant) {
+            return {
+              ...variant,
+              id: String(variant.id),
+            } as SelectedOption;
+          }
+
           return null;
         };
 
@@ -76,6 +92,7 @@ export default function EditProductInfo({
           const opt = findOption(value);
           return opt ? [opt] : [];
         }
+
         return [];
       });
       Promise.all([
@@ -112,9 +129,11 @@ export default function EditProductInfo({
       setProductOptionSchame(productOptionsSchema);
     }
     if (productOptions?.data) {
+      const options = productOptions.data;
       const normalOptions = [
-        ...productOptions?.data.fixed,
-        ...productOptions?.data.custom,
+        ...options.fixed,
+        ...options.custom,
+        ...(options.variant || []),
       ].reduce(
         (acc, option) => {
           if (option.is_default) {
@@ -128,7 +147,7 @@ export default function EditProductInfo({
 
       setFilterValue(normalOptions);
     }
-  }, [productOptions?.data.custom, productOptions?.data.fixed]);
+  }, [productOptions?.data]);
 
   useEffect(() => {
     const { selected_options } = cartItem;
@@ -142,6 +161,9 @@ export default function EditProductInfo({
       const fixedGroup = productOptions?.data.fixed.find(
         (g) => g.option_type === option.option_type,
       );
+      const variantGroup = productOptions?.data.variant?.find(
+        (g) => g.option_type === option.option_type,
+      );
 
       if (customGroup) {
         acc[option.option_type] = [
@@ -149,6 +171,8 @@ export default function EditProductInfo({
           String(option.option_id),
         ];
       } else if (fixedGroup) {
+        acc[option.option_type] = String(option.option_id);
+      } else if (variantGroup) {
         acc[option.option_type] = String(option.option_id);
       }
 
@@ -162,22 +186,25 @@ export default function EditProductInfo({
     const basePrice = product.selling_price;
 
     const optionPrice = Object.entries(filterValues).flatMap(([_, value]) =>
-      Array.isArray(value)
-        ? value
-            .map((optionId) =>
-              productOptions?.data.custom.find(
-                (option) => option.option_id === optionId,
-              ),
-            )
-            .filter(Boolean)
+      value
+        ? [
+            ...(Array.isArray(value) ? value : [value])
+              .map((optionId) =>
+                [
+                  ...(productOptions?.data.custom || []),
+                  ...(productOptions?.data.variant || []),
+                ].find((option) => String(option.option_id) === optionId),
+              )
+              .filter(Boolean),
+          ].filter(Boolean)
         : [],
     );
 
     return (
-      basePrice +
+      basePrice * quantity +
       optionPrice.reduce((total, option) => total + (option?.price ?? 0), 0)
     );
-  }, [filterValues, productOptions?.data.custom, product.selling_price]);
+  }, [filterValues, productOptions, product.selling_price, quantity]);
 
   return (
     <section className="h-full relative">
@@ -209,6 +236,15 @@ export default function EditProductInfo({
               {formatCurrency(product.selling_price)}
             </span>
           </div>
+
+          {productOptions?.data.variant && filterValues["variant"] && (
+            <ProductVariantOptions
+              variants={productOptions.data.variant}
+              update={updateFilter}
+              remove={removeFilter}
+              value={filterValues}
+            />
+          )}
 
           {productOptions?.data.fixed && (
             <FixedOption

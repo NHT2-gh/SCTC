@@ -55,15 +55,9 @@ export async function serverActionGetMenuItemInfo(
         data: {
           info: result.data,
           options: {
-            custom:
-              productOptions.data.custom.filter(
-                (item) => item.option_type != OptionType.variant,
-              ) || [],
+            custom: productOptions.data.custom,
             fixed: productOptions.data.fixed || [],
-            variant:
-              productOptions.data.custom.filter(
-                (item) => item.option_type == OptionType.variant,
-              ) || [],
+            variant: productOptions.data.variant,
           },
           isAllowOrder,
         },

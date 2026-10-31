@@ -85,7 +85,7 @@ export default function MenuPageView({ menuLayout }: MenuPageViewProps) {
                   >
                     <MenuItemCard
                       item={item.menu_item.product}
-                      className={cn("bg-transparent", {
+                      className={cn("bg-transparent text-left", {
                         "flex-row-reverse text-right": item.x > 1,
                       })}
                     />

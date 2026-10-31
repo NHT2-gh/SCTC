@@ -55,7 +55,7 @@ class CustomerService {
   ): Promise<ResponseStandard<LoyaltyClaimResponse>> {
     const query = supabase.rpc(this.submitLoyaltyClaimRpc, {
       p_phone: data.phone_number,
-      p_order_number: `${LoyaltySourceMapCode[data.source]}-${data.order_number}`,
+      p_order_number: data.order_number,
       p_source: data.source,
     });
 

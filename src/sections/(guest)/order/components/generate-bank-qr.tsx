@@ -67,7 +67,15 @@ export default function GenerateBankQr({
 
   return (
     qrUrl && (
-      <div className="mt-2 w-fit mx-auto rounded-lg overflow-hidden">
+      <div className="mt-2 w-fit mx-auto rounded-lg overflow-hidden relative">
+        <Image
+          unoptimized
+          width={25}
+          height={25}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          src={"/images/logo/logo-sctc-v1.webp"}
+          alt="logo-sctc-v1.webp"
+        />
         <Link href={qrUrl} target="_blank">
           <Image
             unoptimized

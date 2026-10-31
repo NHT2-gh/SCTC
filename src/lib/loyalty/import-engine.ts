@@ -12,13 +12,25 @@ const HEADER_SCAN_LIMIT = 30;
 
 function normalizeText(value: unknown): string {
   return String(value ?? "")
-    .replace(/^\uFEFF/, "")
-    .trim()
-    .normalize("NFC");
+    .toLowerCase()
+    .normalize("NFC")
+    .replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\uFEFF]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function normalizeStatus(value: unknown): string {
-  return normalizeText(value).replace(/\s+/g, " ").toLocaleLowerCase("vi-VN");
+  return (
+    String(value ?? "")
+      // Chuẩn hóa Unicode tiếng Việt
+      .normalize("NFC")
+      // Xóa ký tự điều khiển và ký tự vô hình
+      .replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200F\uFEFF]/g, "")
+      // Chuẩn hóa khoảng trắng liên tiếp
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLocaleLowerCase("vi-VN")
+  );
 }
 
 function normalizeHeader(value: unknown): string {
@@ -181,21 +193,50 @@ function parseDate(
     }
   }
 
-  if (format === "dd/mm/yyyy hh:mm:ss") {
+  if (format === "dd mmm yyyy h:mm a") {
     const match = text.match(
-      /^(\d{1,2})\/(\d{1,2})\/(\d{4})[ T](\d{1,2}):(\d{2})(?::(\d{2}))?$/,
+      /^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})\s+(\d{1,2}):(\d{2})\s*(AM|PM)$/i,
     );
 
-    if (match) {
-      return vietnamTimeToIso(
-        Number(match[3]),
-        Number(match[2]),
-        Number(match[1]),
-        Number(match[4]),
-        Number(match[5]),
-        Number(match[6] ?? 0),
-      );
+    if (!match) return null;
+
+    const [, dayText, monthText, yearText, hourText, minuteText, period] =
+      match;
+
+    const months: Record<string, number> = {
+      jan: 1,
+      feb: 2,
+      mar: 3,
+      apr: 4,
+      may: 5,
+      jun: 6,
+      jul: 7,
+      aug: 8,
+      sep: 9,
+      oct: 10,
+      nov: 11,
+      dec: 12,
+    };
+
+    const day = Number(dayText);
+    const month = months[monthText.toLowerCase()];
+    const year = Number(yearText);
+    const hour12 = Number(hourText);
+    const minute = Number(minuteText);
+
+    if (
+      month === undefined ||
+      hour12 < 1 ||
+      hour12 > 12 ||
+      minute < 0 ||
+      minute > 59
+    ) {
+      return null;
     }
+
+    const hour24 = (hour12 % 12) + (period.toUpperCase() === "PM" ? 12 : 0);
+
+    return vietnamTimeToIso(year, month, day, hour24, minute, 0);
   }
 
   return null;
@@ -350,11 +391,6 @@ export async function parseImportFile(
 
     const status = normalizeText(getCell(row, header.columnIndexes, "status"));
 
-    if (!completedStatuses.has(normalizeStatus(status))) {
-      result.skippedRows++;
-      continue;
-    }
-
     const orderNumber = normalizeText(
       getCell(row, header.columnIndexes, "orderNumber"),
     );
@@ -369,21 +405,28 @@ export async function parseImportFile(
       config.amountFormat,
     );
 
+    const shortCode = normalizeText(
+      getCell(row, header.columnIndexes, "shortCode"),
+    );
+
     const rowErrors: string[] = [];
 
-    if (!orderNumber) {
-      rowErrors.push("Thiếu mã đơn hàng.");
-    } else if (seenOrderNumbers.has(orderNumber)) {
+    if (
+      !completedStatuses.has(normalizeStatus(status)) ||
+      !orderNumber ||
+      paidAmount === null
+    ) {
+      result.skippedRows++;
+      continue;
+    }
+
+    if (seenOrderNumbers.has(orderNumber)) {
       rowErrors.push(`Mã đơn hàng bị trùng: ${orderNumber}.`);
       result.duplicateRows++;
     }
 
     if (!completedAt) {
       rowErrors.push("Ngày giờ hoàn tất không hợp lệ.");
-    }
-
-    if (paidAmount === null) {
-      rowErrors.push("Số tiền tính điểm không hợp lệ.");
     }
 
     if (rowErrors.length > 0) {
@@ -410,6 +453,7 @@ export async function parseImportFile(
         points,
         source: config.source,
         rowNumber,
+        shortCode,
       });
     }
   }

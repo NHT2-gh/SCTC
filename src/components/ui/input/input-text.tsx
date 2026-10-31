@@ -60,35 +60,36 @@ export default memo(function TextInput({
   };
 
   return (
-    <div
-      className={cn(
-        baseClasses,
-        variantClasses[variant],
-        {
-          [variantClasses.disabled]: disabled,
-        },
-        className,
-      )}
-    >
-      <input
-        id={id}
-        name={name}
-        ref={ref}
-        type={type}
-        placeholder={placeholder}
-        value={inputValue}
-        onChange={onChange}
-        disabled={disabled}
-        onKeyDown={onKeyDown}
-        className="w-full h-full placeholder:text-gray-400 focus:outline-hidden dark:placeholder:text-white/30"
-        {...props}
-      />
+    <>
+      <div
+        className={cn(
+          baseClasses,
+          variantClasses[variant],
+          {
+            [variantClasses.disabled]: disabled,
+          },
+          className,
+        )}
+      >
+        <input
+          id={id}
+          name={name}
+          ref={ref}
+          type={type}
+          placeholder={placeholder}
+          value={inputValue}
+          onChange={onChange}
+          disabled={disabled}
+          onKeyDown={onKeyDown}
+          className="w-full full placeholder:text-gray-400 focus:outline-hidden dark:placeholder:text-white/30"
+          {...props}
+        />
 
-      {children}
-
+        {children}
+      </div>
       {hint && (
         <p
-          className={`mt-1.5 text-xs ${
+          className={`mt-1 text-xs ${
             variant === "error"
               ? "text-error-500"
               : variant === "success"
@@ -99,6 +100,6 @@ export default memo(function TextInput({
           {hint}
         </p>
       )}
-    </div>
+    </>
   );
 });

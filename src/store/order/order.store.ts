@@ -64,7 +64,8 @@ export const useOrderStore = create<OrderStore>()(
       merge: (persistedState, currentState) => {
         const persisted = persistedState as typeof currentState;
 
-        const now = new Date();
+        const now = Date.now();
+        const twentyFourHours = 24 * 60 * 60 * 1000;
 
         return {
           ...currentState,
@@ -73,13 +74,9 @@ export const useOrderStore = create<OrderStore>()(
             persisted.orders?.filter((order) => {
               if (!order.pick_up_time) return false;
 
-              const pickup = new Date(order.pick_up_time);
+              const pickup = new Date(order.pick_up_time).getTime();
 
-              return (
-                pickup.getFullYear() === now.getFullYear() &&
-                pickup.getMonth() === now.getMonth() &&
-                pickup.getDate() === now.getDate()
-              );
+              return now - pickup <= twentyFourHours && pickup <= now;
             }) ?? [],
         };
       },

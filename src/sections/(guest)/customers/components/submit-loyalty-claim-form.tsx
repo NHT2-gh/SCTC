@@ -60,7 +60,7 @@ export default function SubmitLoyaltyClaimForm() {
           label: "Số điện thoại",
           required: true,
           type: "tel",
-          placeholder: "Nhập số điện thoại mà bạn đã đặt hàng",
+          placeholder: "Nhập số điện thoại dùng để đặt hàng",
         }}
       />
 
@@ -70,23 +70,24 @@ export default function SubmitLoyaltyClaimForm() {
           className="[&_input]:pl-[100px]"
           field={{
             name: "order_number",
-            label: "Mã đơn hàng",
+            label: "Mã đặt hàng",
             required: true,
             type: "text",
             maxLength: 10,
-            placeholder: "Nhập mã số đơn hàng của bạn",
+            placeholder: "Nhập mã đặt hàng từ app đặt hàng",
+            hint: "Sao chép mã đặt hàng từ đơn hàng của bạn",
           }}
         />
         <FormField
           form={submitForm}
-          className="!absolute !left-0 top-[25px] w-[100px]"
+          className="!absolute !left-0 top-[25px] w-[110px]"
           field={{
             name: "source",
             required: true,
             type: "select",
             options: Object.values(LoyaltySource).map((source) => ({
               value: source,
-              label: `${LoyaltySourceMapCode[source]} - `,
+              label: `${LoyaltySourceMapCode[source]}`,
             })),
           }}
         />

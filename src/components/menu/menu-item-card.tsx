@@ -37,7 +37,7 @@ export default function MenuItemCard({ item, className }: DrinkCardProps) {
         >
           {item.name}
         </h5>
-        <p className={cn("line-clamp-2 text-sm text-left text-black")}>
+        <p className={cn("line-clamp-2 text-sm text-black")}>
           {item.description || "Chưa có mô tả"}
         </p>
       </div>

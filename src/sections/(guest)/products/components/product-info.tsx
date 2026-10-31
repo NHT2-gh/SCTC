@@ -140,7 +140,7 @@ export default function ProductInfo({
 
       setFilterValue(normalOptions);
     }
-  }, [options.custom, options.fixed]);
+  }, [options]);
 
   const totalPrice = useMemo(() => {
     const basePrice = info.product.selling_price;

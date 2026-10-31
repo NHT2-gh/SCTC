@@ -66,9 +66,9 @@ export enum LoyaltySource {
 }
 
 export const LoyaltySourceMapCode: Record<LoyaltySource, string> = {
-  [LoyaltySource.grabfood]: "GF",
-  [LoyaltySource.xanhsm]: "XSM",
-  [LoyaltySource.befood]: "BF",
+  [LoyaltySource.grabfood]: "Grab",
+  [LoyaltySource.xanhsm]: "Green SM",
+  [LoyaltySource.befood]: "Be",
 };
 
 export type UploadStatus = "idle" | "uploading" | "success" | "error";

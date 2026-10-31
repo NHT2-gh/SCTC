@@ -5,6 +5,7 @@ import {
   MenuItem,
   MenuItemOption,
   MenuLayoutItem,
+  OptionType,
 } from "@/types/menu";
 import { handlePostgresError } from "@/lib/error/postgres-error";
 import { GetParams, MutationResult, ResponseStandard } from "@/types/common";
@@ -399,18 +400,26 @@ class MenuService {
     menuItemId: string,
     productType?: ProductType,
   ): Promise<
-    ResponseStandard<{ custom: SelectedOption[]; fixed: SelectedOption[] }>
+    ResponseStandard<{
+      custom: SelectedOption[];
+      fixed: SelectedOption[];
+      variant?: SelectedOption[];
+    }>
   > {
-    const [customOptions, fiexedOptions] = await Promise.all([
-      this.getMenuItemOptionsDetail(menuItemId),
+    const { data: options } = await this.getMenuItemOptionsDetail(menuItemId);
+
+    const [customOptions, fiexedOptions, variantOptions] = await Promise.all([
+      options.filter((item) => item.option_type !== OptionType.variant) || [],
       this.getFixedOptions(productType),
+      options.filter((item) => item.option_type === OptionType.variant) || [],
     ]);
 
     return {
       success: true,
       data: {
-        custom: customOptions.data || [],
-        fixed: fiexedOptions.data || [],
+        custom: customOptions,
+        fixed: fiexedOptions.data,
+        variant: variantOptions,
       },
     };
   }
