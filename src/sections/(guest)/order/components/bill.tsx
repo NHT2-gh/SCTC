@@ -43,13 +43,11 @@ export default function Bill({
 
     if (result.method === "clipboard") {
       showToast.success({
-        title: "Thành công",
-        description: "Đã copy ảnh vào clipboard",
+        title: "Đã copy ảnh vào clipboard",
       });
     } else if (result.method === "download") {
-      showToast.success({ title: "Thành công", description: "Đã tải ảnh" });
+      showToast.success({ title: "Đã tải ảnh" });
     } else {
-      console.log(result.error);
       showToast.error({ title: "Lỗi", description: "Có lỗi xảy ra" });
     }
 
@@ -95,7 +93,7 @@ export default function Bill({
             href={APP_ROUTES.GUEST.ROOT}
             aria-label="logo"
             className="size-[100px] bg-[url('/images/logo/logo-text-1.webp')] bg-center bg-no-repeat bg-contain"
-          ></Link>
+          />
 
           <div className="text-left">
             <p className="mt-3 font-bold">No: {data.order.tracking_order}</p>

@@ -26,6 +26,7 @@ import { FilterBoxRender } from "@/components/filter/filter-box-render";
 import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { Order, OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
+import { API_ROUTES } from "@/config/api-routes";
 
 const limit = 24;
 
@@ -108,7 +109,7 @@ export default function OrdersPageView() {
     }
 
     try {
-      const result = await fetch("/api/payment/create", {
+      const result = await fetch(API_ROUTES.ADMIN.PAYMENT.CREATE, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

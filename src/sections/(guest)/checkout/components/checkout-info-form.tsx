@@ -21,6 +21,7 @@ import { SingleFilterButtonGroup } from "@/components/filter/single-toggle";
 import { checkoutFormSchema } from "@/schemas/form-schemas/checkout-form-schema";
 import { CheckoutFormValidationType } from "@/schemas/validation/checkout.validation";
 import ApplyPromotion from "./apply-promotion";
+import { API_ROUTES } from "@/config/api-routes";
 
 export default function CheckoutInfoForm() {
   const router = useRouter();
@@ -61,7 +62,7 @@ export default function CheckoutInfoForm() {
     });
 
     try {
-      const res = await fetch("/api/orders", {
+      const res = await fetch(API_ROUTES.ADMIN.ORDER.CREATE, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

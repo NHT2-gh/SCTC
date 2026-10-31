@@ -5,6 +5,7 @@ import Link from "next/link";
 import { OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { showToast } from "@/lib/toast";
+import { API_ROUTES } from "@/config/api-routes";
 
 interface GenerateBankQrProps {
   orderIds: string[];
@@ -21,7 +22,7 @@ export default function GenerateBankQr({
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   const handlePayment = useCallback(async () => {
     try {
-      const result = await fetch("/api/payment/create", {
+      const result = await fetch(API_ROUTES.ADMIN.PAYMENT.CREATE, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +38,9 @@ export default function GenerateBankQr({
       const data = await result.json();
 
       if (data.success && data.data?.qrUrl) {
-        setQrUrl(data.data.qrUrl);
+        const proxyUrl = API_ROUTES.ADMIN.PAYMENT.QR_IMAGE(data.data.qrUrl);
+
+        setQrUrl(proxyUrl);
       }
     } catch {
       showToast.error({
@@ -67,22 +70,21 @@ export default function GenerateBankQr({
 
   return (
     qrUrl && (
-      <div className="mt-2 w-fit mx-auto rounded-lg overflow-hidden relative">
-        <Image
-          unoptimized
-          width={25}
-          height={25}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          src={"/images/logo/logo-sctc-v1.webp"}
-          alt="logo-sctc-v1.webp"
-        />
-        <Link href={qrUrl} target="_blank">
+      <div className="size-[150px] mx-auto overflow-hidden relative">
+        <Link
+          href={qrUrl}
+          target="_blank"
+          className="relative block size-full before:z-20 before:absolute before:size-6  before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-[url('/images/logo/logo-sctc-v1.webp')] before:bg-center before:bg-no-repeat before:bg-contain"
+        >
           <Image
             unoptimized
             src={qrUrl}
             alt="QR Code"
             width={150}
             height={150}
+            onError={() => {
+              console.error("[SCTC] QR image load failed:", qrUrl);
+            }}
           />
         </Link>
       </div>

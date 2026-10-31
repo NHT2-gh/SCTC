@@ -10,12 +10,26 @@ const canUseClipboard = () => {
   return (
     typeof window !== "undefined" &&
     typeof navigator !== "undefined" &&
+    window.isSecureContext &&
     typeof navigator.clipboard?.write === "function" &&
     typeof ClipboardItem !== "undefined"
   );
 };
 
-const downloadImage = (blob: Blob, fileName: string) => {
+const createImageBlob = async (node: HTMLElement): Promise<Blob> => {
+  const blob = await htmlToImage.toBlob(node, {
+    pixelRatio: 2,
+    backgroundColor: "#fff",
+  });
+
+  if (!blob) {
+    throw new Error("Failed to generate bill image");
+  }
+
+  return blob;
+};
+
+const downloadImage = (blob: Blob, fileName: string): void => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
 
@@ -27,31 +41,13 @@ const downloadImage = (blob: Blob, fileName: string) => {
 
   try {
     a.click();
-  } catch (event) {
-    console.log(event);
   } finally {
     a.remove();
 
-    // Cho trình duyệt thời gian xử lý download.
     window.setTimeout(() => {
       URL.revokeObjectURL(url);
-    }, 1000);
+    }, 3000);
   }
-};
-
-const createImageBlob = (node: HTMLElement): Promise<Blob> => {
-  return htmlToImage
-    .toBlob(node, {
-      pixelRatio: 2,
-      backgroundColor: "#fff",
-    })
-    .then((blob) => {
-      if (!blob) {
-        throw new Error("Failed to generate image");
-      }
-
-      return blob;
-    });
 };
 
 export const useCopyImage = () => {
@@ -67,52 +63,57 @@ export const useCopyImage = () => {
       return {
         success: false,
         method: "none",
-        error: new Error("Node not found"),
+        error: new Error("Bill element not found"),
       };
     }
 
-    try {
-      // Tạo Promise nhưng chưa await, để có thể gọi clipboard
-      // ngay trong lượt xử lý click của người dùng.
-      const blobPromise = createImageBlob(node);
+    // Bắt đầu tạo ảnh ngay trong lần click.
+    const blobPromise = createImageBlob(node);
 
-      if (canUseClipboard()) {
+    // Thử Clipboard trước nếu trình duyệt hỗ trợ.
+    if (canUseClipboard()) {
+      try {
+        const item = new ClipboardItem({
+          "image/png": blobPromise,
+        });
+
+        await navigator.clipboard.write([item]);
+
+        return {
+          success: true,
+          method: "clipboard",
+        };
+      } catch (clipboardError) {
+        console.warn("[SCTC] Clipboard failed:", clipboardError);
+
+        // Kiểm tra xem nguyên nhân có phải do tạo ảnh không.
         try {
-          const item = new ClipboardItem({
-            "image/png": blobPromise,
-          });
+          const blob = await blobPromise;
 
-          // Gọi write trước khi await quá trình render ảnh.
-          await navigator.clipboard.write([item]);
+          // Clipboard bị chặn nhưng ảnh vẫn tạo được.
+          downloadImage(blob, fileName);
 
           return {
             success: true,
-            method: "clipboard",
+            method: "download",
+            error: clipboardError,
           };
-        } catch (clipboardError) {
-          console.log(clipboardError);
-          // Clipboard thất bại: thử tải ảnh xuống.
-          try {
-            const blob = await blobPromise;
-            downloadImage(blob, fileName);
+        } catch (imageError) {
+          console.error("[SCTC] Image generation failed:", imageError);
 
-            return {
-              success: true,
-              method: "download",
-              error: clipboardError,
-            };
-          } catch (fallbackError) {
-            return {
-              success: false,
-              method: "none",
-              error: fallbackError,
-            };
-          }
+          return {
+            success: false,
+            method: "none",
+            error: imageError,
+          };
         }
       }
+    }
 
-      // Trình duyệt không hỗ trợ clipboard.
+    // Không hỗ trợ Clipboard hoặc không phải secure context.
+    try {
       const blob = await blobPromise;
+
       downloadImage(blob, fileName);
 
       return {
@@ -120,10 +121,12 @@ export const useCopyImage = () => {
         method: "download",
       };
     } catch (error) {
+      console.error("[SCTC] Image generation failed:", error);
+
       return {
         success: false,
         method: "none",
-        error: "Copy image failed",
+        error,
       };
     }
   };
