@@ -37,11 +37,7 @@ export default function GenerateBankQr({
 
       const data = await result.json();
 
-      if (data.success && data.data?.qrUrl) {
-        const proxyUrl = API_ROUTES.ADMIN.PAYMENT.QR_IMAGE(data.data.qrUrl);
-
-        setQrUrl(proxyUrl);
-      }
+      setQrUrl(data.data?.qrUrl);
     } catch {
       showToast.error({
         title: "Lỗi khi tạo mã thanh toán",
@@ -74,19 +70,11 @@ export default function GenerateBankQr({
         <Link
           href={qrUrl}
           target="_blank"
-          className="relative block size-full before:z-20 before:absolute before:size-6  before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-[url('/images/logo/logo-sctc-v1.webp')] before:bg-center before:bg-no-repeat before:bg-contain"
-        >
-          <Image
-            unoptimized
-            src={qrUrl}
-            alt="QR Code"
-            width={150}
-            height={150}
-            onError={() => {
-              console.error("[SCTC] QR image load failed:", qrUrl);
-            }}
-          />
-        </Link>
+          style={{
+            backgroundImage: `url(${qrUrl})`,
+          }}
+          className="relative bg-contain bg-no-repeat block size-full before:z-20 before:absolute before:size-6  before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-[url('/images/logo/logo-sctc-v1.webp')] before:bg-center before:bg-no-repeat before:bg-contain"
+        />
       </div>
     )
   );

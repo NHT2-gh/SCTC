@@ -16,12 +16,8 @@ import {
 import { parseImportFile } from "@/lib/loyalty/import-engine";
 import { Select } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-
-const SOURCE_LABELS: Record<LoyaltySource, string> = {
-  grabfood: "GrabFood",
-  xanhsm: "Xanh SM",
-  befood: "beFood",
-};
+import { LoyaltySourceMapCode } from "@/types/common";
+import { API_ROUTES } from "@/config/api-routes";
 
 export default function ModalImportFile() {
   const modal = useModal();
@@ -55,7 +51,7 @@ export default function ModalImportFile() {
       setError("");
 
       if (!isConfigured) {
-        setError(`Source ${SOURCE_LABELS[source]} chưa được cấu hình.`);
+        setError(`Source ${LoyaltySourceMapCode[source]} chưa được cấu hình.`);
         return;
       }
 
@@ -201,7 +197,7 @@ export default function ModalImportFile() {
       formData.append("file", file);
       formData.append("source", source);
 
-      const response = await fetch("/api/loyalty/reconcile/import", {
+      const response = await fetch(API_ROUTES.ADMIN.LOYALTY.RECONCILE.IMPORT, {
         method: "POST",
         body: formData,
       });
@@ -254,10 +250,10 @@ export default function ModalImportFile() {
               className="w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm dark:border-gray-700"
               type={"select"}
               options={[
-                ...(Object.keys(SOURCE_LABELS) as LoyaltySource[]).map(
+                ...(Object.keys(LoyaltySourceMapCode) as LoyaltySource[]).map(
                   (sourceKey) => ({
                     value: sourceKey,
-                    label: SOURCE_LABELS[sourceKey],
+                    label: LoyaltySourceMapCode[sourceKey],
                   }),
                 ),
               ]}

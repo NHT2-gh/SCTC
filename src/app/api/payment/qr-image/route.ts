@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     // Chỉ cho phép lấy ảnh từ VietQR.
     if (
       parsedUrl.protocol !== "https:" ||
-      parsedUrl.hostname !== "api.vietqr.io" ||
+      parsedUrl.hostname !== " " ||
       !parsedUrl.pathname.startsWith("/image/")
     ) {
       return NextResponse.json(

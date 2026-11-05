@@ -15,5 +15,10 @@ export const API_ROUTES = {
     ORDER: {
       CREATE: "/api/orders",
     },
+    LOYALTY: {
+      RECONCILE: {
+        IMPORT: "/api/loyalty/reconcile/import",
+      },
+    },
   },
 };
