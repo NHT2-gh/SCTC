@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { cn } from "@/lib/utils";
 import { delagothic } from "@/lib/fonts";
@@ -16,7 +17,7 @@ interface Props {
   value: Record<string, FilterValue>;
 }
 
-export default async function ProductVariantOptions({
+export default function ProductVariantOptions({
   variants,
   update,
   remove,

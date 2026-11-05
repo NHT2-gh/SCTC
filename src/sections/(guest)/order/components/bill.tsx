@@ -74,7 +74,7 @@ export default function Bill({
           <Printer size={16} />
         </button> */}
 
-        <button
+        {/* <button
           type="button"
           onClick={handleCopy}
           className="flex items-center justify-center gap-1 rounded-md px-2 py-1 hover:bg-black/5"
@@ -82,7 +82,7 @@ export default function Bill({
           disabled={isLoading}
         >
           <CopyIcon size={16} />
-        </button>
+        </button> */}
       </div>
       <div
         ref={billRef}

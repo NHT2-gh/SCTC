@@ -70,9 +70,7 @@ export default function GenerateBankQr({
         <Link
           href={qrUrl}
           target="_blank"
-          style={{
-            backgroundImage: `url(${qrUrl})`,
-          }}
+          style={{ backgroundImage: `url(${qrUrl})` }}
           className="relative bg-contain bg-no-repeat block size-full before:z-20 before:absolute before:size-6  before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-[url('/images/logo/logo-sctc-v1.webp')] before:bg-center before:bg-no-repeat before:bg-contain"
         />
       </div>
