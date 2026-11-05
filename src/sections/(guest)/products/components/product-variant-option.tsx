@@ -44,10 +44,7 @@ export default function ProductVariantOptions({
           <button
             key={variant.id}
             onClick={() => {
-              value[variant.option_type] === String(variant.option_id) &&
-              !variant.is_default
-                ? remove(variant.option_type)
-                : update(variant.option_type, String(variant.option_id));
+              update(variant.option_type, String(variant.option_id));
             }}
             className={cn(
               "text-sm px-2 py-1 flex flex-col justify-end items-center grayscale-80 opacity-30 disabled:opacity-30",
