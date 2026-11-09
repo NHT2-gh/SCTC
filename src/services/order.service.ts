@@ -89,10 +89,11 @@ class OrderService {
     if (params?.filters) {
       const arrayParamFilters = Object.entries(params?.filters);
       arrayParamFilters.map(([key, value]) => {
-        if (value) {
+        if (value !== null) {
           if (Array.isArray(value)) {
             if (key === "created_at") {
-              query.gte(key, `${value[0]}`).lte(key, `${value[1]}`);
+              if (value[0] !== "-")
+                query.gte(key, `${value[0]}`).lte(key, `${value[1]}`);
             } else {
               query.in(key, value as string[]);
             }

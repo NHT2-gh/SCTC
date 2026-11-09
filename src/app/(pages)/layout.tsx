@@ -20,8 +20,8 @@ export default function AdminLayout({
   const mainContentMargin = isMobileOpen
     ? "ml-0"
     : isExpanded || isHovered
-      ? "xl:ml-[290px]"
-      : "xl:ml-[90px]";
+      ? "xl:ml-[290px] xl:max-w-[calc(100vw-310px)]"
+      : "xl:ml-[90px] xl:max-w-[calc(100vw-120px)]";
   return (
     <AuthProvider>
       <div className={`${outfit.className} min-h-screen xl:flex`}>

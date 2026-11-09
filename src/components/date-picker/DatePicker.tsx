@@ -34,8 +34,7 @@ export default function DatePicker({
       onChange: (_, dateStr, instance) => {
         if (instance.config.mode === "range") {
           const [start, end] = dateStr.split(" to ");
-
-          handleOnChange?.([start || null, end || null]);
+          handleOnChange?.([start, end]);
         } else {
           handleOnChange?.(dateStr);
         }

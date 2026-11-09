@@ -16,7 +16,6 @@ import {
 import { showToast } from "@/lib/toast";
 import GenerateBankQr from "./generate-bank-qr";
 import { APP_ROUTES } from "@/config/app-routes";
-import { CopyIcon } from "lucide-react";
 import { useCopyImage } from "@/hooks/use-copy-image";
 import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
 import { cn } from "@/lib/utils";

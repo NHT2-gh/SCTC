@@ -1,8 +1,5 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-
-import Link from "next/link";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
   useGetAllOrder,
@@ -26,7 +23,8 @@ import { FilterBoxRender } from "@/components/filter/filter-box-render";
 import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { Order, OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
-import { API_ROUTES } from "@/config/api-routes";
+import GenerateBankQr from "@/sections/(guest)/order/components/generate-bank-qr";
+import { DataState } from "@/components/common/data-state";
 
 const limit = 24;
 
@@ -41,12 +39,13 @@ export default function OrdersPageView() {
     filterConfigs: orderFilterConfig,
     initSubmit: true,
   });
-  const [qrUrl, setQrUrl] = useState<string | null>(null);
+  const [isQR, setIsQR] = useState<boolean | null>(null);
   const {
     data: orders,
     refetch: refetchOrders,
     fetchNextPage,
     hasNextPage,
+    isFetching,
   } = useGetAllOrder({
     filters: filterValues,
     searchText: searchText,
@@ -66,7 +65,7 @@ export default function OrdersPageView() {
   }, [orders]);
 
   const totalAmount = useMemo(() => {
-    setQrUrl(null);
+    setIsQR(null);
 
     return orderIdsSelected.reduce((acc, orderId) => {
       const orderData = allOrders.find((order) => order.id === orderId);
@@ -107,37 +106,6 @@ export default function OrdersPageView() {
       showToast.error({ title: "Vui lòng chọn đơn hàng cần thanh toán" });
       return;
     }
-
-    try {
-      const result = await fetch(API_ROUTES.ADMIN.PAYMENT.CREATE, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ids: orderIdsSelected,
-          paymentType:
-            orderIdsSelected.length === 1
-              ? PaymentType.INDIVIDUAL
-              : PaymentType.GROUP,
-          tableId: filterValues["table_id"],
-          paymentMethod: PaymentMethod.QR,
-        }),
-      });
-
-      const data = await result.json();
-
-      if (data.success && data.data.qrUrl) {
-        setQrUrl(data.data.qrUrl);
-      } else {
-        showToast.error({
-          title: data.message || "Tạo liên kết thanh toán thất bại",
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      showToast.error({ title: "Lỗi kết nối đến máy chủ" });
-    }
   };
 
   return (
@@ -156,6 +124,7 @@ export default function OrdersPageView() {
               type={"text"}
               placeholder="Search by order code, customer name"
               value={searchText}
+              debounceTime={500}
               handleOnChange={(value) => {
                 setSearchText(String(value));
               }}
@@ -173,7 +142,7 @@ export default function OrdersPageView() {
               variant="outline"
               onClick={() => {
                 refetchOrders();
-                setQrUrl(null);
+                setIsQR(null);
               }}
               className="shrink-0"
             >
@@ -201,6 +170,7 @@ export default function OrdersPageView() {
               handleFilterChange={updateFilter}
               handleClearAllFilters={clearFilters}
               filterValues={filterValues}
+              className="h-fit"
             >
               {tables?.data && (
                 <FormField
@@ -212,53 +182,63 @@ export default function OrdersPageView() {
                     label: "Bàn",
                     value: String(filterValues["table_id"]),
                     handleOnChange: (value: string) => {
-                      updateFilter("table_id", String(value));
+                      if (value.trim()) updateFilter("table_id", String(value));
+                      else {
+                        updateFilter("table_id", null);
+                      }
                     },
-                    options: tables?.data.map((table) => {
-                      return {
-                        label: table.name,
-                        value: String(table.id),
-                      };
-                    }),
+                    options: [
+                      { label: "None", value: "" },
+                      ...tables?.data.map((table) => {
+                        return {
+                          label: table.name,
+                          value: String(table.id),
+                        };
+                      }),
+                    ],
                   }}
                 />
               )}
             </FilterBoxRender>
           )}
-          <section className="max-h-[60vh] max-w-full overflow-auto">
-            <div className="w-fit h-fit columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6">
-              {allOrders?.map((order) => (
-                <div
-                  key={order.id}
-                  className={cn(
-                    "w-[250px] break-inside-avoid mb-4",
-                    orderIdsSelected.includes(order.id) &&
-                      "rounded-lg bg-green-50",
-                  )}
-                >
-                  <OrderItemCard
-                    order={order}
-                    onSelected={(orderId) => {
-                      setIdsOrderSelected((prev) => {
-                        if (prev.includes(orderId)) {
-                          return prev.filter((id) => id !== orderId);
-                        }
-                        return [...prev, orderId];
-                      });
-                    }}
-                    onViewed={(trackingCode) => {
-                      setOrderView(trackingCode);
-                    }}
-                    onConfirm={(orderId) => {
-                      handleUpdateStatus([orderId], OrderStatus.CONFIRMED);
-                    }}
-                    onCancel={() => {
-                      modalConfirmCancelOrder.openModal();
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
+          <section className="h-[60vh] max-w-full overflow-auto">
+            <DataState isLoading={isFetching} />
+
+            {allOrders.length > 0 && !isFetching && (
+              <div className="w-fit max-w-full xl:max-w-[calc(250px*5)] min-h-full h-fit columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6">
+                {allOrders?.map((order) => (
+                  <div
+                    key={order.id}
+                    className={cn(
+                      "w-[230px] break-inside-avoid mb-4",
+                      orderIdsSelected.includes(order.id) &&
+                        "rounded-lg bg-green-50",
+                    )}
+                  >
+                    <OrderItemCard
+                      order={order}
+                      onSelected={(orderId) => {
+                        setIdsOrderSelected((prev) => {
+                          if (prev.includes(orderId)) {
+                            return prev.filter((id) => id !== orderId);
+                          }
+                          return [...prev, orderId];
+                        });
+                      }}
+                      onViewed={(trackingCode) => {
+                        setOrderView(trackingCode);
+                      }}
+                      onConfirm={(orderId) => {
+                        handleUpdateStatus([orderId], OrderStatus.CONFIRMED);
+                      }}
+                      onCancel={() => {
+                        modalConfirmCancelOrder.openModal();
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
 
           {hasNextPage &&
@@ -275,7 +255,7 @@ export default function OrdersPageView() {
         </div>
 
         {allOrders && orderIdsSelected.length > 0 && (
-          <div className="p-2 bg-white absolute bottom-5 sm:bottom-10 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
+          <div className="p-2 bg-white absolute bottom-5 space-y-3 sm:bottom-10 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
             <h3 className="font-bold">
               Total Amount:
               <span className="ml-2 text-brand-500">
@@ -306,25 +286,25 @@ export default function OrdersPageView() {
               onClick={() => handlePayment()}
               className="w-full mt-2 bg-lime-200"
             >
-              Thanh toán
+              QR thanh toán
             </Button>
 
-            {qrUrl && totalAmount > 0 && (
-              <div className="mt-2 w-fit mx-auto rounded-lg overflow-hidden">
-                <Link href={qrUrl} target="_blank">
-                  <Image src={qrUrl} alt="QR Code" width={200} height={200} />
-                </Link>
-                <button
-                  disabled={!qrUrl}
-                  className="w-full mt-2 bg-lime-200 rounded-lg px-2 py-1"
-                  onClick={() => {
-                    modalConfirmPayment.openModal();
-                  }}
-                >
-                  Đã nhận tiền.
-                </button>
-              </div>
+            {isQR && (
+              <GenerateBankQr
+                status={OrderStatus.DONE}
+                orderIds={orderIdsSelected}
+                paymentMethod={PaymentMethod.QR}
+                tableId={filterValues["table_id"] as string}
+              />
             )}
+
+            <Button
+              size="sm"
+              className="w-full"
+              onClick={() => modalConfirmPayment.openModal()}
+            >
+              Đã nhận tiền
+            </Button>
           </div>
         )}
       </MainContainer>
@@ -343,7 +323,7 @@ export default function OrdersPageView() {
         />
       )}
 
-      {modalConfirmPayment.isOpen && qrUrl && (
+      {modalConfirmPayment.isOpen && (
         <ModalAlert
           isOpen={modalConfirmPayment.isOpen}
           onClose={modalConfirmPayment.closeModal}
@@ -351,7 +331,8 @@ export default function OrdersPageView() {
           title={"Bạn chắc chắn đã nhận tiền từ khách hàng?"}
           onConfirm={() => {
             handleUpdateStatus(orderIdsSelected, OrderStatus.COMPLETED);
-            setQrUrl(null);
+            if (isQR) setIsQR(null);
+            modalConfirmPayment.closeModal();
           }}
           confirmText={"Đã nhận"}
         />
