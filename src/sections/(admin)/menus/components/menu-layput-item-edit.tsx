@@ -12,15 +12,6 @@ export default function MenuLayputItemEdit() {
       <FormField
         form={editForm}
         field={{
-          name: "page",
-          label: "Trang",
-          type: "number",
-          min: 1,
-        }}
-      />
-      <FormField
-        form={editForm}
-        field={{
           name: "x",
           label: "X",
           type: "number",
@@ -48,6 +39,15 @@ export default function MenuLayputItemEdit() {
           name: "h",
           label: "Height",
           type: "number",
+        }}
+      />
+      <FormField
+        form={editForm}
+        field={{
+          name: "page",
+          label: "Trang",
+          type: "number",
+          min: 1,
         }}
       />
     </>

@@ -19,7 +19,7 @@ export default function MenuLayoutPreview({
   const [mode, setMode] = useState<"preview" | "editing">("preview");
 
   return (
-    <div className="flex-2 p-10 max-w-full rounded-xl items-center overflow-auto border-2 border-brand-200 space-y-10">
+    <div className="shrink-0 max-w-full md:min-w-[475px] rounded-xl items-center overflow-auto space-y-10">
       <Switch
         type="switch"
         name="preview-mode"
@@ -30,7 +30,7 @@ export default function MenuLayoutPreview({
 
       <div
         className={cn(
-          " border-2 rounded-xl relative w-[375px] mx-auto overflow-hidden p-4 h-[812px] overflow-y-scroll",
+          " border-2 rounded-xl relative w-[375px] mx-auto p-3 overflow-hidden h-[600px] overflow-y-scroll",
         )}
       >
         <div className="relative">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import Link from "next/link";
 import {
   useAddMenuItems,
@@ -26,6 +26,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
   const addMenuItems = useAddMenuItems();
   const deleteMenuItems = useDeleteMenuItems();
   const updateProductInfo = useUpdateProductInfo(id);
+  const [resultItemsSearch, setResultItemsSearch] = useState<string[]>([]);
 
   const handleAddItems = useCallback(
     async (ids: string[]) => {
@@ -45,7 +46,6 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
               menuId: id,
               ids: added,
             });
-
             if (resultAdd.success) {
               refetch();
               showToast.success({ title: "Thành công cập nhật menu" });
@@ -114,7 +114,10 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
             itemsIds={menuItems?.data.map((item) => {
               return item.product.id;
             })}
-            onChange={(ids) => handleAddItems(ids)}
+            onSelectedItems={(ids) => {
+              handleAddItems(ids);
+            }}
+            onChange={(ids) => setResultItemsSearch(ids)}
           />
         )}
         <Link href={APP_ROUTES.ADMIN.MENUS.LAYOUTS(id)}>
@@ -126,18 +129,27 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
       </div>
 
       <section className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,280px)] gap-3">
-        {menuItems?.data.length === 0 && (
-          <span className="italic">Chưa có item nào được thêm</span>
-        )}
-        {menuItems?.data.map((item) => (
-          <ProductCard
-            key={item.id}
-            item={item}
-            onChangeStatus={(id, is_active) =>
-              handleUpdateStatus(id, is_active)
-            }
-          />
-        ))}
+        {resultItemsSearch?.length > 0
+          ? menuItems?.data
+              ?.filter((item) => resultItemsSearch?.includes(item.product.id))
+              ?.map((item) => (
+                <ProductCard
+                  key={item.id}
+                  item={item}
+                  onChangeStatus={(id, is_active) =>
+                    handleUpdateStatus(id, is_active)
+                  }
+                />
+              ))
+          : menuItems?.data?.map((item) => (
+              <ProductCard
+                key={item.id}
+                item={item}
+                onChangeStatus={(id, is_active) =>
+                  handleUpdateStatus(id, is_active)
+                }
+              />
+            ))}
       </section>
       <details className="w-full">
         <summary className="text-blue-400 float-end">New Product</summary>

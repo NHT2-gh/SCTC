@@ -113,7 +113,7 @@ export default function ProductInfo({
         options: options.custom
           .filter((option) => option.option_type == key)
           .map((option) => ({
-            label: `${option.component_name || option.ingredient_name}\t[+${formatCurrency(option.price)}]`,
+            label: `${option.component_name || option.ingredient_name}${option.price > 0 ? ` \t[+${formatCurrency(option.price)}]` : ``}`,
             value: String(option.option_id),
             count: option.limit || 0,
           })),
@@ -123,6 +123,7 @@ export default function ProductInfo({
     }
 
     if (options) {
+      console.log(options.custom);
       const normalOptions = [
         ...options.fixed,
         ...options.custom,
@@ -130,7 +131,7 @@ export default function ProductInfo({
       ].reduce(
         (acc, option) => {
           if (option.is_default) {
-            acc[option.option_type] = String(option.option_id);
+            acc[String(option.option_type)] = String(option.option_id);
           }
 
           return acc;

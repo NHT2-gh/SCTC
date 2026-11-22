@@ -17,10 +17,6 @@ const columns: ColumnDef[] = [
     title: "Sản phẩm",
   },
   {
-    key: "description",
-    title: "Mô tả",
-  },
-  {
     key: "selling_price",
     title: "Giá bán",
   },
@@ -34,30 +30,25 @@ export default function MenuLayoutItems({
   onSelect,
 }: MenuLayoutItemsProps) {
   return (
-    <section className="space-y-10 flex-1 ">
-      <Table className="max-h-[50vh]">
-        <TableHeader columns={columns} />
-        <TableBody>
-          {items.map((item) => (
-            <TableRow
-              key={item.id}
-              className="hover:bg-neutral-100"
-              onDoubleClick={() => {
-                onSelect(item);
-              }}
-            >
-              <TableCell>{item.menu_item.product.name}</TableCell>
-              <TableCell>
-                {item.menu_item.product.description || "///"}
-              </TableCell>
-              <TableCell>
-                {formatCurrency(item.menu_item.product.selling_price)}
-              </TableCell>
-              <TableCell>{`x: ${item.x}, y: ${item.y}, w: ${item.w}, h: ${item.h}`}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </section>
+    <Table className="max-h-[50vh]">
+      <TableHeader columns={columns} />
+      <TableBody>
+        {items.map((item) => (
+          <TableRow
+            key={item.id}
+            className="hover:bg-neutral-100"
+            onDoubleClick={() => {
+              onSelect(item);
+            }}
+          >
+            <TableCell>{item.menu_item.product.name}</TableCell>
+            <TableCell>
+              {formatCurrency(item.menu_item.product.selling_price)}
+            </TableCell>
+            <TableCell>{`x: ${item.x}, y: ${item.y}, w: ${item.w}, h: ${item.h}`}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

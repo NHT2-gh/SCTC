@@ -17,17 +17,19 @@ export enum OptionType {
   sweet = "sweet",
   alcoholic = "alcoholic",
   variant = "variant",
+  other = "other",
 }
 
 export const OptionTypeMapText: Record<OptionType, string> = {
   [OptionType.topping]: "Topping",
   [OptionType.extra]: "Extra",
   [OptionType.upgrade]: "Upgrade",
-  [OptionType.replace]: "Replace",
+  [OptionType.replace]: "Thay thế",
   [OptionType.ice]: "Đá",
   [OptionType.sweet]: "Độ ngọt",
   [OptionType.alcoholic]: "Độ cồn",
   [OptionType.variant]: "Độ bự",
+  [OptionType.other]: "Khác",
 };
 
 export type MenuType = keyof typeof MenuEnumType;

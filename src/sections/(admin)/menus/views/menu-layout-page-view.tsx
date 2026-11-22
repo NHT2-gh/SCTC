@@ -16,7 +16,7 @@ import {
   MenuLayoutPreview,
 } from "../components";
 import { MenuLayoutItem } from "@/types/menu";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { MenuLayoutItemEditValidation } from "@/schemas/validation/menu.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Form from "@/components/form/Form";
@@ -106,16 +106,16 @@ export default function MenuLayoutPageView({
         </Button>
       </div>
       <FormProvider {...editLayoutItemForm}>
-        <section className="flex gap-10 space-y-10">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 space-y-10">
           {layoutMenuItems?.data && (
             <>
               <MenuLayoutPreview
                 items={layoutMenuItems.data}
                 onSelect={(item) => setItemSelected(item)}
               />
-              <section className="flex-3 space-y-4">
+              <section className="max-w-full flex flex-col space-y-4">
                 {itemSelected && (
-                  <section className="flex-1  bg-neutral-50 rounded-xl h-fit p-3">
+                  <section className=" bg-neutral-50 rounded-xl h-fit p-3">
                     <div className="">
                       {itemSelected.menu_item.product.name}
                     </div>

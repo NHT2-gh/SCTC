@@ -63,11 +63,11 @@ class MenuService {
           ) 
         `,
       )
-      .eq("menu_id", id)
-      .eq("is_active", true)
-      .order("product(product_type)", {
-        ascending: true,
-      });
+      .eq("menu_id", id);
+    // .eq("is_active", true);
+    // .order("product(product_type)", {
+    //   ascending: true,
+    // });
 
     const { data: items, error } = await query;
 
@@ -117,7 +117,11 @@ class MenuService {
         )
         `,
       )
-      .eq("menu_id", menuId);
+      .eq("menu_id", menuId)
+      .order("name", {
+        referencedTable: "menu_item.product",
+        ascending: true,
+      });
 
     const { data: menuLayoutItems, error } = await query;
 
@@ -188,7 +192,7 @@ class MenuService {
   async upsertProductOptions(
     data: Pick<
       ProductOptionValidation,
-      "menuItemId" | "id" | "limit" | "option_id"
+      "menuItemId" | "id" | "limit" | "option_id" | "is_default" | "price"
     >[],
   ): Promise<MutationResult> {
     const query = supabase.from(this.itemOptionsDetailTable).upsert(
@@ -197,6 +201,8 @@ class MenuService {
         option_id: option.option_id,
         menu_item_id: option.menuItemId,
         limit: option.limit,
+        is_default: option.is_default,
+        price: option.price,
       })),
     );
 

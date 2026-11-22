@@ -105,7 +105,7 @@ export default function IngredientsTable() {
           handleOnChange={(value) => {
             if (!value.trim()) setSearchText(undefined);
           }}
-          className="absolute right-4 top-4"
+          className="absolute right-4 top-4 max-w-[200px] md:top-5 md:max-w-[500px]"
         />
 
         <Table

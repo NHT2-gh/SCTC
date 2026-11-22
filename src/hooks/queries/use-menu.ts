@@ -103,7 +103,7 @@ export function useUpsertProductOption() {
     mutationFn: (
       payload: Pick<
         ProductOptionValidation,
-        "menuItemId" | "id" | "limit" | "option_id"
+        "menuItemId" | "id" | "limit" | "option_id" | "is_default" | "price"
       >[],
     ) => menuService.upsertProductOptions(payload),
 

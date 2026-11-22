@@ -35,6 +35,7 @@ class StoreService {
       time_end: status.time_end,
       time_start: status.time_start,
       status: status.status,
+      updated_at: new Date(),
     });
 
     const { data, error } = await query;

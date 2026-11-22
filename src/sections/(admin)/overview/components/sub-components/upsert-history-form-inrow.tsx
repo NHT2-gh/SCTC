@@ -5,6 +5,7 @@ import { StoreStatusType } from "@/types/store";
 import { FormField } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { StatusStoreValidationType } from "@/schemas/validation/status-store.validation";
+import { RefreshCwIcon } from "lucide-react";
 
 export default function UpsertHistoryFormInRow({
   onSubmit,
@@ -86,7 +87,10 @@ export default function UpsertHistoryFormInRow({
         />
       </TableCell>
 
-      <TableCell>
+      <TableCell className="flex items-center gap-2">
+        <Button variant="outline" onClick={() => upsertFormContext.reset()}>
+          <RefreshCwIcon />
+        </Button>
         <Button onClick={onSubmit} type="submit">
           Save
         </Button>

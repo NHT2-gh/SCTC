@@ -5,6 +5,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.css";
 import { Calendar } from "lucide-react";
 import DateFieldConfig from "../form/type";
+import { formatUTCDate } from "@/utils/format-data";
 import { Instance } from "flatpickr/dist/types/instance";
 
 export default function DatePicker({
@@ -38,6 +39,7 @@ export default function DatePicker({
         } else {
           handleOnChange?.(dateStr);
         }
+        console.log(dateStr);
       },
     };
 
@@ -81,11 +83,11 @@ export default function DatePicker({
       return;
     }
 
-    pickerRef.current.setDate(new Date(value), false);
+    pickerRef.current.setDate(formatUTCDate(value), false);
   }, [value]);
 
   return (
-    <div className="relative z-50">
+    <div className="relative">
       <input
         id={id}
         ref={inputRef}
@@ -93,7 +95,7 @@ export default function DatePicker({
         placeholder={placeholder}
         disabled={disabled}
         className={cn(
-          "h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30  bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700  dark:focus:border-brand-800",
+          "h-11 w-[180px] rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30  bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700  dark:focus:border-brand-800",
           { hidden: isMobile },
         )}
       />

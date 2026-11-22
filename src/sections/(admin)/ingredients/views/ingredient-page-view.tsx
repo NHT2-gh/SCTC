@@ -6,13 +6,17 @@ import { useModal } from "@/hooks/useModal";
 import Modal from "@/components/ui/modal/modal";
 import IngredientAddForm from "../components/ingredient-add-form";
 import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 
 export default function IngredientPageView() {
   const modalAddForm = useModal();
 
   return (
     <MainContainer title="Danh sách nguyên liệu">
-      <Button onClick={modalAddForm.openModal}>Thêm nguyên liệu</Button>
+      <Button className="" onClick={modalAddForm.openModal}>
+        <PlusCircle className="md:hidden" />{" "}
+        <span className="hidden md:block">Thêm nguyên liệu</span>
+      </Button>
       <IngredientsTable />
       {modalAddForm.isOpen && (
         <Modal isOpen={modalAddForm.isOpen} onClose={modalAddForm.closeModal}>

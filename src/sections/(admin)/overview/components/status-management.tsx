@@ -7,7 +7,7 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { TableHeader } from "@/components/table";
 import { ColumnDef } from "@/components/table/table-header";
-import { formatDateTime } from "@/utils/format-data";
+import { formatDateTime, formatDateTimev2 } from "@/utils/format-data";
 import { Switch } from "@/components/ui/switch";
 import { UpsertHistoryFormInRow } from "./sub-components";
 import { FormProvider, useForm } from "react-hook-form";
@@ -46,13 +46,13 @@ export default function StatusManagement() {
       is_active: false,
       time_end: "",
       time_start: "",
-      created_at: new Date().toLocaleString(),
-      updated_at: new Date().toLocaleString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       status: StoreStatusType.break,
     },
   });
 
-  const { handleSubmit, setValue, reset } = upsertForm;
+  const { handleSubmit, setValue, reset, getValues } = upsertForm;
 
   const onSubmit = async (data: StatusStoreValidationType) => {
     try {
@@ -67,6 +67,8 @@ export default function StatusManagement() {
     }
   };
 
+  console.log(getValues("time_start"));
+
   return (
     <FormProvider {...upsertForm}>
       <Form
@@ -79,19 +81,26 @@ export default function StatusManagement() {
             {historyStatus &&
               historyStatus?.data.length > 0 &&
               historyStatus?.data.map((item) => (
-                <TableRow key={item.id}>
+                <TableRow
+                  className={getValues("id") === item.id ? "bg-blue-100" : ""}
+                  key={item.id}
+                >
                   <TableCell className="capitalize">{item.status}</TableCell>
                   <TableCell>
-                    {formatDateTime(item.time_start, { withTime: true })}
+                    {formatDateTimev2(item.time_start, { withTime: true })}
                   </TableCell>
                   <TableCell className="capitalize">
-                    {formatDateTime(item.time_end, { withTime: true })}
+                    {formatDateTimev2(item.time_end, { withTime: true })}
                   </TableCell>
                   <TableCell className="capitalize">
-                    {item.created_at ? formatDateTime(item.created_at) : "Now"}
+                    {item.created_at
+                      ? formatDateTimev2(item.created_at)
+                      : "Now"}
                   </TableCell>
                   <TableCell className="capitalize">
-                    {item.updated_at ? formatDateTime(item.updated_at) : "Now"}
+                    {item.updated_at
+                      ? formatDateTimev2(item.updated_at)
+                      : "Now"}
                   </TableCell>
 
                   <TableCell>
@@ -112,10 +121,14 @@ export default function StatusManagement() {
                   <TableCell>
                     <Button
                       onClick={() => {
+                        console.log(item.time_start);
                         setValue("id", item.id);
                         setValue("status", item.status);
                         setValue("time_start", item.time_start);
-                        setValue("time_end", item.time_end);
+                        setValue(
+                          "time_end",
+                          item.time_end ? item.time_end : undefined,
+                        );
                         setValue("is_active", item.is_active);
                       }}
                       size="sm"

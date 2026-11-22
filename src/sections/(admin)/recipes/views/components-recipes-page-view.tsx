@@ -36,16 +36,19 @@ export default function ComponentsRecipesPageView() {
 
   useEffect(() => {
     if (!viewComponentRecipe) return;
-    const component = componentsData?.data.find(
-      (item) => item.id === viewComponentRecipe,
-    );
 
-    if (component) {
-      setComponentSelected(component);
-      modalViewComponentItems.openModal();
-    } else {
-      modalViewComponentItems.closeModal();
-    }
+    if (componentsData?.data && componentsData?.data.length > 0) {
+      const component = componentsData?.data.find(
+        (item) => item.id === viewComponentRecipe,
+      );
+
+      if (component) {
+        setComponentSelected(component);
+        modalViewComponentItems.openModal();
+      } else {
+        modalViewComponentItems.closeModal();
+      }
+    } else return;
   }, [viewComponentRecipe, componentsData]);
   return (
     <MainContainer title="Công thức thành phần">
@@ -61,7 +64,7 @@ export default function ComponentsRecipesPageView() {
           className="max-w-full"
         />
         {componentsData?.data && searchText && (
-          <div className="border absolute bg-white z-[10] top-32 left-6 right-6 rounded-lg mt-3 min-h-fit">
+          <div className="border absolute bg-white z-[10] top-32 left-6 right-6 max-h-[50vh] overflow-y-scroll rounded-lg mt-3 h-fit">
             <DataState isLoading={isLoading} isError={isError} />
             {componentsData?.data &&
               componentsData?.data.length > 0 &&

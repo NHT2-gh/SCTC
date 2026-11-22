@@ -2,9 +2,12 @@
 import { useStoreStatus } from "@/context/StoreStatusContext";
 import { Portal } from "../portal";
 import ModalAlert from "./alerts/modal-alert";
+import { formatDateTimev2 } from "@/utils/format-data";
+import { useState } from "react";
 
 export default function StoreStatusModal() {
   const { isBreak, isClosed, endTime, canPreorder } = useStoreStatus();
+  const [isCloseModal, setIsCloseModal] = useState(false);
 
   if (!isBreak && !isClosed) {
     return null;
@@ -13,28 +16,25 @@ export default function StoreStatusModal() {
   const title = isBreak ? "Cửa hàng đang tạm nghỉ" : "Cửa hàng đã đóng";
 
   const description = isBreak
-    ? "Hiện tại cửa hàng đang trong thời gian tạm nghỉ. \nBạn vẫn có thể đặt trước cho thời gian cửa hàng mở lại."
-    : "Hiện tại cửa hàng đã đóng cửa. \nBạn vẫn có thể đặt trước cho thời gian cửa hàng mở cửa tiếp theo.";
+    ? "Hiện tại shop đang trong thời gian tạm nghỉ. \nMấy cục dàng vẫn có thể đặt trước cho thời gian cửa hàng mở lại."
+    : "Hiện tại shop đã đóng cửa. \nMấy cục dàng vẫn có thể đặt trước cho thời gian cửa hàng mở cửa tiếp theo.";
 
   const formattedEndTime = endTime
-    ? endTime.toLocaleTimeString("vi-VN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+    ? formatDateTimev2(endTime.toISOString(), { withTime: true })
     : null;
 
   return (
     <Portal containerId={"portal-root"}>
       <ModalAlert
-        isOpen={true}
-        onClose={() => {}}
+        isOpen={!isCloseModal}
+        onClose={() => setIsCloseModal(true)}
         type={"info"}
         title={title}
         description={
           description +
-          ` ${formattedEndTime ? `\n Thời gian mở cửa: ${formattedEndTime}` : ""}`
+          ` ${formattedEndTime ? `\nThời gian mở cửa lại: ${formattedEndTime}` : ""}`
         }
-        onConfirm={() => {}}
+        onConfirm={() => setIsCloseModal(true)}
         confirmText={"Ok Shop 👍"}
       />
     </Portal>

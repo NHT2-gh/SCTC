@@ -17,7 +17,7 @@ export default function SearchBar({
       type="text"
       ref={ref}
       placeholder={placeholder || "Tìm kiếm"}
-      className={cn("relative max-w-[400px] !pl-8", className)}
+      className={cn("relative w-full max-w-[400px] !pl-8", className)}
       handleOnChange={handleOnChange}
       name="search"
       id="search"

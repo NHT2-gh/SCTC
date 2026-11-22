@@ -9,12 +9,14 @@ import { useGetAllProduct } from "@/hooks/queries/use-product";
 import { Product } from "@/types/product";
 
 interface DrinksSearchBoxProps {
-  onChange: (drinkIds: string[]) => void;
+  onSelectedItems: (drinkIds: string[]) => void;
   itemsIds?: string[];
+  onChange: (ids: string[]) => void;
 }
 export default function DrinksSearchBox({
-  onChange,
+  onSelectedItems,
   itemsIds,
+  onChange,
 }: DrinksSearchBoxProps) {
   const [searchDrink, setSearchDrink] = useState<string | null>(null);
   const { data: drinks, isLoading } = useGetAllProduct({
@@ -27,6 +29,12 @@ export default function DrinksSearchBox({
   useEffect(() => {
     if (itemsIds && itemsIds?.length > 0) setSelectedDrinks(itemsIds);
   }, [itemsIds]);
+
+  useEffect(() => {
+    if (drinks && !isLoading && drinks?.data?.length > 0) {
+      onChange(drinks?.data.map((item) => item.id));
+    }
+  }, [drinks]);
 
   return (
     <div className="flex items-center gap-3 ">
@@ -101,7 +109,7 @@ export default function DrinksSearchBox({
           size="sm"
           disabled={selectedDrinks.length === 0}
           onClick={() => {
-            onChange(selectedDrinks);
+            onSelectedItems(selectedDrinks);
             setSelectedDrinks([]);
             setSearchDrink(null);
           }}

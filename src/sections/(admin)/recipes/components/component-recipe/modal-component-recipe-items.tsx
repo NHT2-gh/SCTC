@@ -24,6 +24,7 @@ import InputText from "@/components/ui/input/input-text";
 import { ItemStateMap } from "@/types/common";
 import { mapErrorToMessage } from "@/lib/error/app-error";
 import { CheckCircle2, X } from "lucide-react";
+import { useUrlState } from "@/hooks/use-url-state";
 
 interface ModalComponentRecipeItemsProps {
   component: Component;
@@ -41,6 +42,8 @@ export default function ModalComponentRecipeItems({
   const [itemStateMap, setItemStateMap] = useState<ItemStateMap>(new Map());
   const upsertRecipeItems = useUpsertComponentRecipeItems();
   const deleteRecipeItems = useDeleteComponentRecipeItems();
+  const [viewComponentRecipe, setViewComponentRecipe] =
+    useUrlState<string>("component_id ");
 
   const [result, setResult] = useState<{
     updated?: {
@@ -194,7 +197,10 @@ export default function ModalComponentRecipeItems({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        setViewComponentRecipe(undefined);
+        onClose();
+      }}
       className="md:max-w-[60rem] md:min-h-fit"
     >
       <FormProvider {...componentRecipeItems}>

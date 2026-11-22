@@ -41,11 +41,11 @@ export default function ModalAlert({
       isOpen={isOpen}
       onClose={onClose}
       isFullScreen
-      className="max-w-[600px] w-[90vw] rounded-xl !max-h-fit !min-h-fit p-5 lg:p-10 [&_.modal-content]:!max-h-fit [&_.modal-content]:!min-h-fit"
+      className="max-w-[600px] font-itim w-[90vw] rounded-xl !max-h-fit !min-h-fit p-5 lg:p-10 [&_.modal-content]:!max-h-fit [&_.modal-content]:!min-h-fit"
     >
       <div className="text-center">
         <Icon />
-        <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90 sm:text-title-sm">
+        <h4 className="font-delagothic font-medium mb-2 text-2xl text-gray-800 dark:text-white/90 sm:text-title-sm">
           {title}
         </h4>
         <p className="mb-6 whitespace-pre-wrap text-gray-500 dark:text-gray-400">
