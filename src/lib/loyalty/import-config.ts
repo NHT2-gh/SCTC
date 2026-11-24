@@ -1,4 +1,4 @@
-export type LoyaltySource = "grabfood" | "xanhsm" | "befood";
+import { LoyaltySource } from "@/types/common";
 
 export type DateFormat =
   | "excel"
@@ -41,6 +41,7 @@ export interface ImportedOrder {
   source: SourceImportConfig["source"];
   rowNumber: number;
   shortCode?: string;
+  isVerified?: boolean;
 }
 
 export interface ImportRowError {
@@ -58,7 +59,7 @@ export interface ImportResult {
 
 export const IMPORT_CONFIGS: Record<LoyaltySource, SourceImportConfig> = {
   grabfood: {
-    source: "grabfood",
+    source: LoyaltySource.grabfood,
     columns: {
       orderNumber: "Mã đặt hàng",
       completedAt: "Cập nhật vào",
@@ -75,7 +76,7 @@ export const IMPORT_CONFIGS: Record<LoyaltySource, SourceImportConfig> = {
   },
 
   xanhsm: {
-    source: "xanhsm",
+    source: LoyaltySource.xanhsm,
     columns: {
       orderNumber: "",
       completedAt: "",
@@ -91,7 +92,7 @@ export const IMPORT_CONFIGS: Record<LoyaltySource, SourceImportConfig> = {
   },
 
   befood: {
-    source: "befood",
+    source: LoyaltySource.befood,
     columns: {
       orderNumber: "",
       completedAt: "",

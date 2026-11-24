@@ -179,6 +179,8 @@ export function StoreStatusProvider({
     const isWithinActiveTime =
       (!startTime || now >= startTime) && (!endTime || now <= endTime);
 
+    console.log(now, endTime, endTime ? now <= endTime : false);
+
     /**
      * The status only becomes effective
      * when current time is inside the configured range.

@@ -16,7 +16,7 @@ const platforms: Platform[] = [
     name: "Grab Food",
     icon: "grabfood",
   },
-  { source: LoyaltySource.xanhsm, name: "XanhSM Food", icon: "xanhsmfood" },
+  // { source: LoyaltySource.xanhsm, name: "XanhSM Food", icon: "xanhsmfood" },
 ];
 
 export default function SalesPlatformsPageView() {

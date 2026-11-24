@@ -391,9 +391,11 @@ export async function parseImportFile(
 
     const status = normalizeText(getCell(row, header.columnIndexes, "status"));
 
-    const orderNumber = normalizeText(
-      getCell(row, header.columnIndexes, "orderNumber"),
-    );
+    const orderNumber = getCell(
+      row,
+      header.columnIndexes,
+      "orderNumber",
+    ) as string;
 
     const completedAt = parseDate(
       getCell(row, header.columnIndexes, "completedAt"),

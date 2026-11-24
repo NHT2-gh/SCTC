@@ -22,9 +22,9 @@ export default function GuestLayout({
           className={`max-w-[31.25rem] relative mx-auto h-fit min-h-[100dvh] max-h-[100dvh] overflow-y-scroll no-scrollbar bg-[#FFFAEA]`}
         >
           <StoreStatusProvider>
+            <StoreStatusModal />
             {children}
             <FloatingHelpButton />
-            <StoreStatusModal />
           </StoreStatusProvider>
         </main>
       </div>

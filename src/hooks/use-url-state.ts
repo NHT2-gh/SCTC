@@ -175,6 +175,3 @@ export function useUrlParams(defaultParams: Record<string, unknown> = {}) {
 
   return [params, updateParams] as const;
 }
-function setActiveTab(value: string) {
-  throw new Error("Function not implemented.");
-}

@@ -39,7 +39,6 @@ export default function DatePicker({
         } else {
           handleOnChange?.(dateStr);
         }
-        console.log(dateStr);
       },
     };
 

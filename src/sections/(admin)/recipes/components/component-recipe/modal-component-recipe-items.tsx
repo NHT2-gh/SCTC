@@ -19,12 +19,11 @@ import {
 import Form from "@/components/form/Form";
 import { FormField } from "@/components/form";
 import { componentService } from "@/services/component.service";
-import { showToast } from "@/lib/toast";
-import InputText from "@/components/ui/input/input-text";
-import { ItemStateMap } from "@/types/common";
 import { mapErrorToMessage } from "@/lib/error/app-error";
 import { CheckCircle2, X } from "lucide-react";
 import { useUrlState } from "@/hooks/use-url-state";
+import { ItemStateMap } from "@/hooks/use-item-state";
+import { RequestState } from "@/types/common";
 
 interface ModalComponentRecipeItemsProps {
   component: Component;
@@ -39,22 +38,13 @@ export default function ModalComponentRecipeItems({
   isOpen,
   onClose,
 }: ModalComponentRecipeItemsProps) {
-  const [itemStateMap, setItemStateMap] = useState<ItemStateMap>(new Map());
+  const [itemStateMap, setItemStateMap] = useState<ItemStateMap<RequestState>>(
+    new Map(),
+  ); //UPDATE
   const upsertRecipeItems = useUpsertComponentRecipeItems();
   const deleteRecipeItems = useDeleteComponentRecipeItems();
-  const [viewComponentRecipe, setViewComponentRecipe] =
-    useUrlState<string>("component_id ");
+  const [_, setViewComponentRecipe] = useUrlState<string>("component_id ");
 
-  const [result, setResult] = useState<{
-    updated?: {
-      items: number;
-      success: boolean;
-    };
-    deleted?: {
-      items: number;
-      success: boolean;
-    };
-  }>();
   const componentRecipeItems = useForm<ComponentRecipeItemsValidationSchema>({
     resolver: zodResolver(componentRecipeItemsValidationSchema),
     defaultValues: {
@@ -236,18 +226,6 @@ export default function ModalComponentRecipeItems({
             className="w-full"
             form={componentRecipeItems}
           />
-          {result && (
-            <>
-              <p>
-                Xoá {result.deleted?.items}{" "}
-                {result.deleted?.success ? "Thành công" : "Thất bại"}
-              </p>
-              <p>
-                Cập nhật {result.updated?.items}{" "}
-                {result.updated?.success ? "Thành công" : "Thất bại"}
-              </p>
-            </>
-          )}
 
           {Array.from(itemStateMap.entries()).map(([key, value]) => {
             return (
@@ -257,7 +235,9 @@ export default function ModalComponentRecipeItems({
               >
                 {value.isSuccess ? (
                   <CheckCircle2 fill="#16a34a" stroke="white" />
-                ) : value.isSuccess === false ? (
+                ) : value.isSuccess === false &&
+                  !value.isEditting &&
+                  !value.isDeleting ? (
                   <X fill="#dc2626" />
                 ) : null}
 

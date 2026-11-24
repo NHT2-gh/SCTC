@@ -8,8 +8,8 @@ export interface ColumnDef {
   title: string;
   className?: string;
   description?: string;
-  isHiddenOnMobile?: boolean;
   width?: number;
+  isHiddenOnMobile?: boolean;
 }
 
 export default function TableHeader({
