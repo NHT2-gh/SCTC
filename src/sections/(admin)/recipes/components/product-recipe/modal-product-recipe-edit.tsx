@@ -23,7 +23,8 @@ import { formatCurrency } from "@/utils/format-data";
 import { FormField } from "@/components/form";
 import { CheckCircle2, X } from "lucide-react";
 import { mapErrorToMessage } from "@/lib/error/app-error";
-import { ItemStateMap } from "@/types/common";
+import { RequestState } from "@/types/common";
+import { ItemStateMap } from "@/hooks/use-item-state";
 
 export default function ModalProductRecipeEdit({
   isOpen,
@@ -33,7 +34,9 @@ export default function ModalProductRecipeEdit({
   currentRecipe: ProductRecipeVersion;
 }) {
   const [currentId, setCurrentId] = useState(currentRecipe.id);
-  const [itemStateMap, setItemStateMap] = useState<ItemStateMap>(new Map());
+  const [itemStateMap, setItemStateMap] = useState<ItemStateMap<RequestState>>(
+    new Map(),
+  );
   const { data: recipeItems, refetch } = useGetProductRecipeDetail(currentId);
   const upsertProductRecipeVersion = useUpsertProductRecipeVersion();
   const upsertRecipeItems = useUpsertProductRecipeItem();

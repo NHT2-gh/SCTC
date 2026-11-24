@@ -3,6 +3,7 @@ import { TableHeader } from "@/components/table";
 import { ColumnDef } from "@/components/table/table-header";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useLoyaltyImportBatches } from "@/hooks/queries/use-customer-service";
+import { formatDateTimev2 } from "@/utils/format-data";
 import React from "react";
 
 const columns: ColumnDef[] = [
@@ -55,7 +56,9 @@ export default function LoyaltyImportBatchesTable() {
             <TableCell>{batch.matched_rows}</TableCell>
             <TableCell>{batch.verified_claims}</TableCell>
             <TableCell>{batch.processed_count}</TableCell>
-            <TableCell>{batch.created_at}</TableCell>
+            <TableCell>
+              {formatDateTimev2(batch.created_at, { withTime: true })}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

@@ -6,7 +6,7 @@ import { formatDateTimev2 } from "@/utils/format-data";
 import { useState } from "react";
 
 export default function StoreStatusModal() {
-  const { isBreak, isClosed, endTime, canPreorder } = useStoreStatus();
+  const { isBreak, isClosed, endTime } = useStoreStatus();
   const [isCloseModal, setIsCloseModal] = useState(false);
 
   if (!isBreak && !isClosed) {

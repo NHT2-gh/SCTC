@@ -42,15 +42,13 @@ export enum SystemRole {
   user = "Người dùng",
 }
 
-export type ItemStateMap = Map<
-  string,
-  {
-    isEditting?: boolean;
-    isDeleting?: boolean;
-    isSuccess?: boolean;
-    message?: string;
-  }
->;
+export type RequestState = {
+  isEditting?: boolean;
+  isDeleting?: boolean;
+  isProgressing?: boolean;
+  isSuccess?: boolean;
+  message?: string;
+};
 
 export interface IconComponentProps {
   size?: number;
@@ -66,7 +64,7 @@ export enum LoyaltySource {
 }
 
 export const LoyaltySourceMapCode: Record<LoyaltySource, string> = {
-  [LoyaltySource.grabfood]: "Grab",
+  [LoyaltySource.grabfood]: "Grab Food",
   [LoyaltySource.xanhsm]: "Green SM",
   [LoyaltySource.befood]: "Be",
 };

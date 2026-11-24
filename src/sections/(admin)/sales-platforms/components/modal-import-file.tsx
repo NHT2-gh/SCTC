@@ -11,32 +11,47 @@ import {
   ImportResult,
   isImportConfigComplete,
   isValidSourceFileName,
-  type LoyaltySource,
 } from "@/lib/loyalty/import-config";
 import { parseImportFile } from "@/lib/loyalty/import-engine";
 import { Select } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { LoyaltySourceMapCode } from "@/types/common";
+import {
+  RequestState,
+  LoyaltySourceMapCode,
+  ServerActionResponse,
+  LoyaltySource,
+} from "@/types/common";
 import { API_ROUTES } from "@/config/api-routes";
+import Label from "@/components/form/label/label";
+import {
+  ReconcileLoyaltyImportBatchResult,
+  ReconcileOutcome,
+  ReconcileOutcomeStatus,
+} from "@/types/reconcile-outcome";
+import { useItemState } from "@/hooks/use-item-state";
+
+enum StateKey {
+  parserFile = "praser-file",
+  checkFile = "check-file",
+  reconcileLoyalty = "reconcile-loyalty",
+  error = "error",
+}
 
 export default function ModalImportFile() {
   const modal = useModal();
-
-  const [source, setSource] = useState<LoyaltySource>("grabfood");
+  const [source, setSource] = useState<LoyaltySource>(LoyaltySource.grabfood);
   const [file, setFile] = useState<File | null>(null);
-  const [result, setResult] = useState<ImportResult | null>(null);
-  const [error, setError] = useState("");
-  const [isParsing, setIsParsing] = useState(false);
-  const [isReconciling, setIsReconciling] = useState(false);
-  const [reconcileMessage, setReconcileMessage] = useState("");
   const [previewOrderLimit, setPreviewOrderLimit] = useState(10);
+  const [result, setResult] = useState<ImportResult | null>(null);
   const config = IMPORT_CONFIGS[source];
   const isConfigured = isImportConfigComplete(config);
+  const { setState, setMessage, removeState, hasState, getValue } =
+    useItemState<RequestState>();
+  const ordersStatus = useItemState<ReconcileOutcome>();
 
   const resetImportState = () => {
     setResult(null);
-    setError("");
-    setReconcileMessage("");
+    removeState(StateKey.parserFile);
   };
 
   const handleSourceChange = (value: LoyaltySource) => {
@@ -48,26 +63,32 @@ export default function ModalImportFile() {
     async (selectedFile: File) => {
       setFile(selectedFile);
       setResult(null);
-      setError("");
 
       if (!isConfigured) {
-        setError(`Source ${LoyaltySourceMapCode[source]} chưa được cấu hình.`);
+        setState(StateKey.parserFile, {
+          isSuccess: false,
+          message: `Source ${LoyaltySourceMapCode[source]} chưa được cấu hình.`,
+        });
+
         return;
       }
 
-      setIsParsing(true);
+      setState(StateKey.parserFile, { isProgressing: true });
 
       try {
         const parsed = await parseImportFile(selectedFile, config);
         setResult(parsed);
+        setState(StateKey.parserFile, { isSuccess: true });
       } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Không thể đọc file. Vui lòng kiểm tra lại.",
-        );
+        setState(StateKey.parserFile, {
+          isSuccess: false,
+          message:
+            err instanceof Error
+              ? err.message
+              : "Không thể đọc file. Vui lòng kiểm tra lại.",
+        });
       } finally {
-        setIsParsing(false);
+        setState(StateKey.parserFile, { isProgressing: false });
       }
     },
     [config, isConfigured, source],
@@ -88,7 +109,10 @@ export default function ModalImportFile() {
     useDropzone({
       onDrop,
       multiple: false,
-      disabled: !isConfigured || isParsing,
+      disabled:
+        !isConfigured ||
+        (hasState(StateKey.parserFile) &&
+          getValue(StateKey.parserFile, "isProgressing")),
       maxSize: 10 * 1024 * 1024,
       accept: {
         "text/csv": [".csv"],
@@ -110,29 +134,33 @@ export default function ModalImportFile() {
   };
 
   const handleCheckFile = async () => {
+    setState(StateKey.checkFile, { isProgressing: true });
     // 1. Kiểm tra file đã được chọn chưa
+
+    if (
+      getValue(StateKey.parserFile, "isProgressing") ||
+      getValue(StateKey.reconcileLoyalty, "isProgressing")
+    ) {
+      setState(StateKey.checkFile, { isProgressing: false });
+      return;
+    }
+
+    // 2. Kiểm tra tên file theo source
+
     if (!file) {
-      setError("Vui lòng chọn file cần kiểm tra.");
-      setResult(null);
+      setState(StateKey.checkFile, {
+        message: "Hãy cung cấp file đầu vào và thử lại sau",
+      });
       return;
     }
-
-    // 2. Chặn thao tác khi đang xử lý
-    if (isParsing || isReconciling) {
-      return;
-    }
-
-    // 3. Reset kết quả preview và thông báo cũ
-    setError("");
-    setResult(null);
-    setReconcileMessage("");
-
-    // 4. Kiểm tra tên file theo source
     if (!isValidSourceFileName(file.name, source)) {
-      setError(
-        `Tên file không hợp lệ. File phải bắt đầu bằng "${source}-" ` +
+      setState(StateKey.checkFile, {
+        isSuccess: false,
+        message:
+          `Tên file không hợp lệ. File phải bắt đầu bằng "${source}-" ` +
           `và có định dạng CSV, XLS hoặc XLSX.`,
-      );
+      });
+
       return;
     }
 
@@ -140,12 +168,13 @@ export default function ModalImportFile() {
     const config = IMPORT_CONFIGS[source];
 
     if (!config || !isImportConfigComplete(config)) {
-      setError(`Source "${source}" chưa được cấu hình import đầy đủ.`);
+      setState(StateKey.checkFile, {
+        isSuccess: false,
+
+        message: `Source "${source}" chưa được cấu hình import đầy đủ.`,
+      });
       return;
     }
-
-    // 6. Bắt đầu parse file
-    setIsParsing(true);
 
     try {
       const parsedResult = await parseImportFile(file, config);
@@ -154,43 +183,60 @@ export default function ModalImportFile() {
       setResult(parsedResult);
 
       if (parsedResult.orders.length === 0) {
-        setError("Không tìm thấy đơn hàng hợp lệ trong file.");
+        setState(StateKey.checkFile, {
+          isSuccess: true,
+          message: "Không tìm thấy đơn hàng hợp lệ trong file.",
+        });
       } else if (parsedResult.errors.length > 0) {
-        setError(
-          `Đã đọc file nhưng có ${parsedResult.errors.length} dòng lỗi. ` +
+        setState(StateKey.checkFile, {
+          isSuccess: false,
+          message:
+            `Đã đọc file nhưng có ${parsedResult.errors.length} dòng lỗi. ` +
             "Vui lòng kiểm tra danh sách lỗi trước khi đối soát.",
-        );
+        });
       }
     } catch (err) {
       setResult(null);
 
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Đã xảy ra lỗi khi đọc file. Vui lòng thử lại.",
-      );
+      setState(StateKey.checkFile, {
+        isSuccess: false,
+        message:
+          err instanceof Error
+            ? err.message
+            : "Đã xảy ra lỗi khi đọc file. Vui lòng thử lại.",
+      });
     } finally {
-      setIsParsing(false);
+      setState(StateKey.checkFile, { isProgressing: false });
     }
   };
 
   const handleReconcile = async () => {
-    if (!file || !result || isReconciling) return;
+    if (
+      !file ||
+      !result ||
+      getValue(StateKey.reconcileLoyalty, "isProgressing")
+    )
+      return;
+    setState(StateKey.reconcileLoyalty, { isProgressing: true });
 
     if (result.orders.length === 0) {
-      setReconcileMessage("Không có đơn hợp lệ để đối soát.");
+      setState(StateKey.reconcileLoyalty, {
+        isProgressing: false,
+        isSuccess: false,
+        message: "Không có đơn hợp lệ để đối soát.",
+      });
       return;
     }
 
     if (result.errors.length > 0) {
-      setReconcileMessage(
-        "File còn dòng lỗi. Vui lòng xử lý lỗi và Preview lại trước khi đối soát.",
-      );
+      setState(StateKey.reconcileLoyalty, {
+        isProgressing: false,
+        isSuccess: false,
+        message: "Không có đơn hợp lệ để đối soát.",
+      });
+
       return;
     }
-
-    setIsReconciling(true);
-    setReconcileMessage("");
 
     try {
       const formData = new FormData();
@@ -202,25 +248,64 @@ export default function ModalImportFile() {
         body: formData,
       });
 
-      const payload = await response.json().catch(() => null);
-
       if (!response.ok) {
-        throw new Error(
-          payload?.error ?? `Đối soát thất bại (HTTP ${response.status}).`,
-        );
+        setState(StateKey.reconcileLoyalty, {
+          isProgressing: false,
+          isSuccess: false,
+          message: "Đối soát thất bại.",
+        });
       }
 
-      setReconcileMessage(
-        payload?.message ?? "Đối soát đã được server xử lý thành công.",
+      const payload: ServerActionResponse<ReconcileLoyaltyImportBatchResult> =
+        await response.json().catch(() => null);
+
+      const reconciliationOutcome = payload.data.outcomes;
+
+      reconciliationOutcome
+        .slice(previewOrderLimit)
+        .map((item) => ordersStatus.setState(item.orderNumber || "", item));
+
+      const [
+        ordersVerified,
+        customersCreateFailed,
+        ordersInvalidPoints,
+        ordersAlreadyVerified,
+      ] = await Promise.all([
+        reconciliationOutcome.filter((item) => {
+          item.status === ReconcileOutcomeStatus.Verified;
+        }).length || 0,
+        reconciliationOutcome.filter((item) => {
+          item.status === ReconcileOutcomeStatus.CustomerCreateFailed;
+        }).length || 0,
+        reconciliationOutcome.filter((item) => {
+          item.status === ReconcileOutcomeStatus.InvalidPoints;
+        }).length || 0,
+        reconciliationOutcome.filter((item) => {
+          item.status === ReconcileOutcomeStatus.AlreadyVerified;
+        }).length || 0,
+      ]);
+
+      setState(StateKey.reconcileLoyalty, {
+        isSuccess: true,
+        message: `${String(ordersVerified)} đơn hàng đã được xác minh hợp lệ `,
+      });
+
+      setMessage(
+        StateKey.error,
+        `${String(customersCreateFailed)} khách hàng chưa được tạo thông tin.\n${String(ordersInvalidPoints)} đơn hàng có điểm không hợp lệ.\n${String(ordersAlreadyVerified)} đơn hàng đã được verified trước đó.
+        `,
       );
     } catch (err) {
-      setReconcileMessage(
-        err instanceof Error
-          ? err.message
-          : "Không thể thực hiện đối soát. Vui lòng thử lại.",
-      );
+      setState(StateKey.reconcileLoyalty, {
+        message:
+          err instanceof Error
+            ? err.message
+            : "Không thể thực hiện đối soát. Vui lòng thử lại.",
+      });
     } finally {
-      setIsReconciling(false);
+      setState(StateKey.reconcileLoyalty, {
+        isProgressing: false,
+      });
     }
   };
 
@@ -274,7 +359,7 @@ export default function ModalImportFile() {
                 ? "border-blue-500 bg-blue-50 dark:bg-gray-800"
                 : "border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900"
             } ${
-              !isConfigured || isParsing
+              !isConfigured || getValue(StateKey.parserFile, "isProgressing")
                 ? "cursor-not-allowed opacity-60"
                 : "cursor-pointer"
             }`}
@@ -282,7 +367,7 @@ export default function ModalImportFile() {
             <input {...getInputProps()} />
 
             <div className="text-sm font-medium">
-              {isParsing
+              {getValue(StateKey.parserFile, "isProgressing")
                 ? "Đang đọc file..."
                 : isDragActive
                   ? "Thả file vào đây"
@@ -309,14 +394,15 @@ export default function ModalImportFile() {
             </p>
           )}
 
-          {error && (
-            <div
-              role="alert"
-              className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
-            >
-              {error}
-            </div>
-          )}
+          {hasState(StateKey.checkFile) &&
+            !getValue(StateKey.checkFile, "isSuccess") && (
+              <div
+                role="alert"
+                className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+              >
+                {getValue(StateKey.checkFile, "message")}
+              </div>
+            )}
 
           {result && (
             <section className="mt-5">
@@ -327,10 +413,16 @@ export default function ModalImportFile() {
                   size="sm"
                   variant="outline"
                   onClick={handleCheckFile}
-                  disabled={!file || isParsing || isReconciling}
+                  disabled={
+                    !file ||
+                    getValue(StateKey.parserFile, "isProgressing")! ||
+                    getValue(StateKey.reconcileLoyalty, "isProgressing")
+                  }
                   className="ml-auto"
                 >
-                  {isParsing ? "Đang kiểm tra..." : "Kiểm tra lại"}
+                  {getValue(StateKey.parserFile, "isProgressing")
+                    ? "Đang kiểm tra..."
+                    : "Kiểm tra lại"}
                 </Button>
 
                 {result && (
@@ -338,13 +430,15 @@ export default function ModalImportFile() {
                     size="sm"
                     onClick={handleReconcile}
                     disabled={
-                      isParsing ||
-                      isReconciling ||
+                      getValue(StateKey.parserFile, "isProgressing")! ||
+                      getValue(StateKey.reconcileLoyalty, "isProgressing") ||
                       result.orders.length === 0 ||
                       result.errors.length > 0
                     }
                   >
-                    {isReconciling ? "Đang đối soát..." : "Tiến hành đối soát"}
+                    {getValue(StateKey.reconcileLoyalty, "isProgressing")
+                      ? "Đang đối soát..."
+                      : "Tiến hành đối soát"}
                   </Button>
                 )}
               </div>
@@ -368,6 +462,11 @@ export default function ModalImportFile() {
                       { key: "completedAt", title: "Hoàn tất lúc" },
                       { key: "paidAmount", title: "Doanh thu" },
                       { key: "points", title: "Điểm" },
+                      {
+                        key: "result",
+                        title: "Trạng thái",
+                        className: `${!getValue(StateKey.reconcileLoyalty, "isSuccess") ? "hidden" : ""}`,
+                      },
                     ]}
                   />
 
@@ -388,6 +487,11 @@ export default function ModalImportFile() {
                           {order.paidAmount.toLocaleString("vi-VN")} ₫
                         </TableCell>
                         <TableCell>{order.points.toFixed(2)}</TableCell>
+                        {getValue(StateKey.reconcileLoyalty, "isSuccess") && (
+                          <TableCell>
+                            {ordersStatus.getValue(order.orderNumber, "status")}
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                   </TableBody>
@@ -397,7 +501,7 @@ export default function ModalImportFile() {
               {result.orders.length > 10 && (
                 <p className="mt-2 text-xs text-gray-500">
                   Đang hiển thị {previewOrderLimit}/{result.orders.length} đơn
-                  hợp lệ.
+                  hàng
                   <button
                     onClick={() =>
                       previewOrderLimit === result.orders.length
@@ -442,6 +546,17 @@ export default function ModalImportFile() {
                 Đây là kết quả preview. Chưa có dữ liệu nào được ghi vào
                 database.
               </p>
+            </section>
+          )}
+
+          {getValue(StateKey.reconcileLoyalty, "isSuccess") && (
+            <section className="space-y-2 mt-4">
+              <Label>Kết quả đối soát</Label>
+              <div className="bg-green-100 rounded-lg p-3 ">
+                <p className="whitespace-pre-wrap text-sm mt-3">
+                  {getValue(StateKey.error, "message")}
+                </p>
+              </div>
             </section>
           )}
 

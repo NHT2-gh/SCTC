@@ -4,10 +4,18 @@ import { createHash } from "node:crypto";
 import {
   IMPORT_CONFIGS,
   isImportConfigComplete,
-  type LoyaltySource,
 } from "@/lib/loyalty/import-config";
 import { parseImportFile } from "@/lib/loyalty/import-engine";
 import { adminSupabase } from "@/supabase/supabaseAdmin";
+import {
+  ReconcileLoyaltyImportBatchResult,
+  ReconcileOutcome,
+} from "@/types/reconcile-outcome";
+import {
+  LoyaltySource,
+  ResponseStandard,
+  ServerActionResponse,
+} from "@/types/common";
 
 export const runtime = "nodejs";
 
@@ -165,7 +173,7 @@ export async function POST(request: NextRequest) {
       console.error("Loyalty reconciliation failed:", reconciliationError);
 
       // RPC is atomic. Mark the batch as failed in a separate request.
-      const { data, error: updateBatchError } = await adminSupabase
+      const { error: updateBatchError } = await adminSupabase
         .from("loyalty_import_batches")
         .update({
           status: "failed",
@@ -192,17 +200,13 @@ export async function POST(request: NextRequest) {
     }
 
     // 7. Return reconciliation result
-    return NextResponse.json(
+    return NextResponse.json<
+      ServerActionResponse<ReconcileLoyaltyImportBatchResult>
+    >(
       {
-        message: "Reconciliation completed.",
-        batchId,
-        reconciliation,
-        parsing: {
-          totalRows: parseResult.totalRows,
-          importedOrders: parseResult.orders.length,
-          skippedRows: parseResult.skippedRows,
-          duplicateRows: parseResult.duplicateRows,
-        },
+        success: true,
+        error: null,
+        data: reconciliation as ReconcileLoyaltyImportBatchResult,
       },
       { status: 200 },
     );

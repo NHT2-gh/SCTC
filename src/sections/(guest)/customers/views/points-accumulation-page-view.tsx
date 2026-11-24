@@ -5,7 +5,7 @@ import { SubmitLoyaltyClaimForm } from "../components";
 
 export default function PointsAccumulationPageView() {
   return (
-    <section className="p-4 h-fit min-h-[100dvh] flex flex-col gap-3">
+    <section className="h-fit min-h-[100dvh] flex flex-col gap-3">
       <NavigationBar
         backHref={APP_ROUTES.GUEST.ROOT}
         title="Tích điểm"

@@ -20,7 +20,7 @@ const services: Service[] = [
     icon: "gift",
     href: APP_ROUTES.GUEST.CUSTOMER.POINTS_ACCUMULATE(),
     desc: "Nhận điểm khi sử dụng dịch vụ",
-    is_active: false,
+    is_active: true,
   },
   // {
   //   title: "Tra cứu đơn hàng",

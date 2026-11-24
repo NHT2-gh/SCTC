@@ -45,7 +45,12 @@ export default function NavigationBar({
       )}
 
       {title && (
-        <h1 className={cn(delagothic.className, "grow text-center")}>
+        <h1
+          className={cn(
+            delagothic.className,
+            "grow text-center transform -translate-x-4",
+          )}
+        >
           {title}
         </h1>
       )}

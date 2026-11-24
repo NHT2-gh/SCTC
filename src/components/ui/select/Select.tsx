@@ -59,6 +59,7 @@ export default function Select({
           <option
             key={option.value}
             value={option.value}
+            disabled={option.disabled}
             className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
           >
             {option.label}
