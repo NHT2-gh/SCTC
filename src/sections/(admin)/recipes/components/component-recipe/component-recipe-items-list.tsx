@@ -10,7 +10,8 @@ import { ComponentRecipeItemsValidationSchema } from "@/schemas/validation/compo
 export default function ComponentRecipeItemsList() {
   const componentRecipeForm =
     useFormContext<ComponentRecipeItemsValidationSchema>();
-  const { data: ingredients } = useIngredients();
+  const { data: ingredients, isLoading: isLoadingIngredient } =
+    useIngredients();
   const { remove } = useFieldArray({
     control: componentRecipeForm.control,
     name: "recipe_items",
@@ -23,12 +24,15 @@ export default function ComponentRecipeItemsList() {
     name: "yield_quantity",
   });
   const {
-    formState: { errors, isLoading },
+    formState: { isLoading },
     setValue,
   } = componentRecipeForm;
   return (
     <div className="space-y-2">
-      <DataState isLoading={isLoading} isEmpty={componentItems.length === 0} />
+      <DataState
+        isLoading={isLoading || isLoadingIngredient}
+        isEmpty={componentItems.length === 0}
+      />
       {componentItems.map((field, index) => (
         <div
           key={field.id ? field.id : index}

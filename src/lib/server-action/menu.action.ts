@@ -44,12 +44,14 @@ export async function serverActionGetMenuItemInfo(
       const tableInfo = await getCurrentTable();
 
       let isAllowOrder = true;
+      let isAllowUpsize = true;
 
       if (!tableInfo?.tableId && result.data.product.is_only_allow_dinein) {
         isAllowOrder = false;
       } else if (!result.data.product.is_active) {
         isAllowOrder = false;
       }
+      if (!tableInfo?.tableId) isAllowUpsize = true;
 
       return {
         data: {
@@ -60,6 +62,7 @@ export async function serverActionGetMenuItemInfo(
             variant: productOptions.data.variant,
           },
           isAllowOrder,
+          isAllowUpsize,
         },
         success: true,
         error: null,

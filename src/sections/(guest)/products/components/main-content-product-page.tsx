@@ -19,6 +19,7 @@ export default function MainContentProductPage({
         info={product.info}
         options={product.options}
         isAllowOrder={product.isAllowOrder}
+        isAllowUpsize={product.isAllowUpsize}
       />
       <FloatingCartButton />
     </section>

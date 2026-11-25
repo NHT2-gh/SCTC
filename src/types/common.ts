@@ -48,6 +48,7 @@ export type RequestState = {
   isProgressing?: boolean;
   isSuccess?: boolean;
   message?: string;
+  isError?: boolean;
 };
 
 export interface IconComponentProps {

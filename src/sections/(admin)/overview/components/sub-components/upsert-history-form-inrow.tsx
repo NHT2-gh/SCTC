@@ -67,6 +67,7 @@ export default function UpsertHistoryFormInRow({
           field={{
             name: "created_at",
             type: "text",
+            readOnly: true,
           }}
           form={upsertFormContext}
         />
@@ -76,6 +77,7 @@ export default function UpsertHistoryFormInRow({
           field={{
             name: "updated_at",
             type: "text",
+            readOnly: true,
           }}
           form={upsertFormContext}
         />

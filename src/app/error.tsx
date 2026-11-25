@@ -13,7 +13,9 @@ export default function Error({
     <div className="w-full min-h-screen flex items-center justify-center font-delagothic">
       <div className="text-center space-y-2">
         <h1 className="text-2xl font-semibold">Oops!</h1>
-        <p className="text-gray-600 font-itim">{error.message}</p>
+        <p className="text-gray-600 font-itim">
+          Có một chút lỗi hệ thống. Thử lại sau nha
+        </p>
         <Button className="min-w-[6.25rem]" onClick={() => reset()}>
           Thử lại
         </Button>

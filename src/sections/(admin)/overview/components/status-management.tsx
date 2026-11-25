@@ -4,19 +4,19 @@ import {
   useGetHistoryStoreStatus,
   useUpsertHistoryStoreStatus,
 } from "@/hooks/queries/use-store";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { EditIcon } from "lucide-react";
+import { showToast } from "@/lib/toast";
+import Form from "@/components/form/Form";
+import { Button } from "@/components/ui/button";
 import { TableHeader } from "@/components/table";
+import { Switch } from "@/components/ui/switch";
+import { StoreStatusType } from "@/types/store";
+import { FormProvider, useForm } from "react-hook-form";
+import { UpsertHistoryFormInRow } from "./sub-components";
+import { mapErrorToMessage } from "@/lib/error/app-error";
 import { ColumnDef } from "@/components/table/table-header";
 import { formatDateTime, formatDateTimev2 } from "@/utils/format-data";
-import { Switch } from "@/components/ui/switch";
-import { UpsertHistoryFormInRow } from "./sub-components";
-import { FormProvider, useForm } from "react-hook-form";
-import { StoreStatusType } from "@/types/store";
-import Form from "@/components/form/Form";
-import { showToast } from "@/lib/toast";
-import { mapErrorToMessage } from "@/lib/error/app-error";
-import { EditIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { StatusStoreValidationType } from "@/schemas/validation/status-store.validation";
 
 const columns: ColumnDef[] = [
@@ -67,8 +67,6 @@ export default function StatusManagement() {
     }
   };
 
-  console.log(getValues("time_start"));
-
   return (
     <FormProvider {...upsertForm}>
       <Form
@@ -87,20 +85,16 @@ export default function StatusManagement() {
                 >
                   <TableCell className="capitalize">{item.status}</TableCell>
                   <TableCell>
-                    {formatDateTimev2(item.time_start, { withTime: true })}
+                    {formatDateTime(item.time_start, { withTime: true })}
                   </TableCell>
                   <TableCell className="capitalize">
-                    {formatDateTimev2(item.time_end, { withTime: true })}
+                    {formatDateTime(item.time_end, { withTime: true })}
                   </TableCell>
                   <TableCell className="capitalize">
-                    {item.created_at
-                      ? formatDateTimev2(item.created_at)
-                      : "Now"}
+                    {item.created_at ? formatDateTime(item.created_at) : "Now"}
                   </TableCell>
                   <TableCell className="capitalize">
-                    {item.updated_at
-                      ? formatDateTimev2(item.updated_at)
-                      : "Now"}
+                    {item.updated_at ? formatDateTime(item.updated_at) : "Now"}
                   </TableCell>
 
                   <TableCell>

@@ -1,6 +1,6 @@
-import Modal, { type ModalProps } from "@/components/ui/modal/modal";
+import Modal from "@/components/ui/modal/modal";
 import { Component, ComponentRecipeItem } from "@/types/component";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { AddComponentRecipeItemsForm } from "..";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,10 +20,10 @@ import Form from "@/components/form/Form";
 import { FormField } from "@/components/form";
 import { componentService } from "@/services/component.service";
 import { mapErrorToMessage } from "@/lib/error/app-error";
-import { CheckCircle2, X } from "lucide-react";
 import { useUrlState } from "@/hooks/use-url-state";
-import { ItemStateMap } from "@/hooks/use-item-state";
+import { useItemState } from "@/hooks/use-item-state";
 import { RequestState } from "@/types/common";
+import BoxResult from "@/components/common/data-state/box_result";
 
 interface ModalComponentRecipeItemsProps {
   component: Component;
@@ -32,15 +32,19 @@ interface ModalComponentRecipeItemsProps {
   onClose: () => void;
 }
 
+enum StateKey {
+  updateComponent = "update-component",
+  updateInfoRecipt = "update-info-recipt",
+}
+
 export default function ModalComponentRecipeItems({
   component,
   items,
   isOpen,
   onClose,
 }: ModalComponentRecipeItemsProps) {
-  const [itemStateMap, setItemStateMap] = useState<ItemStateMap<RequestState>>(
-    new Map(),
-  ); //UPDATE
+  const { setState, getValue, setValue, getState, hasState } =
+    useItemState<RequestState>();
   const upsertRecipeItems = useUpsertComponentRecipeItems();
   const deleteRecipeItems = useDeleteComponentRecipeItems();
   const [_, setViewComponentRecipe] = useUrlState<string>("component_id ");
@@ -50,6 +54,7 @@ export default function ModalComponentRecipeItems({
     defaultValues: {
       recipe_items: items,
       yield_quantity: component.yield_quantity,
+      name: component.name,
     },
     mode: "onChange",
   });
@@ -77,70 +82,87 @@ export default function ModalComponentRecipeItems({
         dirtyFields: dirtyFields.recipe_items,
       });
 
-      if (diffComponentItems.upsert.length > 0) {
-        setItemStateMap((prev) => {
-          prev.set("upsert_data", {
-            isEditting: false,
-          });
-          return prev;
+      if (
+        diffComponentItems.upsert.length > 0 ||
+        diffComponentItems.deleted.length > 0
+      ) {
+        setState(StateKey.updateComponent, {
+          isEditting: true,
+          message: "Đang cập nhật công thức",
         });
 
-        try {
-          const res = await upsertRecipeItems.mutateAsync({
-            recipe_items: diffComponentItems.upsert,
-          });
+        if (diffComponentItems.upsert.length > 0) {
+          try {
+            const res = await upsertRecipeItems.mutateAsync({
+              recipe_items: diffComponentItems.upsert,
+            });
+            if (res.success) {
+              setState(StateKey.updateComponent, {
+                isSuccess: true,
+                message: `Đã cập nhật ${diffComponentItems.upsert.length} thành phần trong công thức`,
+              });
+            } else {
+              setState(StateKey.updateComponent, {
+                isSuccess: false,
+                isError: true,
 
-          setItemStateMap((prev) => {
-            prev.set("upsert_data", {
-              isEditting: false,
-              isSuccess: res.success,
-              message: `Đã cập nhật thành công ${diffComponentItems.upsert.length} thành phần`,
-            });
-            return prev;
-          });
-        } catch (error) {
-          setItemStateMap((prev) => {
-            prev.set("upsert_data", {
-              isEditting: false,
-              isSuccess: false,
-              message: mapErrorToMessage(error),
-            });
-            return prev;
-          });
+                message: `Không thể  ${diffComponentItems.upsert.length} thành phần trong công thức`,
+              });
+            }
+          } catch (error) {
+            {
+              setState(StateKey.updateComponent, {
+                isSuccess: false,
+                isError: true,
+
+                message: `Có lỗi xảy ra trong quá trình cập nhật. Thử lại sau`,
+              });
+            }
+          } finally {
+            setValue(StateKey.updateComponent, "isProgressing", false);
+          }
         }
-      }
-      if (diffComponentItems.deleted.length > 0) {
-        setItemStateMap((prev) => {
-          prev.set("delete_data", {
+        if (diffComponentItems.deleted.length > 0) {
+          setState(StateKey.updateComponent, {
             isEditting: true,
-            isSuccess: false,
+            message: "Đang tiến hành xoá thành phần trong công thức",
           });
-          return prev;
-        });
 
-        try {
-          const res = await deleteRecipeItems.mutateAsync(
-            diffComponentItems.deleted,
-          );
-          setItemStateMap((prev) => {
-            prev.set("delete_data", {
-              isEditting: true,
-              isSuccess: res.success,
-              message: `Đã xoá thành công ${diffComponentItems.deleted.length} thành phần`,
-            });
-            return prev;
-          });
-        } catch (error) {
-          setItemStateMap((prev) => {
-            prev.set("delete_data", {
-              isEditting: true,
-              isSuccess: false,
-              message: mapErrorToMessage(error),
-            });
-            return prev;
-          });
+          try {
+            const res = await deleteRecipeItems.mutateAsync(
+              diffComponentItems.deleted,
+            );
+            if (res.success) {
+              setState(StateKey.updateComponent, {
+                isSuccess: true,
+                message: `Xoá thành công ${diffComponentItems.deleted.length} thành phần trong công thức`,
+              });
+            } else {
+              setState(StateKey.updateComponent, {
+                isSuccess: false,
+                isError: true,
+
+                message: `Không thể xoá ${diffComponentItems.deleted.length} thành phần trong công thức`,
+              });
+            }
+          } catch (error) {
+            {
+              setState(StateKey.updateComponent, {
+                isSuccess: false,
+                isError: true,
+
+                message: `Có lỗi xảy ra trong quá trình xoá. Thử lại sau`,
+              });
+            }
+          } finally {
+            setValue(StateKey.updateComponent, "isProgressing", false);
+          }
         }
-      }
+      } else
+        setState(StateKey.updateComponent, {
+          isEditting: false,
+          isSuccess: false,
+        });
     }
     if (dirtyFields.yield_quantity || dirtyFields.name) {
       const nameState = dirtyFields.yield_quantity
@@ -149,36 +171,32 @@ export default function ModalComponentRecipeItems({
           ? "name"
           : "component_info";
 
-      setItemStateMap((prev) => {
-        prev.set(nameState, {
-          isEditting: true,
-        });
-        return prev;
+      setState(StateKey.updateInfoRecipt, {
+        isProgressing: true,
       });
+
       try {
         const res = await componentService.updateComponent(component.id, {
           yield_quantity: data.yield_quantity,
           name: data.name,
         });
         if (res.success) {
-          setItemStateMap((prev) => {
-            prev.set(nameState, {
-              isEditting: false,
-              isSuccess: true,
-              message: `Đã cập nhật ${nameState === "yield_quantity" ? "khối lượng thành phẩm" : nameState === "name" ? "tên thành phẩm" : "thông tin thành phẩm"}`,
-            });
-            return prev;
+          setState(StateKey.updateInfoRecipt, {
+            isSuccess: true,
+            message: `Đã cập nhật ${nameState === "yield_quantity" ? "khối lượng thành phẩm" : nameState === "name" ? "tên thành phẩm" : "thông tin thành phẩm"}`,
+          });
+        } else {
+          setState(StateKey.updateInfoRecipt, {
+            isSuccess: false,
+            isError: true,
+            message: `Cập nhật thất bại ${nameState === "yield_quantity" ? "khối lượng thành phẩm" : nameState === "name" ? "tên thành phẩm" : "thông tin thành phẩm"}`,
           });
         }
       } catch (error) {
-        setItemStateMap((prev) => {
-          prev.set(nameState, {
-            isEditting: false,
-            isDeleting: false,
-            isSuccess: false,
-            message: mapErrorToMessage(error),
-          });
-          return prev;
+        setState(StateKey.updateInfoRecipt, {
+          isSuccess: false,
+          isError: true,
+          message: mapErrorToMessage(error),
         });
       }
     }
@@ -207,7 +225,7 @@ export default function ModalComponentRecipeItems({
               name: "name",
               disabled: true,
             }}
-            className="w-full font-bold text-brand-500 [&_.input-container]:border-0  [&_.input-container]:shadow-none [&_.input-container>input]:text-2xl"
+            className="w-full font-bold text-brand-500 [&_.input-container]:border-0 [&_.input-container]:shadow-none [&_.input-container>input]:text-2xl"
           />
           {items && items.length === 0 && !dirtyFields.recipe_items && (
             <p className="italic text-gray-500 dark:text-gray-400">
@@ -227,24 +245,9 @@ export default function ModalComponentRecipeItems({
             form={componentRecipeItems}
           />
 
-          {Array.from(itemStateMap.entries()).map(([key, value]) => {
-            return (
-              <p
-                key={key}
-                className="flex items-center text-danger italic text-sm"
-              >
-                {value.isSuccess ? (
-                  <CheckCircle2 fill="#16a34a" stroke="white" />
-                ) : value.isSuccess === false &&
-                  !value.isEditting &&
-                  !value.isDeleting ? (
-                  <X fill="#dc2626" />
-                ) : null}
-
-                {value.message}
-              </p>
-            );
-          })}
+          {hasState(StateKey.updateComponent) && (
+            <BoxResult state={getState(StateKey.updateComponent)!} />
+          )}
 
           <Button
             type="submit"

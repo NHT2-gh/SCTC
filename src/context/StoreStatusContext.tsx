@@ -177,9 +177,9 @@ export function StoreStatusProvider({
      * now 15:00 => false
      */
     const isWithinActiveTime =
-      (!startTime || now >= startTime) && (!endTime || now <= endTime);
-
-    console.log(now, endTime, endTime ? now <= endTime : false);
+      (!startTime || now >= startTime) &&
+      (!endTime || now <= endTime) &&
+      setting.is_active;
 
     /**
      * The status only becomes effective

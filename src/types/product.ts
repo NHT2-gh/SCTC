@@ -43,6 +43,7 @@ export interface ProductDetail {
     variant?: SelectedOption[];
   };
   isAllowOrder: boolean;
+  isAllowUpsize: boolean;
 }
 
 export interface ProductRecipeVersion {

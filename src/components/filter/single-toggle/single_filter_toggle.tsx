@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
+import { FieldOption } from "@/components/form/type";
 
 interface SingleFilterButtonGroupProp {
-  items: {
-    value: string;
-    label: string;
-  }[];
+  items: FieldOption[];
   onChange: (value: string | null) => void;
   value?: string;
   className?: string;
@@ -20,7 +18,7 @@ export default function SingleFilterButtonGroup({
   className,
 }: SingleFilterButtonGroupProp) {
   const [currentValue, setCurrentValue] = useState<string | null>(
-    value ? value : items[0].value,
+    value ? value : String(items[0].value),
   );
   return (
     <div
@@ -51,12 +49,13 @@ export default function SingleFilterButtonGroup({
       {items.map((item) => (
         <button
           key={item.value}
+          disabled={item.disabled}
           onClick={() => {
-            onChange(item.value);
-            setCurrentValue(item.value);
+            onChange(String(item.value));
+            setCurrentValue(String(item.value));
           }}
           className={cn(
-            "text-sm h-full shrink-0 w-fit min-w-[80px] rounded-lg px-3 py-2 font-medium text-[rgb(160,156,150)] dark:text-gray-400",
+            "text-sm h-full shrink-0 w-fit min-w-[80px] rounded-lg px-3 py-2 font-medium text-[rgb(160,156,150)] dark:text-gray-400 disabled:opacity-50",
             {
               "shadow-theme-xs text-brand-500 dark:text-white dark:bg-gray-800 bg-[rgba(235,210,194,0.40)]":
                 currentValue === item.value,

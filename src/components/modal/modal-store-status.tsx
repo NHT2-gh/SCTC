@@ -1,26 +1,34 @@
 "use client";
-import { useStoreStatus } from "@/context/StoreStatusContext";
+import { useState } from "react";
 import { Portal } from "../portal";
 import ModalAlert from "./alerts/modal-alert";
-import { formatDateTimev2 } from "@/utils/format-data";
-import { useState } from "react";
+import { formatDateTime } from "@/utils/format-data";
+import { useStoreStatus } from "@/context/StoreStatusContext";
+import { StoreStatusType } from "@/types/store";
+
+const ContentMapText: Record<
+  StoreStatusType.break | StoreStatusType.closed,
+  { title: string; desc: string }
+> = {
+  [StoreStatusType.break]: {
+    title: "Cửa hàng đang tạm nghỉ",
+    desc: "Hiện tại tụi mình đang trong thời gian tạm nghỉ.",
+  },
+  [StoreStatusType.closed]: {
+    title: "Cửa hàng đang đóng",
+    desc: "Hiện tại tụi mình đang đóng cửa.",
+  },
+};
 
 export default function StoreStatusModal() {
-  const { isBreak, isClosed, endTime } = useStoreStatus();
+  const { endTime, isBreak, canPreorder, isClosed } = useStoreStatus();
   const [isCloseModal, setIsCloseModal] = useState(false);
 
-  if (!isBreak && !isClosed) {
+  if (!isClosed || !isBreak) {
     return null;
   }
-
-  const title = isBreak ? "Cửa hàng đang tạm nghỉ" : "Cửa hàng đã đóng";
-
-  const description = isBreak
-    ? "Hiện tại shop đang trong thời gian tạm nghỉ. \nMấy cục dàng vẫn có thể đặt trước cho thời gian cửa hàng mở lại."
-    : "Hiện tại shop đã đóng cửa. \nMấy cục dàng vẫn có thể đặt trước cho thời gian cửa hàng mở cửa tiếp theo.";
-
   const formattedEndTime = endTime
-    ? formatDateTimev2(endTime.toISOString(), { withTime: true })
+    ? formatDateTime(endTime.toISOString(), { withTime: true })
     : null;
 
   return (
@@ -29,13 +37,21 @@ export default function StoreStatusModal() {
         isOpen={!isCloseModal}
         onClose={() => setIsCloseModal(true)}
         type={"info"}
-        title={title}
+        title={
+          isBreak
+            ? ContentMapText[StoreStatusType.break].title
+            : ContentMapText[StoreStatusType.closed].title
+        }
         description={
-          description +
-          ` ${formattedEndTime ? `\nThời gian mở cửa lại: ${formattedEndTime}` : ""}`
+          ` ${
+            isBreak
+              ? ContentMapText[StoreStatusType.break].desc
+              : ContentMapText[StoreStatusType.closed].desc
+          }` +
+          `${canPreorder ? "\nMấy bạn vẫn có thể đặt trước ... " : ""}  ${formattedEndTime ? `\nThời gian cửa hàng hoạt động lại: ${formattedEndTime}` : ""}` //NEDD UPDATE
         }
         onConfirm={() => setIsCloseModal(true)}
-        confirmText={"Ok Shop 👍"}
+        confirmText={"Tôi đồng ý 👌🏻"}
       />
     </Portal>
   );

@@ -32,8 +32,13 @@ class StoreService {
     const query = supabase.from(this.storeSatusTableName).upsert({
       id: status.id,
       is_active: status.is_active,
-      time_end: status.time_end,
-      time_start: status.time_start,
+      time_end: status.time_end
+        ? new Date(status.time_end).toISOString()
+        : undefined,
+
+      time_start: status.time_start
+        ? new Date(status.time_start).toISOString()
+        : undefined,
       status: status.status,
       updated_at: new Date(),
     });

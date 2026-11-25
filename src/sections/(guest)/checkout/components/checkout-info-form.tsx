@@ -22,6 +22,7 @@ import { checkoutFormSchema } from "@/schemas/form-schemas/checkout-form-schema"
 import { CheckoutFormValidationType } from "@/schemas/validation/checkout.validation";
 import ApplyPromotion from "./apply-promotion";
 import { API_ROUTES } from "@/config/api-routes";
+import { useStoreStatus } from "@/context/StoreStatusContext";
 
 export default function CheckoutInfoForm() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function CheckoutInfoForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { checkoutInfo, updateCheckout } = useCheckout();
   const modalAlert = useModal();
+  const { isOpening } = useStoreStatus();
 
   const checkoutForm = useFormRenderer<CheckoutFormValidationType>(
     checkoutFormSchema,
@@ -115,6 +117,7 @@ export default function CheckoutInfoForm() {
         items={Object.entries(DeliveryMethod).map(([key, value]) => ({
           value: key,
           label: DeliveryMethodMapText[value],
+          disabled: DeliveryMethod.pickup_now && !isOpening,
         }))}
         onChange={(value) =>
           checkoutForm.setValue("delivery_method", value as DeliveryMethod)

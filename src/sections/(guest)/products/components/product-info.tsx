@@ -23,6 +23,7 @@ export default function ProductInfo({
   info,
   options,
   isAllowOrder,
+  isAllowUpsize,
 }: ProductDetail) {
   const { add } = useCart();
   const [lineNote, setLineNote] = useState<string>("");
@@ -207,7 +208,7 @@ export default function ProductInfo({
             )}
           </div>
 
-          {options.variant && filterValues["variant"] && (
+          {options.variant && filterValues["variant"] && isAllowUpsize && (
             <ProductVariantOptions
               variants={options.variant}
               update={updateFilter}

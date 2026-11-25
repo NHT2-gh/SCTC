@@ -69,6 +69,7 @@ export default function DatePicker({
   }, []);
 
   // Sync React Hook Form value -> Flatpickr
+  // Sync React Hook Form value -> Flatpickr
   useEffect(() => {
     if (!pickerRef.current) return;
 
@@ -82,7 +83,16 @@ export default function DatePicker({
       return;
     }
 
-    pickerRef.current.setDate(formatUTCDate(value), false);
+    const dates = Array.isArray(value)
+      ? value.filter(Boolean).map((item) => new Date(item))
+      : [new Date(value)];
+
+    if (dates.some((date) => Number.isNaN(date.getTime()))) {
+      console.error("Invalid DatePicker value:", value);
+      return;
+    }
+
+    pickerRef.current.setDate(dates, false);
   }, [value]);
 
   return (
