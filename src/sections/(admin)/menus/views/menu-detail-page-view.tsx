@@ -28,7 +28,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
   const updateProductInfo = useUpdateProductInfo(id);
   const [resultItemsSearch, setResultItemsSearch] = useState<string[]>([]);
 
-  const handleAddItems = useCallback(
+  const handUpdateItems = useCallback(
     async (ids: string[]) => {
       const originalArray =
         menuItems?.data && menuItems?.data?.length > 0
@@ -39,7 +39,6 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
 
       if (originalArray) {
         const { added, removed } = diffBasicArray<string>(originalArray, ids);
-
         if (added && added.length > 0) {
           try {
             const resultAdd = await addMenuItems.mutateAsync({
@@ -47,27 +46,8 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
               ids: added,
             });
             if (resultAdd.success) {
-              refetch();
-              showToast.success({ title: "Thành công cập nhật menu" });
-            }
-          } catch (error) {
-            showToast.error({
-              title: "Thất bại",
-              description: mapErrorToMessage(error),
-            });
-          }
-        }
-
-        if (removed && removed.length > 0) {
-          try {
-            const resultDelete = await deleteMenuItems.mutateAsync({
-              productIds: removed,
-              menuId: id,
-            });
-            if (!resultDelete.success) {
-              showToast.error({
-                title: "Thất bại",
-                description: mapErrorToMessage(resultDelete.message),
+              showToast.success({
+                title: `Đã thêm ${added.length} sản phẩm ra khỏi menu thành công`,
               });
             }
           } catch (error) {
@@ -77,6 +57,25 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
             });
           }
         }
+        if (removed && removed.length > 0) {
+          try {
+            const resultDelete = await deleteMenuItems.mutateAsync({
+              productIds: removed,
+              menuId: id,
+            });
+            if (resultDelete.success) {
+              showToast.success({
+                title: `Đã xoá ${removed.length} sản phẩm ra khỏi menu thành công`,
+              });
+            }
+          } catch (error) {
+            showToast.error({
+              title: "Thất bại",
+              description: mapErrorToMessage(error),
+            });
+          }
+        }
+        refetch();
       }
     },
     [menuItems],
@@ -115,7 +114,7 @@ export default function MenuDetailPageView({ id }: MenuDetailProps) {
               return item.product.id;
             })}
             onSelectedItems={(ids) => {
-              handleAddItems(ids);
+              handUpdateItems(ids);
             }}
             onChange={(ids) => setResultItemsSearch(ids)}
           />

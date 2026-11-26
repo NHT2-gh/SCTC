@@ -6,7 +6,6 @@ import { Checkbox } from "@/components/ui/input";
 import { SearchBar } from "@/components/search-bar";
 import { formatCurrency } from "@/utils/format-data";
 import { useGetAllProduct } from "@/hooks/queries/use-product";
-import { Product } from "@/types/product";
 
 interface DrinksSearchBoxProps {
   onSelectedItems: (drinkIds: string[]) => void;

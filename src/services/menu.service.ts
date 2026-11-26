@@ -63,11 +63,11 @@ class MenuService {
           ) 
         `,
       )
-      .eq("menu_id", id);
-    // .eq("is_active", true);
-    // .order("product(product_type)", {
-    //   ascending: true,
-    // });
+      .eq("menu_id", id)
+      .eq("is_active", true)
+      .order("product(product_type)", {
+        ascending: true,
+      });
 
     const { data: items, error } = await query;
 
