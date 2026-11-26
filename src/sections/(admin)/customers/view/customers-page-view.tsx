@@ -4,6 +4,7 @@ import { TableHeader } from "@/components/table";
 import { ColumnDef } from "@/components/table/table-header";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useGetAllCustomer } from "@/hooks/queries/use-customer";
+import { formatDateTime } from "@/utils/format-data";
 import React from "react";
 
 const columns: ColumnDef[] = [
@@ -28,7 +29,9 @@ export default function CustomersPageView() {
               <TableCell>{customer.name}</TableCell>
               <TableCell>{customer.phone}</TableCell>
               <TableCell>{customer.points_balance}</TableCell>
-              <TableCell>{customer.created_at}</TableCell>
+              <TableCell>
+                {formatDateTime(customer.created_at, { withTime: true })}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

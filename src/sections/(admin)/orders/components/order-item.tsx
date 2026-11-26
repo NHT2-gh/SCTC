@@ -1,17 +1,15 @@
-import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
-import ModalAlert from "@/components/modal/alerts/modal-alert";
-import { Button } from "@/components/ui/button";
-import { useGetDetailOrder } from "@/hooks/queries/use-order";
-import { useModal } from "@/hooks/useModal";
-import { cn } from "@/lib/utils";
-import { DeliveryMethod, DeliveryMethodMapText } from "@/types/checkout";
-import { Order, OrderStatus } from "@/types/order";
+import React from "react";
 import {
   formatCurrency,
   formatDateTime,
   formatDateTimev2,
 } from "@/utils/format-data";
-import React from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { DeliveryMethod } from "@/types/checkout";
+import { Order, OrderStatus } from "@/types/order";
+import { useGetDetailOrder } from "@/hooks/queries/use-order";
+import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 
 interface OrderItemCardProp {
   order: Order;
@@ -51,7 +49,11 @@ export default function OrderItemCard({
             {order.tables?.id ? (
               <span>{order.tables?.name}</span>
             ) : (
-              <span>{DeliveryMethodMapText[order.delivery_method]}</span>
+              <span>
+                {order.delivery_method === DeliveryMethod.pre_order
+                  ? "Pre Order"
+                  : "Now"}
+              </span>
             )}
           </span>
         </div>
@@ -102,7 +104,7 @@ export default function OrderItemCard({
               </li>
             )}
 
-            <li className="capitalize font-semibold text-brand-500 justify-between mt-2">
+            <li className="capitalize font-semibold text-xs text-brand-500 justify-between mt-2">
               <div className="flex items-center gap-2">
                 <span
                   className={cn("size-2 rounded-full block", {

@@ -125,7 +125,7 @@ const TableCell: React.FC<TableCellProps> = ({
         className,
       )}
     >
-      {children}
+      {children || "---"}
     </td>
   );
 };

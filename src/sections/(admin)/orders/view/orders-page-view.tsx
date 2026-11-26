@@ -15,6 +15,7 @@ import { formatCurrency } from "@/utils/format-data";
 import OrderItemCard from "../components/order-item";
 import InputText from "@/components/ui/input/input-text";
 import { useGetTable } from "@/hooks/queries/use-overview";
+import { DataState } from "@/components/common/data-state";
 import { FilterStatus, ModalViewOrder } from "../components";
 import ModalAlert from "@/components/modal/alerts/modal-alert";
 import { MainContainer } from "@/components/common/page-layout";
@@ -24,9 +25,6 @@ import { orderFilterConfig } from "@/schemas/filter-schemas/order-schema";
 import { _product_setting } from "@/_mocks/_setting/_product_detal_setting";
 import { Order, OrderStatus, PaymentMethod, PaymentType } from "@/types/order";
 import GenerateBankQr from "@/sections/(guest)/order/components/generate-bank-qr";
-import { DataState } from "@/components/common/data-state";
-
-const limit = 24;
 
 export default function OrdersPageView() {
   const modalViewOrder = useModal();
@@ -50,11 +48,11 @@ export default function OrdersPageView() {
     filters: filterValues,
     searchText: searchText,
     page: 1,
-    limit: limit,
+    limit: 24,
   });
-  const [orderIdsSelected, setIdsOrderSelected] = useState<string[]>([]);
   const modalConfirmPayment = useModal();
   const modalConfirmCancelOrder = useModal();
+  const [orderIdsSelected, setIdsOrderSelected] = useState<string[]>([]);
 
   const allOrders: Order[] = React.useMemo(() => {
     // If we only have initial data and haven't fetched more pages yet
@@ -201,16 +199,16 @@ export default function OrdersPageView() {
               )}
             </FilterBoxRender>
           )}
-          <section className="h-[60vh] max-w-full overflow-auto">
+          <section className="h-[62vh] max-w-full overflow-auto">
             <DataState isLoading={isFetching} />
 
             {allOrders.length > 0 && !isFetching && (
-              <div className="w-fit max-w-full xl:max-w-[calc(250px*5)] min-h-full h-fit columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6">
+              <div className="w-full min-h-full h-fit columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6">
                 {allOrders?.map((order) => (
                   <div
                     key={order.id}
                     className={cn(
-                      "w-[230px] break-inside-avoid mb-4",
+                      "w-full break-inside-avoid mb-4",
                       orderIdsSelected.includes(order.id) &&
                         "rounded-lg bg-green-50",
                     )}
@@ -241,21 +239,19 @@ export default function OrdersPageView() {
             )}
           </section>
 
-          {hasNextPage &&
-            orderIdsSelected.length === 0 &&
-            allOrders.length >= limit && (
-              <Button
-                variant="outline"
-                className="w-fit mx-auto"
-                onClick={() => fetchNextPage()}
-              >
-                Xem thêm
-              </Button>
-            )}
+          {hasNextPage && orderIdsSelected.length === 0 && (
+            <Button
+              variant="outline"
+              className="w-fit mx-auto"
+              onClick={() => fetchNextPage()}
+            >
+              Xem thêm
+            </Button>
+          )}
         </div>
 
         {allOrders && orderIdsSelected.length > 0 && (
-          <div className="p-2 bg-white absolute bottom-5 space-y-3 sm:bottom-10 left-10 right-10 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
+          <div className="p-2 w-full bg-white absolute space-y-1 md:space-y-3 bottom-10 left-0 border md:left-[unset] md:max-w-[300px] border-brand-500 border-dashed rounded-lg">
             <h3 className="font-bold">
               Total Amount:
               <span className="ml-2 text-brand-500">
@@ -265,13 +261,13 @@ export default function OrdersPageView() {
 
             {orderIdsSelected.length > 0 && (
               <h3 className="font-bold">
-                Selected: {orderIdsSelected.length} orders ({" "}
+                Selected: {orderIdsSelected.length} orders {" ("}
                 {allOrders
                   .filter((order) => orderIdsSelected.includes(order.id))
                   .reduce((acc, order) => {
                     return acc + order.order_items_count;
                   }, 0)}
-                {"  items )"}
+                {"  items)"}
               </h3>
             )}
 

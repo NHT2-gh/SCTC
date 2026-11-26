@@ -33,14 +33,14 @@ const _category_list = [
   {
     lable: "Cacao",
     color: "#8D1111",
-    pageNumber: 6,
+    pageNumber: 5,
     icon: <IcCoffeCup fillColor="#732C12" />,
   },
 
   {
     lable: "Cồn",
     color: "#8D1111",
-    pageNumber: 5,
+    pageNumber: 6,
     icon: <IcRuouIcon fillColor="#8D1111" />,
   },
 
